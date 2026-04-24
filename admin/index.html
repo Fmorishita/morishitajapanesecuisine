@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>Executive Dashboard - Morishita</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Zen+Antique+Soft&display=swap" rel="stylesheet"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
+  :root {
+    --bg: #050505;
+    --surface: #0a0a0a;
+    --surface-hover: #141414;
+    --fg: #f5f5f5;
+    --fg-muted: #888888;
+    --accent: #c8a97e; /* Gold / Champagne */
+    --accent-hover: #e0c298;
+    --border: #1f1f1f;
+    --success: #c8a97e;
+    --warning: #d4af37;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Login */
+  .login-container { 
+    max-width: 360px; 
+    margin: 15vh auto; 
+    padding: 48px 40px; 
+    background: linear-gradient(145deg, var(--surface) 0%, #000000 100%);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    text-align: center;
+  }
+  .login-container h1 { 
+    font-family: 'Playfair Display', serif; 
+    font-size: 28px; 
+    margin-bottom: 32px; 
+    font-weight: 400;
+    letter-spacing: 2px;
+  }
+  .login-container p { color: var(--fg-muted); margin-bottom: 32px; font-size: 14px; }
+  input { 
+    background: rgba(255,255,255,0.02); 
+    border: 1px solid var(--border); 
+    color: var(--fg); 
+    padding: 16px; 
+    width: 100%; 
+    margin-bottom: 24px; 
+    border-radius: 4px;
+    font-family: 'Inter', sans-serif; 
+    font-size: 13px;
+    letter-spacing: 2px;
+    box-sizing: border-box; 
+    outline: none; 
+    transition: border-color 0.3s; 
+    text-align: center;
+  }
+  input:focus { border-color: var(--accent); }
+  button { 
+    background: var(--accent); 
+    color: #000000; 
+    border: none; 
+    padding: 16px; 
+    border-radius: 4px;
+    cursor: pointer; 
+    font-family: 'Inter', sans-serif; 
+    font-size: 12px;
+    font-weight: 600; 
+    width: 100%; 
+    transition: background 0.3s, transform 0.2s; 
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  button:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+  /* Dashboard */
+  .dashboard { display: none; padding: 48px; max-width: 1400px; margin: 0 auto; }
+
+  .header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-title h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    margin: 0 0 12px 0;
+    font-weight: 400;
+    letter-spacing: 1px;
+  }
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--fg-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  .status-dot { width: 5px; height: 5px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px rgba(200,169,126,0.6); }
+
+  /* KPIs */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+  .kpi-card {
+    background: linear-gradient(145deg, var(--surface) 0%, #000000 100%);
+    border: 1px solid var(--border);
+    padding: 32px 28px;
+    border-radius: 4px;
+    transition: transform 0.4s ease, border-color 0.4s ease;
+  }
+  .kpi-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(200, 169, 126, 0.4);
+  }
+  .kpi-icon {
+    width: auto; height: auto;
+    background: transparent;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .kpi-icon svg { width: 22px; height: 22px; stroke-width: 1.2px; }
+  .kpi-label { color: var(--fg-muted); font-size: 11px; font-weight: 500; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 2px; }
+  .kpi-value { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 400; color: var(--fg); letter-spacing: 0; }
+  .kpi-value.highlight { color: var(--accent); }
+
+  /* Table Area */
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  .table-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+  .filters select {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--fg);
+    padding: 10px 20px;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    transition: border-color 0.3s;
+  }
+  .filters select:focus {
+    border-color: var(--accent);
+  }
+
+  .table-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; text-align: left; }
+  th {
+    background: #000000;
+    color: var(--fg-muted);
+    font-weight: 500;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 24px 24px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--fg);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover { background: rgba(200, 169, 126, 0.02); }
+
+  .client-name { font-family: 'Playfair Display', serif; font-size: 18px; display: block; margin-bottom: 4px; font-weight: 400; }
+  .client-contact { font-size: 12px; color: var(--fg-muted); font-family: 'Inter', sans-serif; letter-spacing: 0.5px; }
+
+  .tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .tag-allergy { background: rgba(180, 40, 40, 0.1); color: #e66; border: 1px solid rgba(180, 40, 40, 0.3); }
+  .tag-none { color: var(--fg-muted); }
+  .tag-note { background: rgba(200, 169, 126, 0.1); color: var(--accent); border: 1px solid rgba(200, 169, 126, 0.2); }
+
+  .action-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--fg);
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: 0.3s;
+    display: inline-block;
+  }
+  .action-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+  }
+
+  /* Cards Style - Morishita Mobile UI */
+  .cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 600px; /* To look mobile-ish / app-ish as requested */
+  }
+  .reservation-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: border-color 0.2s;
+  }
+  .reservation-card:hover {
+    border-color: #3f3f46;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .card-title {
+    color: var(--fg);
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+    padding-right: 16px;
+    line-height: 1.3;
+  }
+  .card-badge {
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .badge-confirmed {
+    color: var(--accent);
+    border-color: rgba(200, 169, 126, 0.4);
+    background: rgba(200, 169, 126, 0.05);
+  }
+  .badge-past {
+    color: var(--fg-muted);
+    border-color: #333;
+    background: rgba(255,255,255,0.02);
+  }
+    background: transparent;
+  }
+  .badge-cancelled {
+    color: #a1a1aa; /* zinc-400 */
+    border-color: #3f3f46; /* zinc-700 */
+    background: transparent;
+  }
+  .card-details {
+    color: var(--fg-muted);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-separator {
+    color: #52525b;
+  }
+  .card-tags {
+    margin-top: 4px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .card-actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+  <div id="login-screen" class="login-container">
+    <h1>森下 ADMIN</h1>
+    <input type="password" id="pin" placeholder="PIN DE ACCESO" onkeyup="if(event.key==='Enter') checkPin()"/>
+    <button onclick="checkPin()">ENTRAR</button>
+  </div>
+
+  <div id="main-dashboard" class="dashboard">
+    <div class="header-actions">
+      <div class="header-title">
+        <h1>森下 Morishita</h1>
+        <div class="status-badge"><div class="status-dot"></div> Supabase Sync Active</div>
+      </div>
+      <div class="filters" style="display: flex; gap: 16px;">
+        <select id="filter-date" onchange="applyFilter()">
+          <option value="all">Todas las reservas</option>
+          <option value="upcoming">Próximos 7 días</option>
+          <option value="today">Hoy</option>
+          <option value="past">Historial (Pasadas)</option>
+        </select>
+        <button onclick="exportToCSV()" class="action-btn" style="width: auto; padding: 10px 20px; font-weight: 500; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+          Descargar Base CSV
+        </button>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
+        <div class="kpi-label">INGRESOS (ANTICIPOS)</div>
+        <div class="kpi-value highlight" id="total-revenue">$0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg></div>
+        <div class="kpi-label">RESERVAS CONFIRMADAS</div>
+        <div class="kpi-value" id="total-bookings">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg></div>
+        <div class="kpi-label">TOTAL PAX</div>
+        <div class="kpi-value" id="total-pax">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg></div>
+        <div class="kpi-label">TICKET PROMEDIO</div>
+        <div class="kpi-value" id="avg-ticket">$0</div>
+      </div>
+    </div>
+
+    <div class="table-header">
+      <h2>Próximos Servicios</h2>
+    </div>
+    <div class="cards-container" id="reservas-body">
+      <div style="text-align:center; padding:48px; color:var(--fg-muted)">Conectando con base de datos...</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = 'https://tuygcyjdnylohjkuqojk.supabase.co';
+    const supabaseKey = 'sb_publishable_bNgItpe84VinnweVCUTyGw_Z2EF-vvz';
+    const client = supabase.createClient(supabaseUrl, supabaseKey);
+
+    const PRECIO_PERSONA = 1850;
+    const ANTICIPO_PCT = 0.5;
+
+    let allData = [];
+
+    async function loadExecutiveData() {
+      const { data, error } = await client
+        .from('Reservas')
+        .select('*')
+        .order('fecha', { ascending: true })
+        .order('hora', { ascending: true });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      allData = data;
+      applyFilter();
+    }
+
+    function applyFilter() {
+      const filter = document.getElementById('filter-date').value;
+      let filteredData = allData;
+
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const todayStr = today.toISOString().split('T')[0];
+
+      if (filter === 'today') {
+        filteredData = allData.filter(r => r.fecha === todayStr);
+      } else if (filter === 'upcoming') {
+        const nextWeek = new Date(today);
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        const nextWeekStr = nextWeek.toISOString().split('T')[0];
+        filteredData = allData.filter(r => r.fecha >= todayStr && r.fecha <= nextWeekStr);
+      } else if (filter === 'past') {
+        filteredData = allData.filter(r => r.fecha < todayStr);
+      }
+
+      renderStats(filteredData);
+      renderTable(filteredData);
+    }
+
+    function exportToCSV() {
+      if (allData.length === 0) return alert("No hay datos para exportar.");
+      
+      const filter = document.getElementById('filter-date').value;
+      // You can decide if exporting the filteredData or allData, usually CSV export exports all or what's on screen. Let's export what's filtered.
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const todayStr = today.toISOString().split('T')[0];
+      
+      let dataToExport = allData;
+      if (filter === 'today') {
+        dataToExport = allData.filter(r => r.fecha === todayStr);
+      } else if (filter === 'upcoming') {
+        const nextWeek = new Date(today);
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        const nextWeekStr = nextWeek.toISOString().split('T')[0];
+        dataToExport = allData.filter(r => r.fecha >= todayStr && r.fecha <= nextWeekStr);
+      } else if (filter === 'past') {
+        dataToExport = allData.filter(r => r.fecha < todayStr);
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += "Fecha,Hora,Nombre,Email,WhatsApp,Comensales,Motivo,Alergias,Estatus\n";
+
+      dataToExport.forEach(r => {
+        let row = [
+          r.fecha,
+          r.hora,
+          `"${(r.nombre || '').replace(/"/g, '""')}"`,
+          `"${(r.email || '').replace(/"/g, '""')}"`,
+          `"${(r.whatsapp || '').replace(/"/g, '""')}"`,
+          r.comensales,
+          `"${(r.motivo || '').replace(/"/g, '""')}"`,
+          `"${(r.alergias || '').replace(/"/g, '""')}"`,
+          r.status || 'Confirmada'
+        ];
+        csvContent += row.join(",") + "\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `morishita_reservas_${filter}_${todayStr}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function renderStats(data) {
+      const totalPax = data.reduce((sum, r) => sum + parseInt(r.comensales || 0), 0);
+      const totalRevenue = totalPax * PRECIO_PERSONA * ANTICIPO_PCT;
+      const totalBookings = data.length;
+      const avgTicket = totalBookings > 0 ? (totalRevenue / totalBookings) : 0;
+
+      document.getElementById('total-revenue').textContent = `$${totalRevenue.toLocaleString()}`;
+      document.getElementById('total-bookings').textContent = totalBookings;
+      document.getElementById('total-pax').textContent = totalPax;
+      document.getElementById('avg-ticket').textContent = `$${avgTicket.toLocaleString()}`;
+    }
+
+    function renderTable(data) {
+      const container = document.getElementById('reservas-body');
+      if (!data || data.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:48px; color:var(--fg-muted)">No hay reservas para este periodo.</div>';
+        return;
+      }
+
+      container.innerHTML = data.map(r => {
+        const ingreso = parseInt(r.comensales || 0) * PRECIO_PERSONA * ANTICIPO_PCT;
+
+        let allergyTag = r.alergias && r.alergias.trim().length > 0
+          ? `<span class="tag tag-allergy">⚠️ ${r.alergias}</span>` : '';
+
+        let noteTag = r.motivo && r.motivo.trim().length > 0
+          ? `<span class="tag tag-note">★ ${r.motivo}</span>` : '';
+
+        // Format Date
+        const dateObj = new Date(r.fecha + 'T00:00:00');
+        const options = { weekday: 'short', month: 'short', day: 'numeric' };
+        const dateFormatted = dateObj.toLocaleDateString('es-ES', options);
+        const dateStr = dateFormatted.charAt(0).toUpperCase() + dateFormatted.slice(1);
+
+        const menuType = "Omakase 12 tiempos";
+
+        const todayForStatus = new Date();
+        todayForStatus.setHours(0,0,0,0);
+        const todayStrStatus = todayForStatus.toISOString().split('T')[0];
+        let statusClass = "badge-confirmed";
+        let statusText = r.status || "Confirmada";
+        if (r.fecha < todayStrStatus) {
+            statusClass = "badge-past";
+            statusText = "Finalizada";
+        }
+
+        return `
+          <div class="reservation-card">
+            <div class="card-header">
+              <h3 class="card-title">${r.nombre}</h3>
+              <span class="card-badge ${statusClass}">${statusText}</span>
+            </div>
+            <div class="card-details">
+              <span>${dateStr}</span>
+              <span class="card-separator">·</span>
+              <span>${r.hora}</span>
+            </div>
+            <div class="card-details">
+              <span>${r.comensales} personas</span>
+              <span class="card-separator">·</span>
+              <span>${menuType}</span>
+            </div>
+            ${(allergyTag || noteTag) ? `
+            <div class="card-tags">
+              ${allergyTag} ${noteTag}
+            </div>
+            ` : ''}
+            <div class="card-actions">
+              <span style="font-weight:500; color:var(--success); margin-right:auto;">Anticipo: $${ingreso.toLocaleString()}</span>
+              <a href="https://wa.me/${(r.whatsapp || '').replace(/\+/g, '')}" target="_blank" class="action-btn">Contactar</a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function checkPin() {
+      if (document.getElementById('pin').value === '1850') {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-dashboard').style.display = 'block';
+        loadExecutiveData();
+      } else {
+        alert('PIN INCORRECTO');
+      }
+    }
+  </script>
+</body>
+</html>
