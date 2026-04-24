@@ -6,6 +6,10 @@
       "use": "@vercel/node"
     },
     {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "admin/index.html",
       "use": "@vercel/static"
     }
@@ -25,15 +29,18 @@
     },
     {
       "src": "/admin",
-      "dest": "admin/index.html"
+      "dest": "/admin/index.html"
     },
     {
       "src": "/admin/",
-      "dest": "admin/index.html"
+      "dest": "/admin/index.html"
+    },
+    {
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "index.html"
+      "dest": "/index.html"
     }
   ]
 }
