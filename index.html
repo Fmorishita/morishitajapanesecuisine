@@ -24,9 +24,228 @@ html{-webkit-font-smoothing:antialiased}
  --sakura-l:#f5d0da;
  --sakura-ll:#fdf0f3;
  --sakura-d:#c4607a;
+ --gold:#c9a45c;
  --display:'Zen Antique Soft',serif;
  --serif:'Cormorant','Georgia',serif;
  --mono:'DM Mono',ui-monospace,monospace;
+}
+
+/* ── DARK MODE — dramático con acentos dorados ── */
+[data-theme="dark"]{
+ --ink:#f5f0e8;            /* texto principal: crema cálida */
+ --ink-mid:#d8d0c2;
+ --ink-soft:#9a9285;
+ --paper:#0a0908;          /* fondo principal: casi negro */
+ --paper-warm:#13110e;     /* secciones: negro cálido */
+ --paper-deep:#1a1814;     /* cards: ligeramente más claro */
+ --line:#2e2a23;
+ --line-soft:#211e19;
+ --sakura:#9a6470;         /* pétalos: rosa apagado */
+ --sakura-l:#3a2a30;
+ --sakura-ll:#1f1518;
+ --sakura-d:#d4af6a;       /* en dark, los acentos rosados se vuelven dorados */
+ --gold:#d4af6a;
+}
+[data-theme="dark"] body{background:linear-gradient(180deg,#0a0908 0%,#13110e 100%);}
+
+/* Topbar */
+[data-theme="dark"] .topbar{background:rgba(10,9,8,.85)!important;border-bottom-color:#1f1c17;}
+[data-theme="dark"] .topbar svg text{fill:#f5f0e8!important;}
+[data-theme="dark"] .topbar svg line{stroke:#2e2a23!important;}
+
+/* HERO STATS — el recuadro de Abrimos/Capacidad/14 tiempos */
+[data-theme="dark"] .hero-stats{
+ background:rgba(20,17,14,.7)!important;
+ border-color:#2e2a23!important;
+ box-shadow:0 0 1px rgba(212,175,106,.15);
+}
+[data-theme="dark"] .stat dt{color:var(--gold)!important;}
+[data-theme="dark"] .stat dd{color:#f5f0e8!important;}
+
+/* Hero pill */
+[data-theme="dark"] .hero-tag-pill{color:var(--gold)!important;}
+[data-theme="dark"] .hero-tag-pill::before,[data-theme="dark"] .hero-tag-pill::after{background:var(--gold)!important;opacity:.5;}
+
+/* Floating decorations en hero */
+[data-theme="dark"] .hero-top .floatA,
+[data-theme="dark"] .hero-top .floatB{color:#3a2a30!important;opacity:.5;}
+
+/* Pétalos cayendo */
+[data-theme="dark"] .petal{
+ background:radial-gradient(ellipse at 40% 35%,#3a1f26,#5a3a42 55%,transparent 100%)!important;
+ opacity:.55;
+}
+
+/* Progress steps */
+[data-theme="dark"] .prog-wrap{background:#13110e!important;border-bottom-color:#2e2a23!important;}
+[data-theme="dark"] .pstep:not(:last-child)::after{background:#2e2a23;}
+[data-theme="dark"] .pstep.done::after{background:var(--gold);}
+[data-theme="dark"] .pstep.active::after{background:linear-gradient(90deg,var(--gold) var(--bar,50%),#2e2a23 var(--bar,50%));}
+[data-theme="dark"] .pstep-num{background:#1a1814;border-color:#2e2a23;color:#9a9285;}
+[data-theme="dark"] .pstep.active .pstep-num{background:var(--gold)!important;border-color:var(--gold)!important;color:#0a0908!important;}
+[data-theme="dark"] .pstep.done .pstep-num{background:var(--gold)!important;border-color:var(--gold)!important;color:#0a0908!important;}
+[data-theme="dark"] .pstep-name{color:#9a9285;}
+[data-theme="dark"] .pstep.active .pstep-name{color:#f5f0e8;}
+[data-theme="dark"] .pstep.done .pstep-name{color:var(--gold);}
+[data-theme="dark"] .pstep-pct{color:#2e2a23;}
+[data-theme="dark"] .pstep.active .pstep-pct{color:#f5f0e8;}
+[data-theme="dark"] .pstep.done .pstep-pct{color:var(--gold);}
+
+/* CALENDARIO — el recuadro y todo dentro */
+[data-theme="dark"] .cal-card{
+ background:rgba(20,17,14,.7)!important;
+ border-color:#2e2a23!important;
+ box-shadow:0 8px 48px rgba(0,0,0,.4)!important;
+}
+[data-theme="dark"] .cal-top{border-bottom-color:#2e2a23!important;}
+[data-theme="dark"] .cal-mo-lbl{color:#f5f0e8!important;}
+[data-theme="dark"] .cal-btn{border-color:#2e2a23;color:#f5f0e8;}
+[data-theme="dark"] .cal-btn:hover:not(:disabled){background:var(--gold)!important;border-color:var(--gold)!important;color:#0a0908!important;}
+[data-theme="dark"] .cal-dow span{color:#9a9285!important;}
+[data-theme="dark"] .cal-leg{color:#9a9285!important;}
+
+/* Días del calendario */
+[data-theme="dark"] .cday{color:#d8d0c2;}
+[data-theme="dark"] .cday.closed,
+[data-theme="dark"] .cday.past{color:#3a3630!important;}
+[data-theme="dark"] .cday.avail{
+ background:rgba(212,175,106,.12)!important;
+ border-color:rgba(212,175,106,.5)!important;
+ color:#f5f0e8!important;
+ box-shadow:0 0 0 1px rgba(212,175,106,.15),0 4px 16px rgba(212,175,106,.08);
+}
+[data-theme="dark"] .cday.avail:hover{
+ background:rgba(212,175,106,.25)!important;
+ border-color:var(--gold)!important;
+ box-shadow:0 0 0 2px rgba(212,175,106,.4),0 6px 20px rgba(212,175,106,.25);
+}
+[data-theme="dark"] .cday.full{
+ background:#13110e!important;
+ color:#5a544a!important;
+}
+[data-theme="dark"] .cday.sel{
+ background:var(--gold)!important;
+ border-color:var(--gold)!important;
+ color:#0a0908!important;
+ box-shadow:0 4px 24px rgba(212,175,106,.4)!important;
+}
+[data-theme="dark"] .cday.avail .cdot{background:var(--gold);box-shadow:0 0 6px rgba(212,175,106,.6);}
+[data-theme="dark"] .cday.sel .cdot{background:#0a0908;box-shadow:none;}
+[data-theme="dark"] .cday.full .cdot{background:#3a3630;}
+
+/* Pantalla de huéspedes (selector +/-) */
+[data-theme="dark"] .crumb,
+[data-theme="dark"] .checkout-card,
+[data-theme="dark"] .conf-card,
+[data-theme="dark"] .slot-card{
+ background:rgba(20,17,14,.7)!important;
+ border-color:#2e2a23!important;
+}
+[data-theme="dark"] .slot-card.s-sel{
+ border-color:var(--gold)!important;
+ background:#1f1c17!important;
+ box-shadow:0 0 0 1px var(--gold),0 8px 32px rgba(212,175,106,.2)!important;
+}
+[data-theme="dark"] .slot-card:not(.s-full):not(.s-nogap):hover{border-color:var(--gold)!important;}
+[data-theme="dark"] .slot-card.s-full,
+[data-theme="dark"] .slot-card.s-nogap{opacity:.4;}
+[data-theme="dark"] .s-badge{background:var(--gold)!important;color:#0a0908!important;}
+[data-theme="dark"] .sdot{background:#3a2a30;}
+[data-theme="dark"] .sdot.taken{background:#2e2a23;}
+
+/* Botones */
+[data-theme="dark"] .btn-pri{
+ background:var(--gold)!important;
+ color:#0a0908!important;
+ border-color:var(--gold)!important;
+}
+[data-theme="dark"] .btn-pri:hover:not(:disabled){
+ background:#e0bd7e!important;
+ border-color:#e0bd7e!important;
+}
+[data-theme="dark"] .btn-pri:disabled{
+ background:#2a2620!important;
+ color:#5a544a!important;
+ border-color:#2a2620!important;
+}
+[data-theme="dark"] .btn-sec,
+[data-theme="dark"] .sec-back{
+ border-color:#2e2a23!important;
+ color:#f5f0e8!important;
+ background:transparent!important;
+}
+[data-theme="dark"] .btn-sec:hover,
+[data-theme="dark"] .sec-back:hover{
+ border-color:var(--gold)!important;
+ color:var(--gold)!important;
+}
+
+/* Inputs y formularios */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select{
+ background:#13110e!important;
+ color:#f5f0e8!important;
+ border-color:#2e2a23!important;
+}
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus{
+ border-color:var(--gold)!important;
+ outline-color:var(--gold)!important;
+}
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder{color:#5a544a!important;}
+[data-theme="dark"] label{color:#d8d0c2!important;}
+
+/* Modal Stripe */
+[data-theme="dark"] .stripe-modal{background:rgba(0,0,0,.85)!important;}
+[data-theme="dark"] .stripe-card{
+ background:#13110e!important;
+ border:1px solid #2e2a23!important;
+ box-shadow:0 12px 60px rgba(0,0,0,.6)!important;
+}
+
+/* Confirmación */
+[data-theme="dark"] .conf-card .conf-ref{color:var(--gold)!important;}
+
+/* Sección titles y separadores */
+[data-theme="dark"] .sec-sub,
+[data-theme="dark"] .cal-section-lbl{color:#9a9285!important;}
+[data-theme="dark"] hr,
+[data-theme="dark"] .divider{border-color:#2e2a23!important;background:#2e2a23!important;}
+
+/* Botón toggle de tema */
+.theme-toggle{
+ position:fixed;top:18px;right:20px;z-index:100;
+ width:42px;height:42px;border-radius:50%;
+ background:rgba(255,255,255,.7);backdrop-filter:blur(10px);
+ border:1px solid var(--line);cursor:pointer;
+ display:grid;place-items:center;
+ transition:all .35s cubic-bezier(.4,0,.2,1);
+ color:var(--ink);
+}
+.theme-toggle:hover{transform:scale(1.08);border-color:var(--ink);}
+[data-theme="dark"] .theme-toggle{
+ background:rgba(20,17,14,.75)!important;
+ border-color:#2e2a23!important;
+ color:var(--gold)!important;
+}
+[data-theme="dark"] .theme-toggle:hover{
+ border-color:var(--gold)!important;
+ box-shadow:0 0 24px rgba(212,175,106,.3);
+}
+.theme-toggle svg{width:18px;height:18px;}
+.theme-toggle .ic-sun{display:none;}
+.theme-toggle .ic-moon{display:block;}
+[data-theme="dark"] .theme-toggle .ic-sun{display:block;}
+[data-theme="dark"] .theme-toggle .ic-moon{display:none;}
+
+/* Transición global suave al cambiar de tema */
+body,.topbar,.cday,.slot-card,.btn-pri,.btn-sec,.sec-back,
+input,textarea,.stat,.crumb,.checkout-card,.conf-card,
+.cal-card,.cal-btn,.hero-stats,.cal-top,.cal-mo-lbl{
+ transition:background .4s ease,color .4s ease,border-color .4s ease,box-shadow .4s ease;
 }
 body{font-family:var(--serif);background:var(--paper);color:var(--ink);font-size:16px;line-height:1.55;overflow-x:hidden;min-height:100vh;}
 
@@ -280,6 +499,35 @@ footer{padding:24px 28px;border-top:1px solid var(--line-soft);font-family:var(-
 </style>
 </head>
 <body>
+<!-- TEMA: aplicar antes de renderizar para evitar flash -->
+<script>
+(function(){
+ // Reglas de prioridad:
+ // 1. Override manual del usuario (localStorage 'theme': 'dark' | 'light' | 'auto')
+ // 2. Si está en 'auto' o no hay preferencia: combinación de SO + hora
+ //    - SO en dark → dark
+ //    - SO en light + hora entre 19:00 y 07:00 → dark
+ //    - resto → light
+ const stored=localStorage.getItem('theme')||'auto';
+ let theme;
+ if(stored==='dark'||stored==='light'){
+  theme=stored;
+ }else{
+  const sysDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const h=new Date().getHours();
+  const nightTime=(h>=19||h<7);
+  theme=(sysDark||nightTime)?'dark':'light';
+ }
+ document.documentElement.setAttribute('data-theme',theme);
+ window.__currentTheme=theme;
+ window.__themePreference=stored;
+})();
+</script>
+<!-- TOGGLE TEMA (sol/luna) -->
+<button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema" title="Cambiar tema">
+ <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+ <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+</button>
 <div class="sakura-bg" id="sakBg"></div>
 <div class="app">
 
@@ -808,6 +1056,31 @@ S.mo=findFirstAvailableMonth();
 renderCal();updateProgress();
 // Cargar disponibilidad real del mes visible (asíncrono, refresca calendario al terminar)
 loadMonthAvail(S.mo);
+
+/* ── theme toggle ── */
+(function(){
+ const btn=document.getElementById('themeToggle');
+ if(!btn)return;
+ btn.addEventListener('click',()=>{
+  // Alternar manualmente y guardar preferencia
+  const current=document.documentElement.getAttribute('data-theme');
+  const next=current==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  localStorage.setItem('theme',next);
+  window.__currentTheme=next;
+  window.__themePreference=next;
+ });
+ // Si el usuario está en 'auto', actualizar al cambiar la preferencia del SO
+ if(window.matchMedia){
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',e=>{
+   if((localStorage.getItem('theme')||'auto')!=='auto')return;
+   const h=new Date().getHours();
+   const nightTime=(h>=19||h<7);
+   const theme=(e.matches||nightTime)?'dark':'light';
+   document.documentElement.setAttribute('data-theme',theme);
+  });
+ }
+})();
 
 window.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
