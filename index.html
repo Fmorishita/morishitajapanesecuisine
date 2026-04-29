@@ -506,23 +506,80 @@ footer{padding:24px 28px;border-top:1px solid var(--line-soft);font-family:var(-
  Flujo: Fecha → Personas → Horario → Checkout
  ═══════════════════════════════════════ */
 const CFG={price:1850,openDays:[0,6],slots:['13:00','15:30','18:00'],max:4,dep:.5};
-const S={screen:'landing',date:null,guests:2,time:null,nombre:'',wa:'',email:'',motivo:'',alergias:'',avail:{},mo:0};
+const S={screen:'landing',date:null,guests:2,time:null,nombre:'',wa:'',email:'',motivo:'',alergias:'',avail:{},mo:0,loading:{}};
 
 const STEPS=[{id:'date'},{id:'guests'},{id:'time'},{id:'checkout'}];
 const PCTS={date:25,guests:50,time:75,checkout:100};
 
-function seedAvail(){
- const t=new Date();t.setHours(0,0,0,0);
- for(let i=0;i<90;i++){
- const d=new Date(t);d.setDate(d.getDate()+i);
- if(!CFG.openDays.includes(d.getDay()))continue;
- const iso=toISO(d);
- CFG.slots.forEach((sl,idx)=>{
- const s=(d.getDate()*7+idx*13+d.getMonth()*3)%10;
- let r=4;if(s<2)r=0;else if(s<4)r=1;else if(s<6)r=2;else if(s<8)r=3;
- S.avail[iso+'__'+sl]=r;
- });
+/* Mapeo entre slots de UI (hora) y enum de BD (categoría) */
+const SLOT_TO_HORARIO={'13:00':'COMIDA','15:30':'TARDE','18:00':'CENA'};
+const HORARIO_TO_SLOT={'COMIDA':'13:00','TARDE':'15:30','CENA':'18:00'};
+
+/* Devuelve true si el mes en offset `mo` tiene al menos un Sáb/Dom futuro */
+function monthHasOpenDays(mo){
+ const today=new Date();today.setHours(0,0,0,0);
+ const base=new Date(today.getFullYear(),today.getMonth()+mo,1);
+ const yr=base.getFullYear(),m=base.getMonth();
+ const dim=new Date(yr,m+1,0).getDate();
+ for(let d=1;d<=dim;d++){
+  const dt=new Date(yr,m,d);
+  if(dt<today)continue;
+  if(CFG.openDays.includes(dt.getDay()))return true;
  }
+ return false;
+}
+
+/* Encuentra el primer offset de mes (0-11) con días abiertos disponibles.
+   Esto evita que el cliente vea un mes vacío si los Sáb/Dom del mes actual ya pasaron. */
+function findFirstAvailableMonth(){
+ for(let mo=0;mo<12;mo++){
+  if(monthHasOpenDays(mo))return mo;
+ }
+ return 0;
+}
+
+/* Carga disponibilidad real desde el backend para una fecha dada.
+   Cachea en S.avail para no consultar dos veces la misma fecha. */
+async function fetchAvailForDate(iso){
+ if(S.loading[iso])return;
+ // Si ya tenemos los 3 slots de esa fecha, no recargues
+ const cached=CFG.slots.every(t=>S.avail[iso+'__'+t]!==undefined);
+ if(cached)return;
+ S.loading[iso]=true;
+ try{
+  const res=await fetch(`/disponibilidad?fecha=${iso}`);
+  if(!res.ok)throw new Error('HTTP '+res.status);
+  const data=await res.json();
+  // Guardar disponibles por slot (mapear COMIDA→13:00, etc.)
+  Object.entries(data.sesiones||{}).forEach(([horario,info])=>{
+   const slot=HORARIO_TO_SLOT[horario];
+   if(slot)S.avail[iso+'__'+slot]=info.disponibles;
+  });
+ }catch(e){
+  console.error('Error cargando disponibilidad para '+iso,e);
+  // Fallback: marcar como 0 para no permitir reservar lo que no podemos verificar
+  CFG.slots.forEach(t=>{if(S.avail[iso+'__'+t]===undefined)S.avail[iso+'__'+t]=0;});
+ }finally{
+  delete S.loading[iso];
+ }
+}
+
+/* Carga disponibilidad de TODOS los días abiertos del mes visible.
+   Se ejecuta cada vez que el usuario cambia de mes en el calendario. */
+async function loadMonthAvail(mo){
+ const today=new Date();today.setHours(0,0,0,0);
+ const base=new Date(today.getFullYear(),today.getMonth()+mo,1);
+ const yr=base.getFullYear(),m=base.getMonth();
+ const dim=new Date(yr,m+1,0).getDate();
+ const promises=[];
+ for(let d=1;d<=dim;d++){
+  const dt=new Date(yr,m,d);
+  if(dt<today)continue;
+  if(!CFG.openDays.includes(dt.getDay()))continue;
+  promises.push(fetchAvailForDate(toISO(dt)));
+ }
+ await Promise.all(promises);
+ renderCal();// re-render para reflejar disponibilidad cargada
 }
 
 function toISO(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
@@ -590,7 +647,9 @@ function renderCal(){
  const fdow=new Date(yr,mo,1).getDay();
 
  document.getElementById('calMo').textContent=MOS[mo]+' '+yr;
- document.getElementById('prevMo').disabled=S.mo<=0;
+ // Deshabilitar prev si no hay mes anterior con fechas válidas
+ const minMo=findFirstAvailableMonth();
+ document.getElementById('prevMo').disabled=S.mo<=minMo;
  document.getElementById('nextMo').disabled=S.mo>=11;
 
  const dow=document.getElementById('calDow');dow.innerHTML='';
@@ -612,8 +671,8 @@ function renderCal(){
  grid.appendChild(el);
  }
 }
-document.getElementById('prevMo').onclick=()=>{if(S.mo>0){S.mo--;renderCal();}};
-document.getElementById('nextMo').onclick=()=>{if(S.mo<11){S.mo++;renderCal();}};
+document.getElementById('prevMo').onclick=()=>{const minMo=findFirstAvailableMonth();if(S.mo>minMo){S.mo--;renderCal();loadMonthAvail(S.mo);}};
+document.getElementById('nextMo').onclick=()=>{if(S.mo<11){S.mo++;renderCal();loadMonthAvail(S.mo);}};
 
 /* ── guests ── */
 function refreshG(){
@@ -743,7 +802,12 @@ function resetAll(){
 }
 
 /* ── init ── */
-seedAvail();buildPetals();renderCal();updateProgress();
+buildPetals();
+// Arrancar en el primer mes con Sáb/Dom futuros (evita mostrar abril vacío si ya pasaron sus fines de semana)
+S.mo=findFirstAvailableMonth();
+renderCal();updateProgress();
+// Cargar disponibilidad real del mes visible (asíncrono, refresca calendario al terminar)
+loadMonthAvail(S.mo);
 
 window.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -753,8 +817,10 @@ window.addEventListener('DOMContentLoaded', () => {
     fetch(`/stripe-webhook-client?session_id=${sid}`)
       .then(r => r.json())
       .then(data => {
-        document.getElementById('cDate').textContent = data.fecha || '—';
-        document.getElementById('cTime').textContent = data.hora || '—';
+        // El backend devuelve `horario` (enum: COMIDA/TARDE/CENA); convertir a hora visible
+        const slotHora = HORARIO_TO_SLOT[data.horario] || data.horario || '';
+        document.getElementById('cDate').textContent = data.fecha ? fmtDate(data.fecha) : '—';
+        document.getElementById('cTime').textContent = slotHora ? fmt12(slotHora) : '—';
         document.getElementById('cGuests').textContent = (data.comensales || '—') + ' personas';
         document.getElementById('cDue').textContent = '$' + ((data.comensales || 0) * 1850 * 0.5).toLocaleString() + ' MXN';
       }).catch(e => console.error(e));
