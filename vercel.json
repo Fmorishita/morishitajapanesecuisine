@@ -28,6 +28,18 @@
       "dest": "backend/server.js"
     },
     {
+      "src": "/disponibilidad",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/disponibilidad\\?(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/health",
+      "dest": "backend/server.js"
+    },
+    {
       "src": "/admin",
       "dest": "/admin/index.html"
     },
