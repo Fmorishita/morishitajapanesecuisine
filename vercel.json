@@ -12,6 +12,14 @@
     {
       "src": "admin/index.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "favicon.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "favicon.ico",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -38,6 +46,16 @@
     {
       "src": "/health",
       "dest": "backend/server.js"
+    },
+    {
+      "src": "/favicon.png",
+      "dest": "/favicon.png",
+      "headers": { "cache-control": "public, max-age=86400" }
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/favicon.ico",
+      "headers": { "cache-control": "public, max-age=86400" }
     },
     {
       "src": "/admin",
