@@ -1591,18 +1591,12 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-/* ── Carga contenido editable desde Supabase ── */
+/* ── Carga contenido editable (via backend, sin exponer keys) ── */
 (async function(){
-  const SUPA='https://tuygcyjdnylohjkuqojk.supabase.co';
-  const KEY='sb_publishable_bNgItpe84VinnweVCUTyGw_Z2EF-vvz';
   try{
-    const r=await fetch(`${SUPA}/rest/v1/site_content?select=key,value`,{
-      headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}
-    });
+    const r=await fetch('/api/content');
     if(!r.ok)return;
-    const rows=await r.json();
-    const C={};
-    rows.forEach(row=>{C[row.key]=row.value;});
+    const C=await r.json();
     document.querySelectorAll('[data-ck]').forEach(el=>{
       const v=C[el.dataset.ck];if(v)el.textContent=v;
     });
