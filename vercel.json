@@ -14,6 +14,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "admin/contenido.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "favicon.png",
       "use": "@vercel/static"
     },
@@ -48,8 +52,24 @@
       "dest": "backend/server.js"
     },
     {
+      "src": "/api/content/upload-image",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/api/content/update",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/api/content",
+      "dest": "backend/server.js"
+    },
+    {
       "src": "/health",
       "dest": "backend/server.js"
+    },
+    {
+      "src": "/admin/contenido",
+      "dest": "/admin/contenido.html"
     },
     {
       "src": "/img/(.*)",

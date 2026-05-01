@@ -808,9 +808,9 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
   <div class="home-hero-bg"></div>
   <div class="home-hero-grid">
    <div class="home-hero-text">
-    <div class="home-hero-eyebrow">Omakase · Baja California</div>
-    <h1 class="home-hero-h1">El producto<em>al frente.</em></h1>
-    <p class="home-hero-sub">Una barra de cuatro asientos. Catorce tiempos curados con Wagyu A5, Kobe importado de Japón y el mejor pescado de la temporada.</p>
+    <div class="home-hero-eyebrow" data-ck="hero.eyebrow">Omakase · Baja California</div>
+    <h1 class="home-hero-h1" data-ck-html="hero.h1">El producto<em>al frente.</em></h1>
+    <p class="home-hero-sub" data-ck="hero.sub">Una barra de cuatro asientos. Catorce tiempos curados con Wagyu A5, Kobe importado de Japón y el mejor pescado de la temporada.</p>
     <div class="home-hero-actions">
      <button class="btn-pri-lg" onclick="goToBooking()">Reservar mesa <span class="ba">→</span></button>
      <button class="btn-sec-lg" onclick="navTo('experiencia')">Conocer la experiencia ↓</button>
@@ -823,8 +823,8 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
     </div>
    </div>
    <div class="home-hero-card">
-    <img src="/img/hero-bar.jpg" alt="Barra Omakase Morishita · Baja California" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
-    <div class="home-hero-card-tag">La barra · 4 asientos · Sáb &amp; Dom</div>
+    <img src="/img/hero-bar.jpg" alt="Barra Omakase Morishita · Baja California" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.hero">
+    <div class="home-hero-card-tag" data-ck="hero.card_tag">La barra · 4 asientos · Sáb &amp; Dom</div>
    </div>
   </div>
  </div>
@@ -833,23 +833,23 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <div class="section-pad" id="experiencia">
   <div class="section-inner">
    <div class="section-eyebrow">La filosofía</div>
-   <h2 class="section-title">Tres reglas. <em>Sin excepción.</em></h2>
-   <p class="section-lead">Un Omakase no se mide por la receta. Se mide por la materia prima, el tiempo dedicado a cada pieza y la intimidad del servicio.</p>
+   <h2 class="section-title" data-ck-html="pilares.title">Tres reglas. <em>Sin excepción.</em></h2>
+   <p class="section-lead" data-ck="pilares.lead">Un Omakase no se mide por la receta. Se mide por la materia prima, el tiempo dedicado a cada pieza y la intimidad del servicio.</p>
    <div class="pillars-grid">
     <div class="pillar">
-     <div class="pillar-num">01 · El producto manda</div>
-     <div class="pillar-title">Cada pieza, seleccionada a mano.</div>
-     <div class="pillar-body">Wagyu A5 y Kobe importados de Japón. Pescado de temporada de las mejores aguas. Si una pieza no llega al estándar, no entra a la barra.</div>
+     <div class="pillar-num" data-ck="pilares.p1.num">01 · El producto manda</div>
+     <div class="pillar-title" data-ck="pilares.p1.title">Cada pieza, seleccionada a mano.</div>
+     <div class="pillar-body" data-ck="pilares.p1.body">Wagyu A5 y Kobe importados de Japón. Pescado de temporada de las mejores aguas. Si una pieza no llega al estándar, no entra a la barra.</div>
     </div>
     <div class="pillar">
-     <div class="pillar-num">02 · Cuatro asientos</div>
-     <div class="pillar-title">Una barra. Dos noches por semana.</div>
-     <div class="pillar-body">Solo abrimos sábado y domingo. Cuatro lugares por servicio. El chef cocina y narra cada tiempo frente a ti.</div>
+     <div class="pillar-num" data-ck="pilares.p2.num">02 · Cuatro asientos</div>
+     <div class="pillar-title" data-ck="pilares.p2.title">Una barra. Dos noches por semana.</div>
+     <div class="pillar-body" data-ck="pilares.p2.body">Solo abrimos sábado y domingo. Cuatro lugares por servicio. El chef cocina y narra cada tiempo frente a ti.</div>
     </div>
     <div class="pillar">
-     <div class="pillar-num">03 · Catorce tiempos</div>
-     <div class="pillar-title">El menú lo dicta el día.</div>
-     <div class="pillar-body">No hay carta. Hay una secuencia construida con el mejor producto que llegó esa semana. La misma cena no se repite jamás.</div>
+     <div class="pillar-num" data-ck="pilares.p3.num">03 · Catorce tiempos</div>
+     <div class="pillar-title" data-ck="pilares.p3.title">El menú lo dicta el día.</div>
+     <div class="pillar-body" data-ck="pilares.p3.body">No hay carta. Hay una secuencia construida con el mejor producto que llegó esa semana. La misma cena no se repite jamás.</div>
     </div>
    </div>
   </div>
@@ -861,40 +861,40 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
    <div class="product-hero">
     <div class="product-hero-text">
      <div class="section-eyebrow">El insumo</div>
-     <h2 class="section-title">Wagyu A5. Kobe.<em>Importados directo de Japón.</em></h2>
-     <p>El corazón de un Omakase serio no es la técnica: es la pieza. Por eso trabajamos con una sola exigencia, sin atajos.</p>
-     <p>Carnes Wagyu A5 y Kobe certificadas, importadas pieza por pieza. Pescado fresco de selección. Arroz japonés, vinagre maderado y dashi preparado en casa. Cada elemento pasa por un solo filtro: <strong>¿es lo mejor que se puede conseguir hoy?</strong></p>
+     <h2 class="section-title" data-ck-html="producto.h2">Wagyu A5. Kobe.<em>Importados directo de Japón.</em></h2>
+     <p data-ck="producto.p1">El corazón de un Omakase serio no es la técnica: es la pieza. Por eso trabajamos con una sola exigencia, sin atajos.</p>
+     <p data-ck="producto.p2">Carnes Wagyu A5 y Kobe certificadas, importadas pieza por pieza. Pescado fresco de selección. Arroz japonés, vinagre maderado y dashi preparado en casa. Cada elemento pasa por un solo filtro: ¿es lo mejor que se puede conseguir hoy?</p>
     </div>
     <div class="product-card-img">
-     <img src="/img/wagyu-hero.jpg" alt="Wagyu A5 importado de Japón · Morishita Omakase" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
-     <div class="product-card-img-tag">Wagyu A5 · Origen Japón · Certificado</div>
+     <img src="/img/wagyu-hero.jpg" alt="Wagyu A5 importado de Japón · Morishita Omakase" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.wagyu">
+     <div class="product-card-img-tag" data-ck="producto.card_tag">Wagyu A5 · Origen Japón · Certificado</div>
     </div>
    </div>
 
    <div class="product-grid">
     <div class="product-item">
      <div class="product-item-img">
-      <img src="/img/producto-carne.jpg" alt="Nigiri de Wagyu A5 con hoja de oro · Morishita" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
+      <img src="/img/producto-carne.jpg" alt="Nigiri de Wagyu A5 con hoja de oro · Morishita" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.carne">
      </div>
-     <div class="product-item-tag">Carne</div>
-     <div class="product-item-title">Wagyu A5 + Kobe</div>
-     <div class="product-item-body">Importados directo de Japón con certificación de origen. Marmoleado A5, el grado más alto del estándar japonés. Servido en preparaciones que respetan la pieza: tataki, sumibiyaki, nigiri.</div>
+     <div class="product-item-tag" data-ck="producto.item1.tag">Carne</div>
+     <div class="product-item-title" data-ck="producto.item1.title">Wagyu A5 + Kobe</div>
+     <div class="product-item-body" data-ck="producto.item1.body">Importados directo de Japón con certificación de origen. Marmoleado A5, el grado más alto del estándar japonés. Servido en preparaciones que respetan la pieza: tataki, sumibiyaki, nigiri.</div>
     </div>
     <div class="product-item">
      <div class="product-item-img">
-      <img src="/img/producto-pescado.jpg" alt="Toro sashimi en plato celadón · Morishita" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
+      <img src="/img/producto-pescado.jpg" alt="Toro sashimi en plato celadón · Morishita" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.pescado">
      </div>
-     <div class="product-item-tag">Pescado</div>
-     <div class="product-item-title">Pescado de temporada</div>
-     <div class="product-item-body">Selección semanal. Cortes premium del Pacífico y de importación japonesa cuando la temporada lo requiere. Lo que no esté en el punto, no entra al servicio.</div>
+     <div class="product-item-tag" data-ck="producto.item2.tag">Pescado</div>
+     <div class="product-item-title" data-ck="producto.item2.title">Pescado de temporada</div>
+     <div class="product-item-body" data-ck="producto.item2.body">Selección semanal. Cortes premium del Pacífico y de importación japonesa cuando la temporada lo requiere. Lo que no esté en el punto, no entra al servicio.</div>
     </div>
     <div class="product-item">
      <div class="product-item-img">
-      <img src="/img/producto-base.jpg" alt="Nigiri con detalle de arroz japonés · Morishita" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
+      <img src="/img/producto-base.jpg" alt="Nigiri con detalle de arroz japonés · Morishita" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.base">
      </div>
-     <div class="product-item-tag">Base</div>
-     <div class="product-item-title">Arroz, vinagre, dashi</div>
-     <div class="product-item-body">Arroz japonés cocido al punto, sazonado con vinagre maderado. Dashi preparado en casa. La base que la mayoría descuida — y donde se reconoce un Omakase real.</div>
+     <div class="product-item-tag" data-ck="producto.item3.tag">Base</div>
+     <div class="product-item-title" data-ck="producto.item3.title">Arroz, vinagre, dashi</div>
+     <div class="product-item-body" data-ck="producto.item3.body">Arroz japonés cocido al punto, sazonado con vinagre maderado. Dashi preparado en casa. La base que la mayoría descuida — y donde se reconoce un Omakase real.</div>
     </div>
    </div>
   </div>
@@ -903,14 +903,14 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <!-- CHEF -->
  <div class="chef-section" id="chef">
   <div class="chef-card">
-   <img src="/img/chef-morishita.jpg" alt="Chef Morishita en la barra · Omakase Baja California" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;object-position:center top;">
+   <img src="/img/chef-morishita.jpg" alt="Chef Morishita en la barra · Omakase Baja California" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;object-position:center top;" data-ck-src="img.chef">
   </div>
   <div class="chef-text">
    <div class="section-eyebrow">El chef</div>
-   <h2>Chef Morishita.<em>Una vida en la barra.</em></h2>
-   <p>Formado en la disciplina clásica japonesa, el chef Morishita lleva años perfeccionando el oficio del Omakase: la lectura del producto, la temperatura exacta, el corte preciso, el silencio entre tiempos.</p>
-   <p>En cada servicio, cada plato se construye delante del comensal. No hay carta porque no hay receta fija — hay una conversación entre el chef, el producto del día y los cuatro invitados que se sientan a la barra.</p>
-   <div class="chef-quote">"El producto manda. Nuestra técnica solo lo acompaña."</div>
+   <h2 data-ck-html="chef.h2">Chef Morishita.<em>Una vida en la barra.</em></h2>
+   <p data-ck="chef.p1">Formado en la disciplina clásica japonesa, el chef Morishita lleva años perfeccionando el oficio del Omakase: la lectura del producto, la temperatura exacta, el corte preciso, el silencio entre tiempos.</p>
+   <p data-ck="chef.p2">En cada servicio, cada plato se construye delante del comensal. No hay carta porque no hay receta fija — hay una conversación entre el chef, el producto del día y los cuatro invitados que se sientan a la barra.</p>
+   <div class="chef-quote" data-ck="chef.quote">"El producto manda. Nuestra técnica solo lo acompaña."</div>
    <div class="chef-sign">— Chef Morishita · 森下</div>
   </div>
  </div>
@@ -924,18 +924,18 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
     <!-- TODO: Reemplazar con testimonios reales (capturas de Google/IG/DMs) -->
     <div class="testimonial">
      <div class="testimonial-stars">★★★★★</div>
-     <div class="testimonial-quote">"La mejor experiencia gastronómica que he tenido en Baja. El Wagyu A5 es de otro nivel y la atención del chef se siente íntima sin ser forzada."</div>
-     <div class="testimonial-author">— Ana R. · Tijuana</div>
+     <div class="testimonial-quote" data-ck="social.t1.quote">"La mejor experiencia gastronómica que he tenido en Baja. El Wagyu A5 es de otro nivel y la atención del chef se siente íntima sin ser forzada."</div>
+     <div class="testimonial-author" data-ck="social.t1.author">— Ana R. · Tijuana</div>
     </div>
     <div class="testimonial">
      <div class="testimonial-stars">★★★★★</div>
-     <div class="testimonial-quote">"Pagué los $1,850 con dudas. Salí convencido de que está subvalorado. Cada uno de los 14 tiempos justifica el ticket."</div>
-     <div class="testimonial-author">— Luis M. · San Diego</div>
+     <div class="testimonial-quote" data-ck="social.t2.quote">"Pagué los $1,850 con dudas. Salí convencido de que está subvalorado. Cada uno de los 14 tiempos justifica el ticket."</div>
+     <div class="testimonial-author" data-ck="social.t2.author">— Luis M. · San Diego</div>
     </div>
     <div class="testimonial">
      <div class="testimonial-stars">★★★★★</div>
-     <div class="testimonial-quote">"Cuatro asientos, dos horas, una experiencia que no se repite. Llevamos a tres parejas distintas y todas quieren volver."</div>
-     <div class="testimonial-author">— María C. · Mexicali</div>
+     <div class="testimonial-quote" data-ck="social.t3.quote">"Cuatro asientos, dos horas, una experiencia que no se repite. Llevamos a tres parejas distintas y todas quieren volver."</div>
+     <div class="testimonial-author" data-ck="social.t3.author">— María C. · Mexicali</div>
     </div>
    </div>
   </div>
@@ -968,28 +968,28 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
    <p class="section-lead">Si tu pregunta no está aquí, escríbenos por WhatsApp. Respondemos personalmente.</p>
    <div class="faq-grid">
     <div class="faq-item">
-     <div class="faq-q">¿Por qué solo abren sábado y domingo?</div>
-     <div class="faq-a">Trabajamos con producto fresco seleccionado pieza por pieza. Mantener el estándar requiere ciclos de servicio acotados. Dos noches por semana es lo que nos permite no comprometer la calidad.</div>
+     <div class="faq-q" data-ck="faq.q1">¿Por qué solo abren sábado y domingo?</div>
+     <div class="faq-a" data-ck="faq.a1">Trabajamos con producto fresco seleccionado pieza por pieza. Mantener el estándar requiere ciclos de servicio acotados. Dos noches por semana es lo que nos permite no comprometer la calidad.</div>
     </div>
     <div class="faq-item">
-     <div class="faq-q">¿El anticipo es reembolsable?</div>
-     <div class="faq-a">Reembolsable hasta 72 horas antes del servicio. Después de ese momento, el anticipo se aplica al producto que ya separamos para tu mesa.</div>
+     <div class="faq-q" data-ck="faq.q2">¿El anticipo es reembolsable?</div>
+     <div class="faq-a" data-ck="faq.a2">Reembolsable hasta 72 horas antes del servicio. Después de ese momento, el anticipo se aplica al producto que ya separamos para tu mesa.</div>
     </div>
     <div class="faq-item">
-     <div class="faq-q">¿Puedo elegir lo que voy a comer?</div>
-     <div class="faq-a">No hay carta. El menú lo construye el chef según el mejor producto del día. Si tienes alergias o restricciones, indícalas al reservar y se adapta el menú sin sacrificar la experiencia.</div>
+     <div class="faq-q" data-ck="faq.q3">¿Puedo elegir lo que voy a comer?</div>
+     <div class="faq-a" data-ck="faq.a3">No hay carta. El menú lo construye el chef según el mejor producto del día. Si tienes alergias o restricciones, indícalas al reservar y se adapta el menú sin sacrificar la experiencia.</div>
     </div>
     <div class="faq-item">
-     <div class="faq-q">¿Cuánto dura la cena?</div>
-     <div class="faq-a">Aproximadamente dos horas. Cada uno de los 14 tiempos se prepara a la vista y se sirve en su momento. Es una experiencia para disfrutar sin prisa.</div>
+     <div class="faq-q" data-ck="faq.q4">¿Cuánto dura la cena?</div>
+     <div class="faq-a" data-ck="faq.a4">Aproximadamente dos horas. Cada uno de los 14 tiempos se prepara a la vista y se sirve en su momento. Es una experiencia para disfrutar sin prisa.</div>
     </div>
     <div class="faq-item">
-     <div class="faq-q">¿Hay código de vestimenta?</div>
-     <div class="faq-a">No hay código formal. Sugerimos vestir cómodo pero cuidado. La barra es íntima — vístete como te vestirías para una cena que importa.</div>
+     <div class="faq-q" data-ck="faq.q5">¿Hay código de vestimenta?</div>
+     <div class="faq-a" data-ck="faq.a5">No hay código formal. Sugerimos vestir cómodo pero cuidado. La barra es íntima — vístete como te vestirías para una cena que importa.</div>
     </div>
     <div class="faq-item">
-     <div class="faq-q">¿Incluye bebidas?</div>
-     <div class="faq-a">El precio del Omakase es solo el menú de 14 tiempos. Bebidas (sake, vino de Valle, agua, etc.) se cobran aparte. Te recomendamos el sake del chef.</div>
+     <div class="faq-q" data-ck="faq.q6">¿Incluye bebidas?</div>
+     <div class="faq-a" data-ck="faq.a6">El precio del Omakase es solo el menú de 14 tiempos. Bebidas (sake, vino de Valle, agua, etc.) se cobran aparte. Te recomendamos el sake del chef.</div>
     </div>
    </div>
   </div>
@@ -1149,19 +1149,19 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
   <div class="footer-col">
    <div class="footer-brand">森下 Morishita</div>
    <div class="footer-brand-sub">Authentic Japanese Cuisine</div>
-   <p class="footer-desc">Una barra de cuatro asientos. Catorce tiempos. Wagyu A5, Kobe importado de Japón y pescado de temporada. Sábados y domingos en Baja California.</p>
+   <p class="footer-desc" data-ck="footer.desc">Una barra de cuatro asientos. Catorce tiempos. Wagyu A5, Kobe importado de Japón y pescado de temporada. Sábados y domingos en Baja California.</p>
   </div>
   <div class="footer-col">
    <h4>Visítanos</h4>
-   <p>Baja California, México</p>
-   <p>Sáb · Dom</p>
+   <p data-ck="footer.location">Baja California, México</p>
+   <p data-ck="footer.hours">Sáb · Dom</p>
    <p>Servicio por reservación</p>
   </div>
   <div class="footer-col">
    <h4>Contacto</h4>
-   <a href="https://wa.me/" target="_blank" rel="noopener">WhatsApp</a>
-   <a href="https://instagram.com/morishitajapanesecuisine" target="_blank" rel="noopener">Instagram</a>
-   <a href="mailto:reservas@morishitajapanesecuisine.com">Email</a>
+   <a href="https://wa.me/" target="_blank" rel="noopener" data-ck-href="footer.whatsapp_url">WhatsApp</a>
+   <a href="https://instagram.com/morishitajapanesecuisine" target="_blank" rel="noopener" data-ck-href="footer.instagram_url">Instagram</a>
+   <a href="mailto:reservas@morishitajapanesecuisine.com" data-ck-href="footer.email_href">Email</a>
   </div>
   <div class="footer-col">
    <h4>Reservar</h4>
@@ -1590,6 +1590,33 @@ window.addEventListener('DOMContentLoaded', () => {
     go('confirm');
   }
 });
+
+/* ── Carga contenido editable desde Supabase ── */
+(async function(){
+  const SUPA='https://tuygcyjdnylohjkuqojk.supabase.co';
+  const KEY='sb_publishable_bNgItpe84VinnweVCUTyGw_Z2EF-vvz';
+  try{
+    const r=await fetch(`${SUPA}/rest/v1/site_content?select=key,value`,{
+      headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}
+    });
+    if(!r.ok)return;
+    const rows=await r.json();
+    const C={};
+    rows.forEach(row=>{C[row.key]=row.value;});
+    document.querySelectorAll('[data-ck]').forEach(el=>{
+      const v=C[el.dataset.ck];if(v)el.textContent=v;
+    });
+    document.querySelectorAll('[data-ck-html]').forEach(el=>{
+      const v=C[el.dataset.ckHtml];if(v)el.innerHTML=v;
+    });
+    document.querySelectorAll('[data-ck-src]').forEach(el=>{
+      const v=C[el.dataset.ckSrc];if(v)el.src=v;
+    });
+    document.querySelectorAll('[data-ck-href]').forEach(el=>{
+      const v=C[el.dataset.ckHref];if(v)el.href=v;
+    });
+  }catch(e){}
+})();
 </script>
 </body>
 </html>

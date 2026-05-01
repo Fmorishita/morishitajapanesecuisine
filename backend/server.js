@@ -110,10 +110,23 @@ app.use((req, res, next) => {
 
 // ⚠️ Importante: el webhook de Stripe necesita el body RAW (sin parsear).
 // Por eso el middleware express.json() se aplica DESPUÉS de la ruta /stripe-webhook.
+// Límite de 10mb para permitir upload de imágenes en base64 desde el admin panel.
 app.use((req, res, next) => {
   if (req.originalUrl === '/stripe-webhook') return next();
-  express.json()(req, res, next);
+  express.json({ limit: '10mb' })(req, res, next);
 });
+
+// ----------------------------------------------------------------
+// ADMIN MIDDLEWARE
+// ----------------------------------------------------------------
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '1850';
+
+function requireAdmin(req, res, next) {
+  if (req.headers['x-admin-token'] !== ADMIN_TOKEN) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+  next();
+}
 
 // ================================================================
 // ENDPOINT: Consultar disponibilidad de una fecha
@@ -326,6 +339,72 @@ app.get('/stripe-webhook-client', async (req, res) => {
   } catch (error) {
     console.error('Error en /stripe-webhook-client:', error);
     res.status(500).json({ error: error.message });
+  }
+});
+
+// ================================================================
+// ENDPOINTS: Contenido editable del sitio (site_content)
+// ================================================================
+
+// GET /api/content — público, devuelve todo como objeto key→value
+app.get('/api/content', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('site_content')
+      .select('key, value');
+    if (error) throw error;
+    const obj = {};
+    (data || []).forEach(r => { obj[r.key] = r.value; });
+    res.setHeader('Cache-Control', 'public, s-maxage=30');
+    res.json(obj);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/content/update — admin: upserta un campo de texto
+app.post('/api/content/update', requireAdmin, async (req, res) => {
+  try {
+    const { key, value } = req.body;
+    if (!key) return res.status(400).json({ error: 'Falta key' });
+    const { error } = await supabase
+      .from('site_content')
+      .upsert({ key, value: value ?? '', updated_at: new Date().toISOString() });
+    if (error) throw error;
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/content/upload-image — admin: sube imagen y guarda URL en site_content
+// Body: { key, filename, data (base64), type (mime) }
+app.post('/api/content/upload-image', requireAdmin, async (req, res) => {
+  try {
+    const { key, filename, data, type } = req.body;
+    if (!key || !filename || !data) {
+      return res.status(400).json({ error: 'Faltan campos: key, filename, data' });
+    }
+    const buffer = Buffer.from(data, 'base64');
+    const storagePath = `${Date.now()}-${filename.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('site-images')
+      .upload(storagePath, buffer, { contentType: type || 'image/jpeg', upsert: true });
+
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('site-images')
+      .getPublicUrl(storagePath);
+
+    await supabase
+      .from('site_content')
+      .upsert({ key, value: publicUrl, updated_at: new Date().toISOString() });
+
+    res.json({ ok: true, url: publicUrl });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
