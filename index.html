@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
-<title>Morishita — Reservaciones Omakase</title>
-<meta name="description" content="Menú de 14 tiempos. Cupo limitado. Confía en el chef."/>
+<title>Morishita — Omakase Baja California · Wagyu A5 · 4 asientos</title>
+<meta name="description" content="Omakase de 14 tiempos en Baja California. Wagyu A5 y Kobe importados de Japón. Cuatro asientos. Sábados y domingos. Reserva con anticipo."/>
+<meta name="keywords" content="omakase, baja california, tijuana, wagyu a5, kobe, sushi premium, japanese cuisine, omakase tijuana, omakase baja, morishita"/>
 <meta name="theme-color" content="#0a0908" media="(prefers-color-scheme: dark)"/>
 <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)"/>
 
@@ -14,18 +15,18 @@
 <link rel="apple-touch-icon" href="/favicon.png"/>
 
 <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
-<meta property="og:type" content="website"/>
-<meta property="og:title" content="Morishita — Omakase"/>
-<meta property="og:description" content="Una experiencia omakase íntima en cuatro asientos. El mar dicta el menú cada semana."/>
+<meta property="og:type" content="restaurant"/>
+<meta property="og:title" content="Morishita — Omakase · Baja California"/>
+<meta property="og:description" content="14 tiempos. Wagyu A5 y Kobe importados de Japón. Una barra de cuatro asientos. Sábados y domingos."/>
 <meta property="og:url" content="https://morishitajapanesecuisine.com"/>
 <meta property="og:image" content="https://morishitajapanesecuisine.com/favicon.png"/>
 <meta property="og:locale" content="es_MX"/>
 <meta property="og:site_name" content="Morishita"/>
 
 <!-- Twitter Card -->
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Morishita — Omakase"/>
-<meta name="twitter:description" content="Una experiencia omakase íntima en cuatro asientos."/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Morishita — Omakase · Baja California"/>
+<meta name="twitter:description" content="14 tiempos. Wagyu A5 y Kobe importados de Japón. Cuatro asientos. Sáb · Dom."/>
 <meta name="twitter:image" content="https://morishitajapanesecuisine.com/favicon.png"/>
 
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -519,6 +520,209 @@ footer{padding:24px 28px;border-top:1px solid var(--line-soft);font-family:var(-
  .panel-bd{padding:18px 20px;}
  footer{flex-direction:column;text-align:center;}
 }
+
+/* ═══════════════════════════════════════
+   HOMEPAGE — narrativa de marca (nuevo)
+   ═══════════════════════════════════════ */
+.topbar{padding-right:78px;}/* aire para el theme-toggle fixed */
+.topbar .logo-svg{cursor:pointer;}
+.topbar-nav{display:flex;align-items:center;gap:28px;}
+.topbar-nav a{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-mid);text-decoration:none;transition:color .25s;cursor:pointer;}
+.topbar-nav a:hover{color:var(--sakura-d);}
+[data-theme="dark"] .topbar-nav a{color:var(--ink-mid);}
+[data-theme="dark"] .topbar-nav a:hover{color:var(--gold);}
+.topbar-cta{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:11px 22px;border:none;cursor:pointer;transition:all .3s;}
+.topbar-cta:hover{background:var(--sakura-d);}
+[data-theme="dark"] .topbar-cta{background:var(--gold);color:#0a0908;}
+[data-theme="dark"] .topbar-cta:hover{background:#e0bd7e;}
+.topbar-burger{display:none;background:none;border:none;cursor:pointer;color:var(--ink);font-size:18px;padding:6px 10px;}
+
+/* HERO */
+.home-hero{position:relative;min-height:calc(100vh - 64px);display:flex;align-items:center;padding:80px 28px 100px;overflow:hidden;}
+.home-hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 70% 60% at 100% 0%,rgba(196,96,122,.14),transparent 60%),radial-gradient(ellipse 60% 70% at 0% 100%,rgba(201,164,92,.10),transparent 60%),linear-gradient(180deg,var(--paper-warm),var(--paper));}
+[data-theme="dark"] .home-hero-bg{background:radial-gradient(ellipse 70% 60% at 100% 0%,rgba(212,175,106,.12),transparent 60%),radial-gradient(ellipse 60% 70% at 0% 100%,rgba(212,175,106,.08),transparent 60%),linear-gradient(180deg,#0a0908,#13110e);}
+.home-hero-grid{position:relative;z-index:2;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.15fr 1fr;gap:80px;align-items:center;width:100%;}
+.home-hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--sakura-d);margin-bottom:28px;display:inline-flex;align-items:center;gap:14px;}
+.home-hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--sakura-d);}
+[data-theme="dark"] .home-hero-eyebrow{color:var(--gold);}
+[data-theme="dark"] .home-hero-eyebrow::before{background:var(--gold);}
+.home-hero-h1{font-family:var(--display);font-size:clamp(54px,8vw,108px);line-height:.92;letter-spacing:-.02em;color:var(--ink);margin-bottom:28px;}
+.home-hero-h1 em{display:block;font-family:var(--serif);font-style:italic;font-weight:300;color:var(--sakura-d);margin-top:6px;}
+[data-theme="dark"] .home-hero-h1 em{color:var(--gold);}
+.home-hero-sub{font-family:var(--serif);font-style:italic;font-size:clamp(17px,1.6vw,21px);line-height:1.55;color:var(--ink-soft);max-width:540px;margin-bottom:40px;}
+.home-hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:48px;}
+.btn-pri-lg,.btn-sec-lg{display:inline-flex;align-items:center;gap:12px;padding:20px 36px;font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;cursor:pointer;border:none;transition:all .35s cubic-bezier(.4,0,.2,1);}
+.btn-pri-lg{background:var(--ink);color:var(--paper);}
+.btn-pri-lg:hover{background:var(--sakura-d);transform:translateY(-2px);box-shadow:0 12px 36px rgba(196,96,122,.32);}
+.btn-pri-lg .ba{transition:transform .3s;}
+.btn-pri-lg:hover .ba{transform:translateX(5px);}
+.btn-sec-lg{background:transparent;color:var(--ink);border:1px solid var(--ink);}
+.btn-sec-lg:hover{background:var(--ink);color:var(--paper);}
+[data-theme="dark"] .btn-pri-lg{background:var(--gold);color:#0a0908;}
+[data-theme="dark"] .btn-pri-lg:hover{background:#e0bd7e;box-shadow:0 12px 36px rgba(212,175,106,.32);}
+[data-theme="dark"] .btn-sec-lg{color:var(--gold);border-color:var(--gold);}
+[data-theme="dark"] .btn-sec-lg:hover{background:var(--gold);color:#0a0908;}
+.home-hero-meta{display:flex;gap:32px;flex-wrap:wrap;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);}
+.home-hero-meta span{display:inline-flex;gap:8px;align-items:center;}
+.home-hero-meta i{width:5px;height:5px;background:var(--sakura-d);border-radius:50%;}
+[data-theme="dark"] .home-hero-meta i{background:var(--gold);}
+.home-hero-card{position:relative;aspect-ratio:4/5;background:var(--paper-deep);overflow:hidden;box-shadow:0 30px 90px rgba(13,13,11,.18);border:1px solid var(--line);}
+[data-theme="dark"] .home-hero-card{background:#1a1814;border-color:#2e2a23;box-shadow:0 30px 90px rgba(0,0,0,.6);}
+.home-hero-card-inner{position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg,transparent 0 8px,rgba(0,0,0,.025) 8px 16px),linear-gradient(135deg,var(--paper-warm),var(--paper-deep));font-family:var(--display);font-size:240px;color:rgba(196,96,122,.12);line-height:1;}
+[data-theme="dark"] .home-hero-card-inner{background:repeating-linear-gradient(45deg,transparent 0 8px,rgba(255,255,255,.02) 8px 16px),linear-gradient(135deg,#1a1814,#13110e);color:rgba(212,175,106,.13);}
+.home-hero-card-tag{position:absolute;bottom:24px;left:24px;right:24px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--paper);background:rgba(13,13,11,.78);padding:14px 18px;backdrop-filter:blur(8px);}
+[data-theme="dark"] .home-hero-card-tag{background:rgba(0,0,0,.78);color:var(--gold);}
+
+/* SECTIONS — common */
+.section-pad{padding:100px 28px;}
+.section-inner{max-width:1240px;margin:0 auto;}
+.section-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--sakura-d);margin-bottom:18px;text-align:center;display:flex;align-items:center;gap:18px;justify-content:center;}
+.section-eyebrow::before,.section-eyebrow::after{content:'';flex:0 0 56px;height:1px;background:var(--sakura-d);opacity:.45;}
+[data-theme="dark"] .section-eyebrow{color:var(--gold);}
+[data-theme="dark"] .section-eyebrow::before,[data-theme="dark"] .section-eyebrow::after{background:var(--gold);}
+.section-title{font-family:var(--display);font-size:clamp(38px,5.5vw,68px);line-height:1;letter-spacing:-.015em;text-align:center;margin-bottom:24px;color:var(--ink);}
+.section-title em{display:block;font-family:var(--serif);font-style:italic;font-weight:300;color:var(--sakura-d);margin-top:4px;}
+[data-theme="dark"] .section-title em{color:var(--gold);}
+.section-lead{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--ink-soft);max-width:640px;margin:0 auto 60px;text-align:center;line-height:1.6;}
+
+/* PILLARS */
+.pillars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+.pillar{background:var(--paper);padding:52px 38px;display:flex;flex-direction:column;gap:18px;}
+[data-theme="dark"] .pillars-grid{background:#2e2a23;border-color:#2e2a23;}
+[data-theme="dark"] .pillar{background:var(--paper-warm);}
+.pillar-num{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--sakura-d);}
+[data-theme="dark"] .pillar-num{color:var(--gold);}
+.pillar-title{font-family:var(--display);font-size:28px;line-height:1.1;color:var(--ink);}
+.pillar-body{font-family:var(--serif);font-size:16px;line-height:1.65;color:var(--ink-soft);}
+
+/* PRODUCT */
+.product-section{background:var(--paper-warm);}
+[data-theme="dark"] .product-section{background:#0f0d0a;}
+.product-hero{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-bottom:80px;}
+.product-hero-text .section-eyebrow{justify-content:flex-start;text-align:left;}
+.product-hero-text .section-eyebrow::before{display:none;}
+.product-hero-text .section-eyebrow::after{display:none;}
+.product-hero-text .section-title{text-align:left;}
+.product-hero-text .section-title em{margin-top:6px;}
+.product-hero-text p{font-family:var(--serif);font-size:17px;line-height:1.7;color:var(--ink-soft);margin-bottom:20px;}
+.product-card-img{aspect-ratio:4/5;background:var(--paper-deep);border:1px solid var(--line);position:relative;overflow:hidden;}
+[data-theme="dark"] .product-card-img{background:#1a1814;border-color:#2e2a23;}
+.product-card-img-inner{position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(0,0,0,.025) 6px 12px),linear-gradient(135deg,var(--paper-warm),var(--paper-deep));font-family:var(--display);font-size:200px;color:rgba(196,96,122,.13);line-height:1;}
+[data-theme="dark"] .product-card-img-inner{background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(255,255,255,.022) 6px 12px),linear-gradient(135deg,#1a1814,#13110e);color:rgba(212,175,106,.14);}
+.product-card-img-tag{position:absolute;bottom:22px;left:22px;right:22px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--paper);background:rgba(13,13,11,.78);padding:13px 17px;backdrop-filter:blur(8px);}
+[data-theme="dark"] .product-card-img-tag{background:rgba(0,0,0,.78);color:var(--gold);}
+.product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;}
+.product-item{display:flex;flex-direction:column;gap:16px;}
+.product-item-img{aspect-ratio:1/1;position:relative;overflow:hidden;border:1px solid var(--line);}
+[data-theme="dark"] .product-item-img{border-color:#2e2a23;}
+.product-item-img-inner{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(135deg,var(--paper),var(--paper-deep));font-family:var(--display);font-size:90px;color:rgba(196,96,122,.14);line-height:1;}
+[data-theme="dark"] .product-item-img-inner{background:linear-gradient(135deg,#13110e,#1a1814);color:rgba(212,175,106,.16);}
+.product-item-tag{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--sakura-d);}
+[data-theme="dark"] .product-item-tag{color:var(--gold);}
+.product-item-title{font-family:var(--display);font-size:26px;color:var(--ink);line-height:1.1;}
+.product-item-body{font-family:var(--serif);font-size:15px;line-height:1.65;color:var(--ink-soft);}
+
+/* CHEF */
+.chef-section{display:grid;grid-template-columns:1fr 1.25fr;gap:80px;align-items:center;max-width:1240px;margin:0 auto;padding:100px 28px;}
+.chef-card{aspect-ratio:4/5;background:var(--paper-deep);border:1px solid var(--line);position:relative;overflow:hidden;}
+[data-theme="dark"] .chef-card{background:#1a1814;border-color:#2e2a23;}
+.chef-card-inner{position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg,transparent 0 6px,rgba(0,0,0,.028) 6px 12px),linear-gradient(135deg,var(--paper-warm),var(--paper-deep));font-family:var(--display);font-size:220px;color:rgba(196,96,122,.13);line-height:1;}
+[data-theme="dark"] .chef-card-inner{background:repeating-linear-gradient(45deg,transparent 0 6px,rgba(255,255,255,.022) 6px 12px),linear-gradient(135deg,#1a1814,#13110e);color:rgba(212,175,106,.14);}
+.chef-text .section-eyebrow{justify-content:flex-start;text-align:left;}
+.chef-text .section-eyebrow::before,.chef-text .section-eyebrow::after{display:none;}
+.chef-text h2{font-family:var(--display);font-size:clamp(38px,4.8vw,60px);line-height:1;letter-spacing:-.015em;margin-bottom:24px;color:var(--ink);}
+.chef-text h2 em{display:block;font-family:var(--serif);font-style:italic;font-weight:300;color:var(--sakura-d);margin-top:4px;}
+[data-theme="dark"] .chef-text h2 em{color:var(--gold);}
+.chef-text p{font-family:var(--serif);font-size:17px;line-height:1.75;color:var(--ink-soft);margin-bottom:18px;}
+.chef-quote{border-left:3px solid var(--sakura-d);padding:6px 0 6px 24px;margin:32px 0 18px;font-family:var(--serif);font-style:italic;font-size:22px;line-height:1.4;color:var(--ink);}
+[data-theme="dark"] .chef-quote{border-left-color:var(--gold);}
+.chef-sign{font-family:var(--display);font-size:22px;color:var(--sakura-d);margin-top:8px;}
+[data-theme="dark"] .chef-sign{color:var(--gold);}
+
+/* SOCIAL PROOF */
+.social-section{background:var(--ink);color:var(--paper);}
+[data-theme="dark"] .social-section{background:#050403;}
+.social-section .section-eyebrow{color:var(--sakura-l);}
+.social-section .section-eyebrow::before,.social-section .section-eyebrow::after{background:var(--sakura-l);opacity:.5;}
+.social-section .section-title{color:var(--paper);}
+.social-section .section-title em{color:var(--sakura-l);}
+.social-section .section-lead{color:rgba(250,248,244,.65);}
+[data-theme="dark"] .social-section .section-eyebrow{color:var(--gold);}
+[data-theme="dark"] .social-section .section-eyebrow::before,[data-theme="dark"] .social-section .section-eyebrow::after{background:var(--gold);}
+[data-theme="dark"] .social-section .section-title em{color:var(--gold);}
+.testimonials{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.testimonial{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:36px 32px;display:flex;flex-direction:column;gap:18px;transition:all .3s;}
+.testimonial:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);}
+.testimonial-stars{color:var(--sakura-l);font-size:14px;letter-spacing:.18em;}
+[data-theme="dark"] .testimonial-stars{color:var(--gold);}
+.testimonial-quote{font-family:var(--serif);font-style:italic;font-size:17px;line-height:1.55;color:var(--paper);}
+.testimonial-author{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(250,248,244,.55);margin-top:auto;}
+
+/* RESERVE CTA */
+.reserve-cta-section{text-align:center;padding:120px 28px 80px;background:var(--paper);position:relative;}
+[data-theme="dark"] .reserve-cta-section{background:var(--paper);}
+.reserve-cta-section .section-title{margin-bottom:16px;}
+.reserve-cta-actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:32px;}
+.reserve-detail{display:inline-flex;gap:36px;padding:22px 40px;background:var(--paper-warm);border:1px solid var(--line);margin-top:36px;flex-wrap:wrap;justify-content:center;}
+[data-theme="dark"] .reserve-detail{background:rgba(20,17,14,.7);border-color:#2e2a23;}
+.reserve-detail-item{display:flex;flex-direction:column;gap:4px;text-align:left;}
+.reserve-detail-item dt{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--sakura-d);}
+[data-theme="dark"] .reserve-detail-item dt{color:var(--gold);}
+.reserve-detail-item dd{font-family:var(--display);font-size:18px;color:var(--ink);}
+
+/* FAQ */
+.faq-section{background:var(--paper-warm);padding:100px 28px;}
+[data-theme="dark"] .faq-section{background:#0f0d0a;}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:1100px;margin:0 auto;}
+.faq-item{background:var(--paper);border:1px solid var(--line);padding:28px 30px;}
+[data-theme="dark"] .faq-item{background:rgba(20,17,14,.7);border-color:#2e2a23;}
+.faq-q{font-family:var(--display);font-size:19px;margin-bottom:10px;color:var(--ink);}
+.faq-a{font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--ink-soft);}
+
+/* HOME FOOTER */
+footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);background:var(--paper);}
+[data-theme="dark"] footer.home-footer{background:#0a0908;border-top-color:#2e2a23;}
+.footer-grid{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:48px;padding-bottom:40px;}
+.footer-col h4{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--sakura-d);margin-bottom:18px;}
+[data-theme="dark"] .footer-col h4{color:var(--gold);}
+.footer-col p,.footer-col a{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ink-soft);text-decoration:none;display:block;line-height:1.95;cursor:pointer;}
+.footer-col a:hover{color:var(--sakura-d);}
+[data-theme="dark"] .footer-col a:hover{color:var(--gold);}
+.footer-brand{font-family:var(--display);font-size:30px;letter-spacing:-.01em;color:var(--ink);margin-bottom:8px;}
+.footer-brand-sub{font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px;}
+.footer-desc{font-family:var(--serif);font-size:14px;line-height:1.7;color:var(--ink-soft);}
+.footer-bottom{max-width:1240px;margin:0 auto;border-top:1px solid var(--line-soft);padding-top:22px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);flex-wrap:wrap;gap:12px;}
+[data-theme="dark"] .footer-bottom{border-top-color:#2e2a23;}
+
+/* Back-to-home button on booking screens */
+.back-home{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;cursor:pointer;background:none;border:none;transition:color .25s;padding:0;}
+.back-home:hover{color:var(--sakura-d);}
+[data-theme="dark"] .back-home:hover{color:var(--gold);}
+
+/* HOMEPAGE responsive */
+@media(max-width:980px){
+ .home-hero-grid{grid-template-columns:1fr;gap:56px;}
+ .home-hero{min-height:auto;padding:60px 22px 80px;}
+ .home-hero-card{max-width:480px;margin:0 auto;width:100%;}
+ .pillars-grid{grid-template-columns:1fr;}
+ .product-hero{grid-template-columns:1fr;gap:48px;}
+ .product-hero-text .section-title{font-size:38px;}
+ .product-grid{grid-template-columns:1fr;}
+ .chef-section{grid-template-columns:1fr;gap:48px;padding:60px 22px;}
+ .chef-card{max-width:420px;margin:0 auto;width:100%;}
+ .testimonials{grid-template-columns:1fr;}
+ .faq-grid{grid-template-columns:1fr;}
+ .footer-grid{grid-template-columns:1fr 1fr;gap:36px;}
+ .section-pad{padding:64px 22px;}
+ .reserve-cta-section{padding:80px 22px 60px;}
+ .topbar-nav{display:none;}
+ .topbar-nav.mobile-open{display:flex;flex-direction:column;align-items:stretch;position:absolute;top:100%;right:0;left:0;background:var(--paper);padding:18px 22px;border-bottom:1px solid var(--line);box-shadow:0 14px 36px rgba(0,0,0,.12);gap:18px;}
+ [data-theme="dark"] .topbar-nav.mobile-open{background:#0a0908;border-bottom-color:#2e2a23;}
+ .topbar-nav.mobile-open a{padding:10px 0;}
+ .topbar-burger{display:inline-flex;}
+ .reserve-detail{flex-direction:column;align-items:flex-start;gap:18px;padding:24px 28px;}
+ .reserve-detail-item{flex-direction:row;justify-content:space-between;width:100%;align-items:baseline;gap:18px;}
+}
 </style>
 </head>
 <body>
@@ -556,13 +760,20 @@ footer{padding:24px 28px;border-top:1px solid var(--line-soft);font-family:var(-
 
 <!-- TOPBAR -->
 <header class="topbar">
- <svg class="logo-svg" viewBox="0 0 360 72" xmlns="http://www.w3.org/2000/svg" fill="none">
+ <svg class="logo-svg" viewBox="0 0 360 72" xmlns="http://www.w3.org/2000/svg" fill="none" onclick="go('home')">
  <text x="2" y="58" font-family="'Zen Antique Soft',serif" font-size="60" fill="#0d0d0b" letter-spacing="1">森下</text>
  <line x1="135" y1="8" x2="135" y2="64" stroke="#ddd5c8" stroke-width="1"/>
  <text x="147" y="44" font-family="'DM Mono','Courier New',monospace" font-size="19.5" fill="#0d0d0b" letter-spacing="4">MORISHITA</text>
  <text x="147" y="60" font-family="'DM Mono','Courier New',monospace" font-size="8.5" fill="#6b6760" letter-spacing="3.2">AUTHENTIC JAPANESE CUISINE</text>
  </svg>
- <div class="topbar-tag">Omakase · MXN</div>
+ <button class="topbar-burger" id="topbarBurger" aria-label="Menú">≡</button>
+ <nav class="topbar-nav" id="topbarNav">
+  <a onclick="navTo('experiencia')">La experiencia</a>
+  <a onclick="navTo('producto')">El producto</a>
+  <a onclick="navTo('chef')">El chef</a>
+  <a onclick="navTo('faq')">FAQ</a>
+  <button class="topbar-cta" onclick="goToBooking()">Reservar</button>
+ </nav>
 </header>
 
 <!-- PROGRESS -->
@@ -589,15 +800,219 @@ footer{padding:24px 28px;border-top:1px solid var(--line-soft);font-family:var(-
 
 <main>
 
+<!-- ═══ HOMEPAGE (nuevo) ═══ -->
+<section class="screen active" id="screen-home">
+
+ <!-- HERO -->
+ <div class="home-hero">
+  <div class="home-hero-bg"></div>
+  <div class="home-hero-grid">
+   <div class="home-hero-text">
+    <div class="home-hero-eyebrow">Omakase · Baja California</div>
+    <h1 class="home-hero-h1">El producto<em>al frente.</em></h1>
+    <p class="home-hero-sub">Una barra de cuatro asientos. Catorce tiempos curados con Wagyu A5, Kobe importado de Japón y el mejor pescado de la temporada.</p>
+    <div class="home-hero-actions">
+     <button class="btn-pri-lg" onclick="goToBooking()">Reservar mesa <span class="ba">→</span></button>
+     <button class="btn-sec-lg" onclick="navTo('experiencia')">Conocer la experiencia ↓</button>
+    </div>
+    <div class="home-hero-meta">
+     <span><i></i>Sáb · Dom</span>
+     <span><i></i>4 asientos</span>
+     <span><i></i>14 tiempos</span>
+     <span><i></i>$1,850 MXN p/p</span>
+    </div>
+   </div>
+   <div class="home-hero-card">
+    <!-- TODO: Reemplazar este bloque con <img src="/hero.jpg" alt="Barra Omakase Morishita"> cuando se produzcan las fotos -->
+    <div class="home-hero-card-inner">森</div>
+    <div class="home-hero-card-tag">La barra · 4 asientos · Sáb &amp; Dom</div>
+   </div>
+  </div>
+ </div>
+
+ <!-- PILARES -->
+ <div class="section-pad" id="experiencia">
+  <div class="section-inner">
+   <div class="section-eyebrow">La filosofía</div>
+   <h2 class="section-title">Tres reglas. <em>Sin excepción.</em></h2>
+   <p class="section-lead">Un Omakase no se mide por la receta. Se mide por la materia prima, el tiempo dedicado a cada pieza y la intimidad del servicio.</p>
+   <div class="pillars-grid">
+    <div class="pillar">
+     <div class="pillar-num">01 · El producto manda</div>
+     <div class="pillar-title">Cada pieza, seleccionada a mano.</div>
+     <div class="pillar-body">Wagyu A5 y Kobe importados de Japón. Pescado de temporada de las mejores aguas. Si una pieza no llega al estándar, no entra a la barra.</div>
+    </div>
+    <div class="pillar">
+     <div class="pillar-num">02 · Cuatro asientos</div>
+     <div class="pillar-title">Una barra. Dos noches por semana.</div>
+     <div class="pillar-body">Solo abrimos sábado y domingo. Cuatro lugares por servicio. El chef cocina y narra cada tiempo frente a ti.</div>
+    </div>
+    <div class="pillar">
+     <div class="pillar-num">03 · Catorce tiempos</div>
+     <div class="pillar-title">El menú lo dicta el día.</div>
+     <div class="pillar-body">No hay carta. Hay una secuencia construida con el mejor producto que llegó esa semana. La misma cena no se repite jamás.</div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <!-- PRODUCTO -->
+ <div class="product-section section-pad" id="producto">
+  <div class="section-inner">
+   <div class="product-hero">
+    <div class="product-hero-text">
+     <div class="section-eyebrow">El insumo</div>
+     <h2 class="section-title">Wagyu A5. Kobe.<em>Importados directo de Japón.</em></h2>
+     <p>El corazón de un Omakase serio no es la técnica: es la pieza. Por eso trabajamos con una sola exigencia, sin atajos.</p>
+     <p>Carnes Wagyu A5 y Kobe certificadas, importadas pieza por pieza. Pescado fresco de selección. Arroz japonés, vinagre maderado y dashi preparado en casa. Cada elemento pasa por un solo filtro: <strong>¿es lo mejor que se puede conseguir hoy?</strong></p>
+    </div>
+    <div class="product-card-img">
+     <!-- TODO: Reemplazar con foto cenital de un corte de Wagyu A5 marmoleado -->
+     <div class="product-card-img-inner">和</div>
+     <div class="product-card-img-tag">Wagyu A5 · Origen Japón · Certificado</div>
+    </div>
+   </div>
+
+   <div class="product-grid">
+    <div class="product-item">
+     <div class="product-item-img">
+      <!-- TODO: Foto de Wagyu A5/Kobe -->
+      <div class="product-item-img-inner">牛</div>
+     </div>
+     <div class="product-item-tag">Carne</div>
+     <div class="product-item-title">Wagyu A5 + Kobe</div>
+     <div class="product-item-body">Importados directo de Japón con certificación de origen. Marmoleado A5, el grado más alto del estándar japonés. Servido en preparaciones que respetan la pieza: tataki, sumibiyaki, nigiri.</div>
+    </div>
+    <div class="product-item">
+     <div class="product-item-img">
+      <!-- TODO: Foto de pescado/sashimi -->
+      <div class="product-item-img-inner">魚</div>
+     </div>
+     <div class="product-item-tag">Pescado</div>
+     <div class="product-item-title">Pescado de temporada</div>
+     <div class="product-item-body">Selección semanal. Cortes premium del Pacífico y de importación japonesa cuando la temporada lo requiere. Lo que no esté en el punto, no entra al servicio.</div>
+    </div>
+    <div class="product-item">
+     <div class="product-item-img">
+      <!-- TODO: Foto de arroz/nigiri -->
+      <div class="product-item-img-inner">米</div>
+     </div>
+     <div class="product-item-tag">Base</div>
+     <div class="product-item-title">Arroz, vinagre, dashi</div>
+     <div class="product-item-body">Arroz japonés cocido al punto, sazonado con vinagre maderado. Dashi preparado en casa. La base que la mayoría descuida — y donde se reconoce un Omakase real.</div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <!-- CHEF -->
+ <div class="chef-section" id="chef">
+  <div class="chef-card">
+   <!-- TODO: Reemplazar con retrato del chef Morishita en la barra -->
+   <div class="chef-card-inner">森</div>
+  </div>
+  <div class="chef-text">
+   <div class="section-eyebrow">El chef</div>
+   <h2>Chef Morishita.<em>Una vida en la barra.</em></h2>
+   <p>Formado en la disciplina clásica japonesa, el chef Morishita lleva años perfeccionando el oficio del Omakase: la lectura del producto, la temperatura exacta, el corte preciso, el silencio entre tiempos.</p>
+   <p>En cada servicio, cada plato se construye delante del comensal. No hay carta porque no hay receta fija — hay una conversación entre el chef, el producto del día y los cuatro invitados que se sientan a la barra.</p>
+   <div class="chef-quote">"El producto manda. Nuestra técnica solo lo acompaña."</div>
+   <div class="chef-sign">— Chef Morishita · 森下</div>
+  </div>
+ </div>
+
+ <!-- PRUEBA SOCIAL -->
+ <div class="social-section section-pad">
+  <div class="section-inner">
+   <div class="section-eyebrow">Lo que dicen quienes ya estuvieron</div>
+   <h2 class="section-title">La barra <em>habla por sí sola.</em></h2>
+   <div class="testimonials">
+    <!-- TODO: Reemplazar con testimonios reales (capturas de Google/IG/DMs) -->
+    <div class="testimonial">
+     <div class="testimonial-stars">★★★★★</div>
+     <div class="testimonial-quote">"La mejor experiencia gastronómica que he tenido en Baja. El Wagyu A5 es de otro nivel y la atención del chef se siente íntima sin ser forzada."</div>
+     <div class="testimonial-author">— Ana R. · Tijuana</div>
+    </div>
+    <div class="testimonial">
+     <div class="testimonial-stars">★★★★★</div>
+     <div class="testimonial-quote">"Pagué los $1,850 con dudas. Salí convencido de que está subvalorado. Cada uno de los 14 tiempos justifica el ticket."</div>
+     <div class="testimonial-author">— Luis M. · San Diego</div>
+    </div>
+    <div class="testimonial">
+     <div class="testimonial-stars">★★★★★</div>
+     <div class="testimonial-quote">"Cuatro asientos, dos horas, una experiencia que no se repite. Llevamos a tres parejas distintas y todas quieren volver."</div>
+     <div class="testimonial-author">— María C. · Mexicali</div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <!-- RESERVAR (CTA) -->
+ <div class="reserve-cta-section">
+  <div class="section-inner">
+   <div class="section-eyebrow">Reserva tu lugar</div>
+   <h2 class="section-title">Cuatro asientos.<em>Dos noches por semana.</em></h2>
+   <p class="section-lead">El menú se construye pieza por pieza el día del servicio. Por eso pedimos un anticipo del 50% al reservar — se aplica directamente a tu cuenta final, no es un cargo adicional.</p>
+   <div class="reserve-cta-actions">
+    <button class="btn-pri-lg" onclick="goToBooking()">Ver fechas disponibles <span class="ba">→</span></button>
+   </div>
+   <dl class="reserve-detail">
+    <div class="reserve-detail-item"><dt>Servicio</dt><dd>Sáb · Dom</dd></div>
+    <div class="reserve-detail-item"><dt>Capacidad</dt><dd>4 asientos</dd></div>
+    <div class="reserve-detail-item"><dt>Tiempos</dt><dd>14</dd></div>
+    <div class="reserve-detail-item"><dt>Precio</dt><dd>$1,850 MXN p/p</dd></div>
+    <div class="reserve-detail-item"><dt>Anticipo</dt><dd>50% Stripe</dd></div>
+   </dl>
+  </div>
+ </div>
+
+ <!-- FAQ -->
+ <div class="faq-section" id="faq">
+  <div class="section-inner">
+   <div class="section-eyebrow">Antes de reservar</div>
+   <h2 class="section-title">Lo que <em>conviene saber.</em></h2>
+   <p class="section-lead">Si tu pregunta no está aquí, escríbenos por WhatsApp. Respondemos personalmente.</p>
+   <div class="faq-grid">
+    <div class="faq-item">
+     <div class="faq-q">¿Por qué solo abren sábado y domingo?</div>
+     <div class="faq-a">Trabajamos con producto fresco seleccionado pieza por pieza. Mantener el estándar requiere ciclos de servicio acotados. Dos noches por semana es lo que nos permite no comprometer la calidad.</div>
+    </div>
+    <div class="faq-item">
+     <div class="faq-q">¿El anticipo es reembolsable?</div>
+     <div class="faq-a">Reembolsable hasta 72 horas antes del servicio. Después de ese momento, el anticipo se aplica al producto que ya separamos para tu mesa.</div>
+    </div>
+    <div class="faq-item">
+     <div class="faq-q">¿Puedo elegir lo que voy a comer?</div>
+     <div class="faq-a">No hay carta. El menú lo construye el chef según el mejor producto del día. Si tienes alergias o restricciones, indícalas al reservar y se adapta el menú sin sacrificar la experiencia.</div>
+    </div>
+    <div class="faq-item">
+     <div class="faq-q">¿Cuánto dura la cena?</div>
+     <div class="faq-a">Aproximadamente dos horas. Cada uno de los 14 tiempos se prepara a la vista y se sirve en su momento. Es una experiencia para disfrutar sin prisa.</div>
+    </div>
+    <div class="faq-item">
+     <div class="faq-q">¿Hay código de vestimenta?</div>
+     <div class="faq-a">No hay código formal. Sugerimos vestir cómodo pero cuidado. La barra es íntima — vístete como te vestirías para una cena que importa.</div>
+    </div>
+    <div class="faq-item">
+     <div class="faq-q">¿Incluye bebidas?</div>
+     <div class="faq-a">El precio del Omakase es solo el menú de 14 tiempos. Bebidas (sake, vino de Valle, agua, etc.) se cobran aparte. Te recomendamos el sake del chef.</div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+</section>
+
 <!-- ═══ LANDING ═══ -->
-<section class="screen active" id="screen-landing">
+<section class="screen" id="screen-landing">
  <div class="hero-wrap">
  <div class="hero-top">
+ <button class="back-home" onclick="go('home')">← Inicio</button>
  <span class="floatA">❀</span>
  <span class="floatB">✿</span>
  <div class="hero-tag-pill">Menú de 14 tiempos</div>
  <h1 class="hero-h1">森下<em>Confía en el chef.</em></h1>
- <p class="hero-desc">Una experiencia omakase íntima en cuatro asientos. El mar dicta el menú cada semana.</p>
+ <p class="hero-desc">Una experiencia omakase íntima en cuatro asientos. El producto manda; el chef solo lo acompaña.</p>
  <div class="hero-stats">
  <dl class="stat"><dt>Abrimos</dt><dd>Sáb · Dom</dd></dl>
  <dl class="stat"><dt>Capacidad</dt><dd>4 asientos</dd></dl>
@@ -735,10 +1150,37 @@ footer{padding:24px 28px;border-top:1px solid var(--line-soft);font-family:var(-
 
 </main>
 
-<footer>
- <span>森下 Morishita · Baja California</span>
- <span>Omakase · 14 tiempos · $1,850 MXN</span>
- <span>Pagos seguros vía Stripe</span>
+<footer class="home-footer">
+ <div class="footer-grid">
+  <div class="footer-col">
+   <div class="footer-brand">森下 Morishita</div>
+   <div class="footer-brand-sub">Authentic Japanese Cuisine</div>
+   <p class="footer-desc">Una barra de cuatro asientos. Catorce tiempos. Wagyu A5, Kobe importado de Japón y pescado de temporada. Sábados y domingos en Baja California.</p>
+  </div>
+  <div class="footer-col">
+   <h4>Visítanos</h4>
+   <p>Baja California, México</p>
+   <p>Sáb · Dom</p>
+   <p>Servicio por reservación</p>
+  </div>
+  <div class="footer-col">
+   <h4>Contacto</h4>
+   <a href="https://wa.me/" target="_blank" rel="noopener">WhatsApp</a>
+   <a href="https://instagram.com/morishitajapanesecuisine" target="_blank" rel="noopener">Instagram</a>
+   <a href="mailto:reservas@morishitajapanesecuisine.com">Email</a>
+  </div>
+  <div class="footer-col">
+   <h4>Reservar</h4>
+   <a onclick="goToBooking()">Ver disponibilidad</a>
+   <a onclick="navTo('experiencia')">La experiencia</a>
+   <a onclick="navTo('producto')">El producto</a>
+   <a onclick="navTo('faq')">Preguntas frecuentes</a>
+  </div>
+ </div>
+ <div class="footer-bottom">
+  <span>© 2026 森下 Morishita · Authentic Japanese Cuisine</span>
+  <span>Pagos seguros vía Stripe · SSL</span>
+ </div>
 </footer>
 </div>
 
@@ -777,7 +1219,7 @@ footer{padding:24px 28px;border-top:1px solid var(--line-soft);font-family:var(-
  Flujo: Fecha → Personas → Horario → Checkout
  ═══════════════════════════════════════ */
 const CFG={price:1850,openDays:[0,6],slots:['13:00','15:30','18:00'],max:4,dep:.5};
-const S={screen:'landing',date:null,guests:2,time:null,nombre:'',wa:'',email:'',motivo:'',alergias:'',avail:{},mo:0,loading:{}};
+const S={screen:'home',date:null,guests:2,time:null,nombre:'',wa:'',email:'',motivo:'',alergias:'',avail:{},mo:0,loading:{}};
 
 const STEPS=[{id:'date'},{id:'guests'},{id:'time'},{id:'checkout'}];
 const PCTS={date:25,guests:50,time:75,checkout:100};
@@ -873,12 +1315,26 @@ function go(screen){
  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
  document.getElementById('screen-'+screen).classList.add('active');
  S.screen=screen;
+ // Cierra menú mobile si estaba abierto
+ const navEl=document.getElementById('topbarNav');
+ if(navEl)navEl.classList.remove('mobile-open');
  window.scrollTo({top:0,behavior:'smooth'});
  updateProgress();
  if(screen==='landing') renderCal();
  if(screen==='guests') refreshG();
  if(screen==='time') renderSlots();
  if(screen==='checkout') renderCO();
+}
+
+/* CTA "Reservar": va al calendario (screen-landing) */
+function goToBooking(){go('landing');}
+
+/* Navegación a secciones del home: si no estoy en home, vuelvo primero y luego scroll */
+function navTo(sectionId){
+ const scroll=()=>{const el=document.getElementById(sectionId);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});};
+ const navEl=document.getElementById('topbarNav');
+ if(navEl)navEl.classList.remove('mobile-open');
+ if(S.screen!=='home'){go('home');setTimeout(scroll,140);}else{scroll();}
 }
 
 function updateProgress(){
@@ -1079,6 +1535,20 @@ S.mo=findFirstAvailableMonth();
 renderCal();updateProgress();
 // Cargar disponibilidad real del mes visible (asíncrono, refresca calendario al terminar)
 loadMonthAvail(S.mo);
+
+/* ── burger menu mobile ── */
+(function(){
+ const burger=document.getElementById('topbarBurger');
+ const nav=document.getElementById('topbarNav');
+ if(!burger||!nav)return;
+ burger.addEventListener('click',()=>{
+  nav.classList.toggle('mobile-open');
+ });
+ // Cerrar al hacer click fuera
+ document.addEventListener('click',e=>{
+  if(!nav.contains(e.target)&&!burger.contains(e.target))nav.classList.remove('mobile-open');
+ });
+})();
 
 /* ── theme toggle ── */
 (function(){
