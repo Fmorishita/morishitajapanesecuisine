@@ -177,33 +177,58 @@ async function saveField(key, value, statusEl){
   }
 }
 
+// ── COMPRESS IMAGE (Canvas API — resuelve el límite de 4.5MB de Vercel) ──
+async function compressImage(file, maxWidth=1920, quality=0.82){
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('No se pudo leer la imagen')); };
+    img.onload = ()=>{
+      URL.revokeObjectURL(url);
+      let {width, height} = img;
+      if(width > maxWidth){ height = Math.round(height*maxWidth/width); width = maxWidth; }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      canvas.toBlob(blob=>{
+        if(!blob) return reject(new Error('Error al comprimir imagen'));
+        const reader = new FileReader();
+        reader.onload = e => resolve({
+          base64: e.target.result.split(',')[1],
+          type: 'image/jpeg',
+          filename: file.name.replace(/\.[^.]+$/, '.jpg')
+        });
+        reader.readAsDataURL(blob);
+      }, 'image/jpeg', quality);
+    };
+    img.src = url;
+  });
+}
+
 // ── UPLOAD IMAGE ──
 async function uploadImage(key, file, previewEl, statusEl){
   if(!file) return;
-  const MAX_MB = 8;
+  const MAX_MB = 15;
   if(file.size > MAX_MB*1024*1024){ showToast('Imagen demasiado grande (máx '+MAX_MB+'MB)', true); return; }
-  if(statusEl){ statusEl.textContent='Subiendo...'; statusEl.className='save-status'; }
-  const reader = new FileReader();
-  reader.onload = async function(e){
-    const base64 = e.target.result.split(',')[1];
-    try{
-      const r = await fetch('/api/content/upload-image',{
-        method:'POST',
-        headers:{'Content-Type':'application/json','x-admin-token':ADMIN_TOKEN},
-        body: JSON.stringify({key, filename:file.name, data:base64, type:file.type})
-      });
-      const j = await r.json();
-      if(!r.ok) throw new Error(j.error||'Error desconocido');
-      CONTENT[key] = j.url;
-      if(previewEl) previewEl.src = j.url;
-      if(statusEl){ statusEl.textContent='✓ Imagen actualizada'; statusEl.className='save-status ok'; setTimeout(()=>{ if(statusEl)statusEl.textContent=''; },3000); }
-      showToast('Imagen guardada');
-    }catch(e){
-      if(statusEl){ statusEl.textContent='✗ '+e.message; statusEl.className='save-status err'; }
-      showToast('Error: '+e.message, true);
-    }
-  };
-  reader.readAsDataURL(file);
+  if(statusEl){ statusEl.textContent='Comprimiendo...'; statusEl.className='save-status'; }
+  try{
+    const {base64, type, filename} = await compressImage(file);
+    if(statusEl){ statusEl.textContent='Subiendo...'; statusEl.className='save-status'; }
+    const r = await fetch('/api/content/upload-image',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-admin-token':ADMIN_TOKEN},
+      body: JSON.stringify({key, filename, data:base64, type})
+    });
+    const j = await r.json();
+    if(!r.ok) throw new Error(j.error||'Error desconocido');
+    CONTENT[key] = j.url;
+    if(previewEl) previewEl.src = j.url;
+    if(statusEl){ statusEl.textContent='✓ Imagen actualizada'; statusEl.className='save-status ok'; setTimeout(()=>{ if(statusEl)statusEl.textContent=''; },3000); }
+    showToast('Imagen guardada');
+  }catch(e){
+    if(statusEl){ statusEl.textContent='✗ '+e.message; statusEl.className='save-status err'; }
+    showToast('Error: '+e.message, true);
+  }
 }
 
 // ── TOAST ──
