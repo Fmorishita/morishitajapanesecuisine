@@ -33,6 +33,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Antique+Soft&family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
 <style>
+/* ── PAGE LOADER ── */
+#page-loader{position:fixed;inset:0;z-index:9999;background:var(--paper);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;transition:opacity .35s ease;}
+#page-loader.hide{opacity:0;pointer-events:none;}
+.pl-kanji{font-family:var(--display);font-size:clamp(64px,12vw,110px);color:var(--ink);line-height:1;letter-spacing:-.02em;}
+.pl-brand{font-family:var(--mono);font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:var(--ink-soft);margin-top:-8px;}
+.pl-dots{display:flex;gap:8px;margin-top:16px;}
+.pl-dot{width:6px;height:6px;border-radius:50%;background:var(--sakura-d);animation:plPulse 1.2s ease-in-out infinite;}
+[data-theme="dark"] .pl-dot{background:var(--gold);}
+.pl-dot:nth-child(2){animation-delay:.2s;}
+.pl-dot:nth-child(3){animation-delay:.4s;}
+@keyframes plPulse{0%,80%,100%{transform:scale(0.7);opacity:.4}40%{transform:scale(1);opacity:1}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-font-smoothing:antialiased}
 :root{
@@ -734,6 +745,15 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
  <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
 </button>
+<div id="page-loader">
+ <div class="pl-kanji">森下</div>
+ <div class="pl-brand">Morishita</div>
+ <div class="pl-dots">
+  <div class="pl-dot"></div>
+  <div class="pl-dot"></div>
+  <div class="pl-dot"></div>
+ </div>
+</div>
 <div class="sakura-bg" id="sakBg"></div>
 <div class="app">
 
@@ -1518,6 +1538,11 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ── Carga contenido editable (via backend, sin exponer keys) ── */
+function hideLoader(){
+  const l=document.getElementById('page-loader');
+  if(l){l.classList.add('hide');setTimeout(()=>l.remove(),400);}
+}
+setTimeout(hideLoader,3000);
 (async function(){
   try{
     const r=await fetch('/api/content');
@@ -1536,6 +1561,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const v=C[el.dataset.ckHref];if(v)el.href=v;
     });
   }catch(e){}
+  hideLoader();
 })();
 </script>
 </body>
