@@ -426,6 +426,33 @@ const SECTIONS = {
       <hr class="divider"/>
       ${imgField('img.chef','Chef Morishita (retrato)','/img/chef-morishita.jpg','Chef Morishita')}
     `
+  },
+
+  testimonios: {
+    title: 'Testimonios',
+    desc: 'Reseñas de clientes. Edita los textos de las reseñas de Google.',
+    render: ()=>`
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 4px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 12px;">Reseña #1</label>
+          <textarea id="edit-social-t1-quote" placeholder="Texto de la reseña" style="width: 100%; min-height: 80px; margin-bottom: 10px; padding: 8px; border: 1px solid #ccc; border-radius: 3px; font-family: inherit; font-size: 14px;"></textarea>
+          <input type="text" id="edit-social-t1-author" placeholder="Autor (ej: — Ana R. · Tijuana)" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 3px; font-family: inherit; font-size: 14px;">
+          <button type="button" onclick="editField('social.t1.quote'); editField('social.t1.author');" style="margin-top: 8px; padding: 6px 12px; background: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 12px;">Guardar</button>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 4px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 12px;">Reseña #2</label>
+          <textarea id="edit-social-t2-quote" placeholder="Texto de la reseña" style="width: 100%; min-height: 80px; margin-bottom: 10px; padding: 8px; border: 1px solid #ccc; border-radius: 3px; font-family: inherit; font-size: 14px;"></textarea>
+          <input type="text" id="edit-social-t2-author" placeholder="Autor" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 3px; font-family: inherit; font-size: 14px;">
+          <button type="button" onclick="editField('social.t2.quote'); editField('social.t2.author');" style="margin-top: 8px; padding: 6px 12px; background: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 12px;">Guardar</button>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 4px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 12px;">Reseña #3</label>
+          <textarea id="edit-social-t3-quote" placeholder="Texto de la reseña" style="width: 100%; min-height: 80px; margin-bottom: 10px; padding: 8px; border: 1px solid #ccc; border-radius: 3px; font-family: inherit; font-size: 14px;"></textarea>
+          <input type="text" id="edit-social-t3-author" placeholder="Autor" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 3px; font-family: inherit; font-size: 14px;">
+          <button type="button" onclick="editField('social.t3.quote'); editField('social.t3.author');" style="margin-top: 8px; padding: 6px 12px; background: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 12px;">Guardar</button>
+        </div>
+      </div>
+    `
   }
 };
 
@@ -445,6 +472,16 @@ function showSection(key){
     </div>
     ${s.render()}
   `;
+
+  // Cargar testimonios en los campos si estamos en la sección de testimonios
+  if(key === 'testimonios'){
+    for(let i = 1; i <= 3; i++){
+      const quoteEl = document.getElementById(`edit-social-t${i}-quote`);
+      const authorEl = document.getElementById(`edit-social-t${i}-author`);
+      if(quoteEl && CONTENT[`social.t${i}.quote`]) quoteEl.value = CONTENT[`social.t${i}.quote`];
+      if(authorEl && CONTENT[`social.t${i}.author`]) authorEl.value = CONTENT[`social.t${i}.author`];
+    }
+  }
 }
 </script>
 </body>
