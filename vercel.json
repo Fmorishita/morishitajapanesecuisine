@@ -1,76 +1,32 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "backend/server.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "admin/index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "favicon.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "favicon.ico",
-      "use": "@vercel/static"
-    }
+    { "src": "backend/server.js", "use": "@vercel/node" },
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "admin/index.html", "use": "@vercel/static" },
+    { "src": "admin/contenido.html", "use": "@vercel/static" },
+    { "src": "favicon.png", "use": "@vercel/static" },
+    { "src": "favicon.ico", "use": "@vercel/static" },
+    { "src": "img/**", "use": "@vercel/static" }
   ],
   "routes": [
-    {
-      "src": "/create-checkout-session",
-      "dest": "backend/server.js"
-    },
-    {
-      "src": "/stripe-webhook",
-      "dest": "backend/server.js"
-    },
-    {
-      "src": "/stripe-webhook-client",
-      "dest": "backend/server.js"
-    },
-    {
-      "src": "/disponibilidad",
-      "dest": "backend/server.js"
-    },
-    {
-      "src": "/disponibilidad\\?(.*)",
-      "dest": "backend/server.js"
-    },
-    {
-      "src": "/health",
-      "dest": "backend/server.js"
-    },
-    {
-      "src": "/favicon.png",
-      "dest": "/favicon.png",
-      "headers": { "cache-control": "public, max-age=86400" }
-    },
-    {
-      "src": "/favicon.ico",
-      "dest": "/favicon.ico",
-      "headers": { "cache-control": "public, max-age=86400" }
-    },
-    {
-      "src": "/admin",
-      "dest": "/admin/index.html"
-    },
-    {
-      "src": "/admin/",
-      "dest": "/admin/index.html"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+    { "src": "/create-checkout-session", "dest": "backend/server.js" },
+    { "src": "/stripe-webhook", "dest": "backend/server.js" },
+    { "src": "/stripe-webhook-client", "dest": "backend/server.js" },
+    { "src": "/disponibilidad", "dest": "backend/server.js" },
+    { "src": "/disponibilidad\\?(.*)", "dest": "backend/server.js" },
+    { "src": "/api/content/upload-image", "dest": "backend/server.js" },
+    { "src": "/api/content/update", "dest": "backend/server.js" },
+    { "src": "/api/content", "dest": "backend/server.js" },
+    { "src": "/health", "dest": "backend/server.js" },
+    { "src": "/favicon.png", "dest": "/favicon.png", "headers": { "cache-control": "public, max-age=86400" } },
+    { "src": "/favicon.ico", "dest": "/favicon.ico", "headers": { "cache-control": "public, max-age=86400" } },
+    { "src": "/img/(.*)", "dest": "/img/$1", "headers": { "cache-control": "public, max-age=604800" } },
+    { "src": "/admin/contenido", "dest": "/admin/contenido.html" },
+    { "src": "/admin/contenido/", "dest": "/admin/contenido.html" },
+    { "src": "/admin", "dest": "/admin/index.html" },
+    { "src": "/admin/", "dest": "/admin/index.html" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
