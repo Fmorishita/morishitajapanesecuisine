@@ -33,6 +33,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Antique+Soft&family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
 <style>
+/* ── PAGE LOADER ── */
+#page-loader{position:fixed;inset:0;z-index:9999;background:var(--paper);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;transition:opacity .35s ease;}
+#page-loader.hide{opacity:0;pointer-events:none;}
+.pl-kanji{font-family:var(--display);font-size:clamp(64px,12vw,110px);color:var(--ink);line-height:1;letter-spacing:-.02em;}
+.pl-brand{font-family:var(--mono);font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:var(--ink-soft);margin-top:-8px;}
+.pl-dots{display:flex;gap:8px;margin-top:16px;}
+.pl-dot{width:6px;height:6px;border-radius:50%;background:var(--sakura-d);animation:plPulse 1.2s ease-in-out infinite;}
+[data-theme="dark"] .pl-dot{background:var(--gold);}
+.pl-dot:nth-child(2){animation-delay:.2s;}
+.pl-dot:nth-child(3){animation-delay:.4s;}
+@keyframes plPulse{0%,80%,100%{transform:scale(0.7);opacity:.4}40%{transform:scale(1);opacity:1}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-font-smoothing:antialiased}
 :root{
@@ -176,6 +187,17 @@ html{-webkit-font-smoothing:antialiased}
 [data-theme="dark"] .s-badge{background:var(--gold)!important;color:#0a0908!important;}
 [data-theme="dark"] .sdot{background:#3a2a30;}
 [data-theme="dark"] .sdot.taken{background:#2e2a23;}
+[data-theme="dark"] .guests-box{background:rgba(20,17,14,.8)!important;border-color:#2e2a23!important;}
+[data-theme="dark"] .guests-box::before{color:#2e2a23!important;}
+[data-theme="dark"] .g-lbl{color:#9a9285!important;}
+[data-theme="dark"] .g-btn{border-color:#9a9285!important;color:#f5f0e8!important;}
+[data-theme="dark"] .g-btn:hover:not(:disabled){background:#f5f0e8!important;color:#0a0908!important;}
+[data-theme="dark"] .g-num{color:#f5f0e8!important;}
+[data-theme="dark"] .g-hint{color:#9a9285!important;}
+[data-theme="dark"] .panel{background:rgba(20,17,14,.8)!important;border-color:#2e2a23!important;}
+[data-theme="dark"] .panel-hd{border-bottom-color:#2e2a23!important;color:#f5f0e8!important;}
+[data-theme="dark"] .fld input,[data-theme="dark"] .fld textarea{border-bottom-color:#3a3630!important;}
+[data-theme="dark"] .fld input:focus,[data-theme="dark"] .fld textarea:focus{border-bottom-color:var(--gold)!important;}
 
 /* Botones */
 [data-theme="dark"] .btn-pri{
@@ -222,13 +244,7 @@ html{-webkit-font-smoothing:antialiased}
 [data-theme="dark"] textarea::placeholder{color:#5a544a!important;}
 [data-theme="dark"] label{color:#d8d0c2!important;}
 
-/* Modal Stripe */
-[data-theme="dark"] .stripe-modal{background:rgba(0,0,0,.85)!important;}
-[data-theme="dark"] .stripe-card{
- background:#13110e!important;
- border:1px solid #2e2a23!important;
- box-shadow:0 12px 60px rgba(0,0,0,.6)!important;
-}
+
 
 /* Confirmación */
 [data-theme="dark"] .conf-card .conf-ref{color:var(--gold)!important;}
@@ -451,35 +467,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 .ba{transition:transform .3s;}
 .btn-pri:hover:not(:disabled) .ba{transform:translateX(5px);}
 
-/*── STRIPE MODAL ──*/
-.modal-bg{position:fixed;inset:0;z-index:200;background:rgba(13,13,11,.65);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px;}
-.modal-bg.open{display:flex;animation:fIn .3s;}
-@keyframes fIn{from{opacity:0}to{opacity:1}}
-.modal{background:var(--paper);max-width:420px;width:100%;animation:mUp .4s cubic-bezier(.2,.7,.2,1);}
-@keyframes mUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
-.modal-top{padding:24px 30px 18px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:center;}
-.modal-top h3{font-family:var(--display);font-size:22px;}
-.modal-x{font-size:20px;cursor:pointer;color:var(--ink-soft);background:none;border:none;line-height:1;padding:0;}
-.modal-x:hover{color:var(--ink);}
-.modal-bd{padding:24px 30px 30px;}
-.sec-badge{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line-soft);}
-.sec-ico{color:var(--sakura-d);font-size:14px;}
-.pay-alts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-.pay-alt{padding:11px;border:1px solid var(--line);background:var(--paper-warm);font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);cursor:pointer;transition:all .22s;}
-.pay-alt:hover{background:var(--ink);color:var(--paper);border-color:var(--ink);}
-.div-or{display:flex;align-items:center;gap:10px;margin:10px 0 14px;font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);}
-.div-or::before,.div-or::after{content:'';flex:1;height:1px;background:var(--line);}
-.pf{margin-bottom:13px;}
-.pf label{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:4px;}
-.pf input{width:100%;padding:10px 12px;border:1px solid var(--line);background:var(--paper-warm);font-family:var(--mono);font-size:13px;color:var(--ink);outline:none;transition:border-color .22s;}
-.pf input:focus{border-color:var(--ink);}
-.pf-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.pay-total-bar{background:var(--ink);color:var(--paper);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;margin:8px 0 14px;}
-.ptb-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--sakura-l);}
-.ptb-amt{font-family:var(--display);font-size:28px;}
-.pay-submit{width:100%;background:var(--sakura-d);color:#fff;padding:17px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .3s;}
-.pay-submit:hover:not(:disabled){background:var(--ink);}
-.pay-submit:disabled{opacity:.5;cursor:wait;}
 .spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-1px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -758,6 +745,15 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
  <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
 </button>
+<div id="page-loader">
+ <div class="pl-kanji">森下</div>
+ <div class="pl-brand">Morishita</div>
+ <div class="pl-dots">
+  <div class="pl-dot"></div>
+  <div class="pl-dot"></div>
+  <div class="pl-dot"></div>
+ </div>
+</div>
 <div class="sakura-bg" id="sakBg"></div>
 <div class="app">
 
@@ -1181,34 +1177,6 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
 </footer>
 </div>
 
-<!-- STRIPE MODAL -->
-<div class="modal-bg" id="stripeModal">
- <div class="modal">
- <div class="modal-top">
- <h3>Pago del anticipo</h3>
- <button class="modal-x" onclick="closeModal()">✕</button>
- </div>
- <div class="modal-bd">
- <div class="sec-badge"><span class="sec-ico">🔒</span><span>Pago seguro · Stripe · SSL</span></div>
- <div class="pay-alts">
- <button class="pay-alt" type="button">Apple Pay</button>
- <button class="pay-alt" type="button">Google Pay</button>
- </div>
- <div class="div-or">o con tarjeta</div>
- <form id="payForm">
- <div class="pf"><label>Correo</label><input type="email" id="mEmail"/></div>
- <div class="pf"><label>Número de tarjeta</label><input type="text" id="mCard" placeholder="4242 4242 4242 4242" maxlength="19"/></div>
- <div class="pf pf-2">
- <div class="pf"><label>Vencimiento</label><input type="text" id="mExp" placeholder="MM / AA" maxlength="7"/></div>
- <div class="pf"><label>CVC</label><input type="text" id="mCvc" placeholder="123" maxlength="4"/></div>
- </div>
- <div class="pf"><label>Nombre en tarjeta</label><input type="text" id="mName"/></div>
- <div class="pay-total-bar"><span class="ptb-lbl">Anticipo 50%</span><span class="ptb-amt" id="mAmt">—</span></div>
- <button type="submit" class="pay-submit" id="mSubmit">Confirmar pago</button>
- </form>
- </div>
- </div>
-</div>
 
 <script>
 /* ═══════════════════════════════════════
@@ -1447,66 +1415,41 @@ function renderCO(){
  document.getElementById('pTotal').textContent=fmx(tot)+' MXN';
  document.getElementById('pAnticipo').textContent=fmx(ant);
  document.getElementById('pSaldo').textContent=fmx(sal)+' MXN';
- document.getElementById('mAmt').textContent=fmx(ant)+' MXN';
 }
 
-/* ── pay btn ── */
-document.getElementById('payBtn').onclick=()=>{
- const form=document.getElementById('resForm');
+/* ── pay btn: directo a Stripe Checkout ── */
+document.getElementById('payBtn').onclick = async () => {
+ const form = document.getElementById('resForm');
  ['fn','fw','fe'].forEach(id=>document.getElementById(id).classList.remove('err'));
- let ok=true;
- const nb=form.nombre.value.trim(),wa=form.whatsapp.value.trim(),em=form.email.value.trim();
+ let ok = true;
+ const nb=form.nombre.value.trim(), wa=form.whatsapp.value.trim(), em=form.email.value.trim();
  if(nb.length<2){document.getElementById('fn').classList.add('err');ok=false;}
  if(!/^[+\d\s\-()\\.]{8,}$/.test(wa)){document.getElementById('fw').classList.add('err');ok=false;}
  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){document.getElementById('fe').classList.add('err');ok=false;}
  if(!ok){document.querySelector('#resForm .err input')?.scrollIntoView({behavior:'smooth',block:'center'});return;}
- S.nombre=nb;S.wa=wa;S.email=em;S.motivo=form.motivo.value.trim();S.alergias=form.alergias.value.trim();
+ S.nombre=nb; S.wa=wa; S.email=em; S.motivo=form.motivo.value.trim(); S.alergias=form.alergias.value.trim();
  if(rem(S.date,S.time)<S.guests){alert('Lo sentimos, ese horario ya no tiene lugares suficientes.');go('time');return;}
- document.getElementById('mEmail').value=S.email;
- document.getElementById('mName').value=S.nombre;
- document.getElementById('stripeModal').classList.add('open');
-};
-function closeModal(){document.getElementById('stripeModal').classList.remove('open');}
-document.getElementById('stripeModal').addEventListener('click',e=>{if(e.target.id==='stripeModal')closeModal();});
-document.getElementById('mCard').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim();});
-document.getElementById('mExp').addEventListener('input',e=>{let v=e.target.value.replace(/\D/g,'');if(v.length>=3)v=v.slice(0,2)+' / '+v.slice(2,4);e.target.value=v;});
-
-document.getElementById('payForm').onsubmit = async e => {
- e.preventDefault();
- const btn = document.getElementById('mSubmit');
+ const btn = document.getElementById('payBtn');
  btn.disabled = true;
  btn.innerHTML = '<span class="spinner"></span>&nbsp;Procesando…';
-
  try {
    const res = await fetch('/create-checkout-session', {
      method: 'POST',
-     headers: { 
-       'Content-Type': 'application/json',
-       'Bypass-Tunnel-Reminder': 'true'
-     },
-     body: JSON.stringify({
-       date: S.date,
-       time: S.time,
-       guests: S.guests,
-       nombre: S.nombre,
-       email: S.email,
-       whatsapp: S.wa,
-       motivo: S.motivo,
-       alergias: S.alergias
-     })
+     headers: {'Content-Type':'application/json','Bypass-Tunnel-Reminder':'true'},
+     body: JSON.stringify({date:S.date, time:S.time, guests:S.guests, nombre:S.nombre, email:S.email, whatsapp:S.wa, motivo:S.motivo, alergias:S.alergias})
    });
    const data = await res.json();
-   if (data.url) {
+   if(data.url){
      window.location.href = data.url;
    } else {
      alert('Error: ' + data.error);
      btn.disabled = false;
-     btn.textContent = 'Confirmar pago';
+     btn.innerHTML = 'Pagar anticipo <span class="ba">→</span>';
    }
- } catch (err) {
+ } catch(err) {
    alert('Error de conexión: ' + err.message);
    btn.disabled = false;
-   btn.textContent = 'Confirmar pago';
+   btn.innerHTML = 'Pagar anticipo <span class="ba">→</span>';
  }
 };
 
@@ -1595,6 +1538,11 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ── Carga contenido editable (via backend, sin exponer keys) ── */
+function hideLoader(){
+  const l=document.getElementById('page-loader');
+  if(l){l.classList.add('hide');setTimeout(()=>l.remove(),400);}
+}
+setTimeout(hideLoader,3000);
 (async function(){
   try{
     const r=await fetch('/api/content');
@@ -1613,6 +1561,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const v=C[el.dataset.ckHref];if(v)el.href=v;
     });
   }catch(e){}
+  hideLoader();
 })();
 </script>
 </body>
