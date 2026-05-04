@@ -167,11 +167,13 @@
       <nav class="sidebar">
         <div class="sidebar-label">Secciones</div>
         <div class="nav-item active" data-sec="hero" onclick="showSection('hero')">Hero principal</div>
+        <div class="nav-item" data-sec="topbar" onclick="showSection('topbar')">Topbar / Logo</div>
         <div class="nav-item" data-sec="pilares" onclick="showSection('pilares')">Pilares</div>
         <div class="nav-item" data-sec="producto" onclick="showSection('producto')">El producto</div>
         <div class="nav-item" data-sec="chef" onclick="showSection('chef')">El chef</div>
         <div class="nav-item" data-sec="testimonios" onclick="showSection('testimonios')">Testimonios</div>
         <div class="nav-item" data-sec="faq" onclick="showSection('faq')">FAQ</div>
+        <div class="nav-item" data-sec="reservar" onclick="showSection('reservar')">Reservar (CTA)</div>
         <div class="nav-item" data-sec="footer" onclick="showSection('footer')">Footer</div>
         <div class="nav-item" data-sec="imagenes" onclick="showSection('imagenes')">Imágenes</div>
         <div class="nav-item" data-sec="orden" onclick="showSection('orden')">Orden de bloques</div>
@@ -462,12 +464,15 @@ function onToggleChange(key, checked, statusId){
 
 // ── KEY → SECTION MAP (para click-to-edit) ──
 function keyToSection(key){
+  if(key === 'hero.card_tag.show') return 'botones';
   if(key.startsWith('hero.')) return 'hero';
+  if(key.startsWith('logo.') || key.startsWith('nav.') || key === 'cta.topbar.label') return 'topbar';
   if(key.startsWith('pilares.')) return 'pilares';
   if(key.startsWith('producto.')) return 'producto';
   if(key.startsWith('chef.')) return 'chef';
   if(key.startsWith('social.')) return 'testimonios';
   if(key.startsWith('faq.')) return 'faq';
+  if(key.startsWith('reservar.')) return 'reservar';
   if(key.startsWith('footer.')) return 'footer';
   if(key.startsWith('img.')) return 'imagenes';
   if(key.startsWith('cta.')) return 'botones';
@@ -496,7 +501,42 @@ const SECTIONS = {
       ${field('hero.eyebrow','Eyebrow',{multiline:false,fallback:'Omakase · Baja California'})}
       ${field('hero.h1','Título principal (H1)',{html:true,fallback:'El producto<em>al frente.</em>'})}
       ${field('hero.sub','Subtítulo',{fallback:'Una barra de cuatro asientos. Catorce tiempos.'})}
-      ${field('hero.card_tag','Tag de la imagen',{multiline:false,fallback:'La barra · 4 asientos · Sáb & Dom'})}
+      ${field('hero.card_tag','Overlay sobre la imagen',{multiline:false,fallback:'La barra · 4 asientos · Sáb & Dom'})}
+      <hr class="divider"/>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Bullets debajo de los botones</div>
+      ${field('hero.meta1','Bullet 1',{multiline:false,fallback:'Sáb · Dom'})}
+      ${field('hero.meta2','Bullet 2',{multiline:false,fallback:'4 asientos'})}
+      ${field('hero.meta3','Bullet 3',{multiline:false,fallback:'14 tiempos'})}
+      ${field('hero.meta4','Bullet 4',{multiline:false,fallback:'$1,850 MXN p/p'})}
+    `
+  },
+
+  topbar: {
+    title: 'Topbar / Logo',
+    desc: 'Logo de marca y enlaces de navegación superior.',
+    render: ()=>`
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Logo (texto SVG)</div>
+      ${field('logo.kanji','Kanji (森下)',{multiline:false,fallback:'森下'})}
+      ${field('logo.name','Nombre',{multiline:false,fallback:'MORISHITA'})}
+      ${field('logo.tagline','Tagline (debajo del nombre)',{multiline:false,fallback:'AUTHENTIC JAPANESE CUISINE'})}
+      <hr class="divider"/>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Enlaces de navegación</div>
+      ${field('nav.link1','Enlace 1',{multiline:false,fallback:'La experiencia'})}
+      ${field('nav.link2','Enlace 2',{multiline:false,fallback:'El producto'})}
+      ${field('nav.link3','Enlace 3',{multiline:false,fallback:'El chef'})}
+      ${field('nav.link4','Enlace 4',{multiline:false,fallback:'FAQ'})}
+      <hr class="divider"/>
+      ${field('cta.topbar.label','Botón "Reservar" del topbar',{multiline:false,fallback:'Reservar'})}
+    `
+  },
+
+  reservar: {
+    title: 'Reservar (CTA)',
+    desc: 'Sección de invitación a reservar antes del calendario.',
+    render: ()=>`
+      ${field('reservar.eyebrow','Eyebrow',{multiline:false,fallback:'Reserva tu lugar'})}
+      ${field('reservar.h2','Título (H2)',{html:true,fallback:'Cuatro asientos.<em>Dos noches por semana.</em>'})}
+      ${field('reservar.lead','Párrafo introductorio',{fallback:'El menú se construye pieza por pieza el día del servicio.'})}
     `
   },
 
@@ -658,12 +698,20 @@ const SECTIONS = {
   },
 
   botones: {
-    title: 'Botones (CTAs)',
-    desc: 'Activa o desactiva botones secundarios.',
+    title: 'Botones (CTAs) y visibilidad',
+    desc: 'Edita el texto de los botones y activa/desactiva elementos opcionales.',
     render: ()=>`
-      ${toggleField('cta.hero_secondary.show', 'Botón "Conocer la experiencia ↓" en hero', true)}
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Texto de los botones</div>
+      ${field('cta.hero_primary.label','Botón principal del hero (Reservar mesa)',{multiline:false,fallback:'Reservar mesa'})}
+      ${field('cta.hero_secondary.label','Botón secundario del hero (Conocer la experiencia)',{multiline:false,fallback:'Conocer la experiencia'})}
+      ${field('cta.reservar_section.label','Botón de sección Reservar (Ver fechas)',{multiline:false,fallback:'Ver fechas disponibles'})}
       <hr class="divider"/>
-      ${toggleField('cta.reservar_section.show', 'Botón "Ver fechas disponibles →" en sección Reservar', true)}
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Mostrar / ocultar</div>
+      ${toggleField('cta.hero_secondary.show', 'Mostrar botón "Conocer la experiencia ↓" en hero', true)}
+      <hr class="divider"/>
+      ${toggleField('cta.reservar_section.show', 'Mostrar botón "Ver fechas disponibles →" en sección Reservar', true)}
+      <hr class="divider"/>
+      ${toggleField('hero.card_tag.show', 'Mostrar overlay "La barra · 4 asientos…" sobre la imagen del hero', true)}
     `
   }
 };

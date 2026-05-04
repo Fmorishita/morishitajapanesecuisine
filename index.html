@@ -764,18 +764,18 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
 <!-- TOPBAR -->
 <header class="topbar">
  <svg class="logo-svg" viewBox="0 0 360 72" xmlns="http://www.w3.org/2000/svg" fill="none" onclick="go('home')">
- <text x="2" y="58" font-family="'Zen Antique Soft',serif" font-size="60" fill="#0d0d0b" letter-spacing="1">森下</text>
+ <text x="8" y="58" font-family="'Zen Antique Soft',serif" font-size="60" fill="#0d0d0b" letter-spacing="1" data-ck="logo.kanji">森下</text>
  <line x1="135" y1="8" x2="135" y2="64" stroke="#ddd5c8" stroke-width="1"/>
- <text x="147" y="44" font-family="'DM Mono','Courier New',monospace" font-size="19.5" fill="#0d0d0b" letter-spacing="4">MORISHITA</text>
- <text x="147" y="60" font-family="'DM Mono','Courier New',monospace" font-size="8.5" fill="#6b6760" letter-spacing="3.2">AUTHENTIC JAPANESE CUISINE</text>
+ <text x="147" y="44" font-family="'DM Mono','Courier New',monospace" font-size="19.5" fill="#0d0d0b" letter-spacing="4" data-ck="logo.name">MORISHITA</text>
+ <text x="147" y="60" font-family="'DM Mono','Courier New',monospace" font-size="8.5" fill="#6b6760" letter-spacing="3.2" data-ck="logo.tagline">AUTHENTIC JAPANESE CUISINE</text>
  </svg>
  <button class="topbar-burger" id="topbarBurger" aria-label="Menú">≡</button>
  <nav class="topbar-nav" id="topbarNav">
-  <a onclick="navTo('experiencia')">La experiencia</a>
-  <a onclick="navTo('producto')">El producto</a>
-  <a onclick="navTo('chef')">El chef</a>
-  <a onclick="navTo('faq')">FAQ</a>
-  <button class="topbar-cta" onclick="goToBooking()">Reservar</button>
+  <a onclick="navTo('experiencia')" data-ck="nav.link1">La experiencia</a>
+  <a onclick="navTo('producto')" data-ck="nav.link2">El producto</a>
+  <a onclick="navTo('chef')" data-ck="nav.link3">El chef</a>
+  <a onclick="navTo('faq')" data-ck="nav.link4">FAQ</a>
+  <button class="topbar-cta" onclick="goToBooking()" data-ck="cta.topbar.label">Reservar</button>
  </nav>
 </header>
 
@@ -815,19 +815,19 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
     <h1 class="home-hero-h1" data-ck-html="hero.h1">El producto<em>al frente.</em></h1>
     <p class="home-hero-sub" data-ck="hero.sub">Una barra de cuatro asientos. Catorce tiempos curados con Wagyu A5, Kobe importado de Japón y el mejor pescado de la temporada.</p>
     <div class="home-hero-actions">
-     <button class="btn-pri-lg" onclick="goToBooking()">Reservar mesa <span class="ba">→</span></button>
-     <button class="btn-sec-lg" onclick="navTo('experiencia')" data-ck-show="cta.hero_secondary.show">Conocer la experiencia ↓</button>
+     <button class="btn-pri-lg" onclick="goToBooking()"><span data-ck="cta.hero_primary.label">Reservar mesa</span> <span class="ba">→</span></button>
+     <button class="btn-sec-lg" onclick="navTo('experiencia')" data-ck-show="cta.hero_secondary.show"><span data-ck="cta.hero_secondary.label">Conocer la experiencia</span> ↓</button>
     </div>
     <div class="home-hero-meta">
-     <span><i></i>Sáb · Dom</span>
-     <span><i></i>4 asientos</span>
-     <span><i></i>14 tiempos</span>
-     <span><i></i>$1,850 MXN p/p</span>
+     <span><i></i><span data-ck="hero.meta1">Sáb · Dom</span></span>
+     <span><i></i><span data-ck="hero.meta2">4 asientos</span></span>
+     <span><i></i><span data-ck="hero.meta3">14 tiempos</span></span>
+     <span><i></i><span data-ck="hero.meta4">$1,850 MXN p/p</span></span>
     </div>
    </div>
    <div class="home-hero-card">
     <img src="/img/hero-bar.jpg" alt="Barra Omakase Morishita · Baja California" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.hero">
-    <div class="home-hero-card-tag" data-ck="hero.card_tag">La barra · 4 asientos · Sáb &amp; Dom</div>
+    <div class="home-hero-card-tag" data-ck="hero.card_tag" data-ck-show="hero.card_tag.show">La barra · 4 asientos · Sáb &amp; Dom</div>
    </div>
   </div>
  </div>
@@ -947,11 +947,11 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <!-- RESERVAR (CTA) -->
  <div class="reserve-cta-section">
   <div class="section-inner">
-   <div class="section-eyebrow">Reserva tu lugar</div>
-   <h2 class="section-title">Cuatro asientos.<em>Dos noches por semana.</em></h2>
-   <p class="section-lead">El menú se construye pieza por pieza el día del servicio. Por eso pedimos un anticipo del 50% al reservar — se aplica directamente a tu cuenta final, no es un cargo adicional.</p>
+   <div class="section-eyebrow" data-ck="reservar.eyebrow">Reserva tu lugar</div>
+   <h2 class="section-title" data-ck-html="reservar.h2">Cuatro asientos.<em>Dos noches por semana.</em></h2>
+   <p class="section-lead" data-ck="reservar.lead">El menú se construye pieza por pieza el día del servicio. Por eso pedimos un anticipo del 50% al reservar — se aplica directamente a tu cuenta final, no es un cargo adicional.</p>
    <div class="reserve-cta-actions">
-    <button class="btn-pri-lg" onclick="goToBooking()" data-ck-show="cta.reservar_section.show">Ver fechas disponibles <span class="ba">→</span></button>
+    <button class="btn-pri-lg" onclick="goToBooking()" data-ck-show="cta.reservar_section.show"><span data-ck="cta.reservar_section.label">Ver fechas disponibles</span> <span class="ba">→</span></button>
    </div>
    <dl class="reserve-detail">
     <div class="reserve-detail-item"><dt>Servicio</dt><dd>Sáb · Dom</dd></div>
