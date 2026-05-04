@@ -812,7 +812,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
     <p class="home-hero-sub" data-ck="hero.sub">Una barra de cuatro asientos. Catorce tiempos curados con Wagyu A5, Kobe importado de Japón y el mejor pescado de la temporada.</p>
     <div class="home-hero-actions">
      <button class="btn-pri-lg" onclick="goToBooking()">Reservar mesa <span class="ba">→</span></button>
-     <button class="btn-sec-lg" onclick="navTo('experiencia')">Conocer la experiencia ↓</button>
+     <button class="btn-sec-lg" onclick="navTo('experiencia')" data-ck-show="cta.hero_secondary.show">Conocer la experiencia ↓</button>
     </div>
     <div class="home-hero-meta">
      <span><i></i>Sáb · Dom</span>
@@ -834,18 +834,18 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
    <div class="section-eyebrow">La filosofía</div>
    <h2 class="section-title" data-ck-html="pilares.title">Tres reglas. <em>Sin excepción.</em></h2>
    <p class="section-lead" data-ck="pilares.lead">Un Omakase no se mide por la receta. Se mide por la materia prima, el tiempo dedicado a cada pieza y la intimidad del servicio.</p>
-   <div class="pillars-grid">
-    <div class="pillar">
+   <div class="pillars-grid" data-list-id="pilares">
+    <div class="pillar" data-card-id="p1">
      <div class="pillar-num" data-ck="pilares.p1.num">01 · El producto manda</div>
      <div class="pillar-title" data-ck="pilares.p1.title">Cada pieza, seleccionada a mano.</div>
      <div class="pillar-body" data-ck="pilares.p1.body">Wagyu A5 y Kobe importados de Japón. Pescado de temporada de las mejores aguas. Si una pieza no llega al estándar, no entra a la barra.</div>
     </div>
-    <div class="pillar">
+    <div class="pillar" data-card-id="p2">
      <div class="pillar-num" data-ck="pilares.p2.num">02 · Cuatro asientos</div>
      <div class="pillar-title" data-ck="pilares.p2.title">Una barra. Dos noches por semana.</div>
      <div class="pillar-body" data-ck="pilares.p2.body">Solo abrimos sábado y domingo. Cuatro lugares por servicio. El chef cocina y narra cada tiempo frente a ti.</div>
     </div>
-    <div class="pillar">
+    <div class="pillar" data-card-id="p3">
      <div class="pillar-num" data-ck="pilares.p3.num">03 · Catorce tiempos</div>
      <div class="pillar-title" data-ck="pilares.p3.title">El menú lo dicta el día.</div>
      <div class="pillar-body" data-ck="pilares.p3.body">No hay carta. Hay una secuencia construida con el mejor producto que llegó esa semana. La misma cena no se repite jamás.</div>
@@ -870,8 +870,8 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
     </div>
    </div>
 
-   <div class="product-grid">
-    <div class="product-item">
+   <div class="product-grid" data-list-id="producto">
+    <div class="product-item" data-card-id="item1">
      <div class="product-item-img">
       <img src="/img/producto-carne.jpg" alt="Nigiri de Wagyu A5 con hoja de oro · Morishita" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.carne">
      </div>
@@ -879,7 +879,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
      <div class="product-item-title" data-ck="producto.item1.title">Wagyu A5 + Kobe</div>
      <div class="product-item-body" data-ck="producto.item1.body">Importados directo de Japón con certificación de origen. Marmoleado A5, el grado más alto del estándar japonés. Servido en preparaciones que respetan la pieza: tataki, sumibiyaki, nigiri.</div>
     </div>
-    <div class="product-item">
+    <div class="product-item" data-card-id="item2">
      <div class="product-item-img">
       <img src="/img/producto-pescado.jpg" alt="Toro sashimi en plato celadón · Morishita" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.pescado">
      </div>
@@ -887,7 +887,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
      <div class="product-item-title" data-ck="producto.item2.title">Pescado de temporada</div>
      <div class="product-item-body" data-ck="producto.item2.body">Selección semanal. Cortes premium del Pacífico y de importación japonesa cuando la temporada lo requiere. Lo que no esté en el punto, no entra al servicio.</div>
     </div>
-    <div class="product-item">
+    <div class="product-item" data-card-id="item3">
      <div class="product-item-img">
       <img src="/img/producto-base.jpg" alt="Nigiri con detalle de arroz japonés · Morishita" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.base">
      </div>
@@ -919,19 +919,19 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
   <div class="section-inner">
    <div class="section-eyebrow">Lo que dicen quienes ya estuvieron</div>
    <h2 class="section-title">La barra <em>habla por sí sola.</em></h2>
-   <div class="testimonials">
+   <div class="testimonials" data-list-id="social">
     <!-- TODO: Reemplazar con testimonios reales (capturas de Google/IG/DMs) -->
-    <div class="testimonial">
+    <div class="testimonial" data-card-id="t1">
      <div class="testimonial-stars">★★★★★</div>
      <div class="testimonial-quote" data-ck="social.t1.quote">"La mejor experiencia gastronómica que he tenido en Baja. El Wagyu A5 es de otro nivel y la atención del chef se siente íntima sin ser forzada."</div>
      <div class="testimonial-author" data-ck="social.t1.author">— Ana R. · Tijuana</div>
     </div>
-    <div class="testimonial">
+    <div class="testimonial" data-card-id="t2">
      <div class="testimonial-stars">★★★★★</div>
      <div class="testimonial-quote" data-ck="social.t2.quote">"Pagué los $1,850 con dudas. Salí convencido de que está subvalorado. Cada uno de los 14 tiempos justifica el ticket."</div>
      <div class="testimonial-author" data-ck="social.t2.author">— Luis M. · San Diego</div>
     </div>
-    <div class="testimonial">
+    <div class="testimonial" data-card-id="t3">
      <div class="testimonial-stars">★★★★★</div>
      <div class="testimonial-quote" data-ck="social.t3.quote">"Cuatro asientos, dos horas, una experiencia que no se repite. Llevamos a tres parejas distintas y todas quieren volver."</div>
      <div class="testimonial-author" data-ck="social.t3.author">— María C. · Mexicali</div>
@@ -947,7 +947,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
    <h2 class="section-title">Cuatro asientos.<em>Dos noches por semana.</em></h2>
    <p class="section-lead">El menú se construye pieza por pieza el día del servicio. Por eso pedimos un anticipo del 50% al reservar — se aplica directamente a tu cuenta final, no es un cargo adicional.</p>
    <div class="reserve-cta-actions">
-    <button class="btn-pri-lg" onclick="goToBooking()">Ver fechas disponibles <span class="ba">→</span></button>
+    <button class="btn-pri-lg" onclick="goToBooking()" data-ck-show="cta.reservar_section.show">Ver fechas disponibles <span class="ba">→</span></button>
    </div>
    <dl class="reserve-detail">
     <div class="reserve-detail-item"><dt>Servicio</dt><dd>Sáb · Dom</dd></div>
@@ -965,28 +965,28 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
    <div class="section-eyebrow">Antes de reservar</div>
    <h2 class="section-title">Lo que <em>conviene saber.</em></h2>
    <p class="section-lead">Si tu pregunta no está aquí, escríbenos por WhatsApp. Respondemos personalmente.</p>
-   <div class="faq-grid">
-    <div class="faq-item">
+   <div class="faq-grid" data-list-id="faq">
+    <div class="faq-item" data-card-id="q1">
      <div class="faq-q" data-ck="faq.q1">¿Por qué solo abren sábado y domingo?</div>
      <div class="faq-a" data-ck="faq.a1">Trabajamos con producto fresco seleccionado pieza por pieza. Mantener el estándar requiere ciclos de servicio acotados. Dos noches por semana es lo que nos permite no comprometer la calidad.</div>
     </div>
-    <div class="faq-item">
+    <div class="faq-item" data-card-id="q2">
      <div class="faq-q" data-ck="faq.q2">¿El anticipo es reembolsable?</div>
      <div class="faq-a" data-ck="faq.a2">Reembolsable hasta 72 horas antes del servicio. Después de ese momento, el anticipo se aplica al producto que ya separamos para tu mesa.</div>
     </div>
-    <div class="faq-item">
+    <div class="faq-item" data-card-id="q3">
      <div class="faq-q" data-ck="faq.q3">¿Puedo elegir lo que voy a comer?</div>
      <div class="faq-a" data-ck="faq.a3">No hay carta. El menú lo construye el chef según el mejor producto del día. Si tienes alergias o restricciones, indícalas al reservar y se adapta el menú sin sacrificar la experiencia.</div>
     </div>
-    <div class="faq-item">
+    <div class="faq-item" data-card-id="q4">
      <div class="faq-q" data-ck="faq.q4">¿Cuánto dura la cena?</div>
      <div class="faq-a" data-ck="faq.a4">Aproximadamente dos horas. Cada uno de los 14 tiempos se prepara a la vista y se sirve en su momento. Es una experiencia para disfrutar sin prisa.</div>
     </div>
-    <div class="faq-item">
+    <div class="faq-item" data-card-id="q5">
      <div class="faq-q" data-ck="faq.q5">¿Hay código de vestimenta?</div>
      <div class="faq-a" data-ck="faq.a5">No hay código formal. Sugerimos vestir cómodo pero cuidado. La barra es íntima — vístete como te vestirías para una cena que importa.</div>
     </div>
-    <div class="faq-item">
+    <div class="faq-item" data-card-id="q6">
      <div class="faq-q" data-ck="faq.q6">¿Incluye bebidas?</div>
      <div class="faq-a" data-ck="faq.a6">El precio del Omakase es solo el menú de 14 tiempos. Bebidas (sake, vino de Valle, agua, etc.) se cobran aparte. Te recomendamos el sake del chef.</div>
     </div>
@@ -1544,10 +1544,7 @@ function hideLoader(){
 }
 setTimeout(hideLoader,3000);
 (async function(){
-  try{
-    const r=await fetch('/api/content');
-    if(!r.ok)return;
-    const C=await r.json();
+  function applyContent(C){
     document.querySelectorAll('[data-ck]').forEach(el=>{
       const v=C[el.dataset.ck];if(v)el.textContent=v;
     });
@@ -1560,6 +1557,30 @@ setTimeout(hideLoader,3000);
     document.querySelectorAll('[data-ck-href]').forEach(el=>{
       const v=C[el.dataset.ckHref];if(v)el.href=v;
     });
+    document.querySelectorAll('[data-list-id]').forEach(list=>{
+      const orderVal=C[list.dataset.listId+'.order'];
+      if(!orderVal)return;
+      const ids=orderVal.split(',').map(s=>s.trim()).filter(Boolean);
+      const byId={};
+      list.querySelectorAll('[data-card-id]').forEach(el=>{byId[el.dataset.cardId]=el;});
+      ids.forEach(id=>{if(byId[id])list.appendChild(byId[id]);});
+    });
+    document.querySelectorAll('[data-ck-show]').forEach(el=>{
+      if(C[el.dataset.ckShow]==='false')el.style.display='none';
+    });
+  }
+  try{
+    const cached=localStorage.getItem('site_content');
+    if(cached){
+      try{
+        applyContent(JSON.parse(cached));
+      }catch(e){}
+    }
+    const r=await fetch('/api/content');
+    if(!r.ok)return;
+    const C=await r.json();
+    applyContent(C);
+    localStorage.setItem('site_content',JSON.stringify(C));
   }catch(e){}
   hideLoader();
 })();

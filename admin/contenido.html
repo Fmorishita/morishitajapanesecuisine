@@ -76,6 +76,21 @@
   input[type=file]{display:none;}
   .upload-note{font-size:11px;color:var(--muted);}
 
+  /* ORDER LIST (reorder con ↑↓) */
+  .order-list{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:8px;}
+  .order-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:4px;margin-bottom:6px;}
+  .order-item:last-child{margin-bottom:0;}
+  .order-num{font-size:11px;color:var(--muted);font-weight:600;min-width:18px;}
+  .order-label{flex:1;font-size:13px;color:var(--fg);}
+  .order-btn{background:transparent;border:1px solid var(--border);color:var(--fg);width:30px;height:28px;border-radius:3px;font-size:14px;cursor:pointer;transition:.2s;}
+  .order-btn:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}
+  .order-btn:disabled{opacity:.25;cursor:not-allowed;}
+
+  /* TOGGLE (checkbox simple) */
+  .toggle-row{display:flex;align-items:center;gap:12px;cursor:pointer;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;}
+  .toggle-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--gold);cursor:pointer;}
+  .toggle-label{flex:1;font-size:13px;color:var(--fg);}
+
   /* DIVIDERS */
   .divider{border:none;border-top:1px solid var(--border);margin:36px 0;}
 
@@ -119,6 +134,8 @@
       <div class="nav-item" onclick="showSection('faq')">FAQ</div>
       <div class="nav-item" onclick="showSection('footer')">Footer</div>
       <div class="nav-item" onclick="showSection('imagenes')">Imágenes</div>
+      <div class="nav-item" onclick="showSection('orden')">Orden de bloques</div>
+      <div class="nav-item" onclick="showSection('botones')">Botones</div>
     </nav>
     <main class="content" id="mainContent"></main>
   </div>
@@ -288,6 +305,87 @@ function imgField(key, label, defaultSrc, altText){
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function escAttr(s){ return String(s).replace(/"/g,'&quot;'); }
 
+// Lee el valor de un input/textarea con id "edit-<key>" y lo guarda
+function editField(key){
+  const id = 'edit-' + key.replace(/\./g, '-');
+  const el = document.getElementById(id);
+  if(!el){ showToast('Campo no encontrado: '+key, true); return; }
+  saveField(key, el.value);
+}
+
+// Estado local de orden por sección. Se inicializa al renderizar la sección "orden".
+const ORDER_STATE = {};
+
+// Renderiza una lista reordenable con botones ↑↓ y un botón "Guardar orden"
+function orderList(listId, label, defaultOrder, labels){
+  // Inicializar el estado con el orden guardado (o el default)
+  const saved = val(listId+'.order','');
+  let order = saved ? saved.split(',').map(s=>s.trim()).filter(Boolean) : defaultOrder.slice();
+  // Asegurar que estén todos los items conocidos (por si se agregaron nuevos)
+  defaultOrder.forEach(id=>{ if(!order.includes(id)) order.push(id); });
+  // Filtrar ids desconocidos
+  order = order.filter(id=>defaultOrder.includes(id));
+  ORDER_STATE[listId] = order;
+  return `
+    <div class="field">
+      <div class="field-label">${escHtml(label)}</div>
+      <div id="orderlist-${listId}" class="order-list">
+        ${order.map((id,i)=>orderItemHtml(listId, id, labels[id]||id, i, order.length)).join('')}
+      </div>
+      <div class="field-actions" style="margin-top:14px;">
+        <button class="btn-save" onclick="saveOrder('${listId}')">Guardar orden</button>
+        <span class="save-status" id="ord_${listId}"></span>
+      </div>
+    </div>`;
+}
+
+function orderItemHtml(listId, id, label, idx, total){
+  return `
+    <div class="order-item" data-id="${escAttr(id)}">
+      <span class="order-num">${idx+1}.</span>
+      <span class="order-label">${escHtml(label)}</span>
+      <button class="order-btn" onclick="moveOrderItem('${listId}','${id}',-1)" ${idx===0?'disabled':''} title="Mover arriba">↑</button>
+      <button class="order-btn" onclick="moveOrderItem('${listId}','${id}',1)" ${idx===total-1?'disabled':''} title="Mover abajo">↓</button>
+    </div>`;
+}
+
+function moveOrderItem(listId, id, delta){
+  const arr = ORDER_STATE[listId]; if(!arr) return;
+  const i = arr.indexOf(id); if(i<0) return;
+  const j = i + delta;
+  if(j<0 || j>=arr.length) return;
+  arr.splice(i,1); arr.splice(j,0,id);
+  // Re-render la lista (mantener labels desde DOM actual)
+  const container = document.getElementById('orderlist-'+listId);
+  if(!container) return;
+  const labels = {};
+  container.querySelectorAll('.order-item').forEach(el=>{
+    const lbl = el.querySelector('.order-label');
+    if(lbl) labels[el.dataset.id] = lbl.textContent;
+  });
+  container.innerHTML = arr.map((id,idx)=>orderItemHtml(listId, id, labels[id]||id, idx, arr.length)).join('');
+}
+
+function saveOrder(listId){
+  const arr = ORDER_STATE[listId]; if(!arr) return;
+  saveField(listId+'.order', arr.join(','), document.getElementById('ord_'+listId));
+}
+
+// Renderiza un toggle on/off para un key booleano (guardado como "true"/"false")
+function toggleField(key, label, defaultOn=true){
+  const id = 'tog_'+key.replace(/\./g,'_');
+  const stored = val(key, '');
+  const isOn = stored === '' ? defaultOn : (stored !== 'false');
+  return `
+    <div class="field">
+      <label class="toggle-row">
+        <input type="checkbox" id="${id}" ${isOn?'checked':''} onchange="saveField('${key}', this.checked?'true':'false', document.getElementById('s_${id}'))"/>
+        <span class="toggle-label">${escHtml(label)}</span>
+        <span class="save-status" id="s_${id}"></span>
+      </label>
+    </div>`;
+}
+
 // ── SECTIONS ──
 const SECTIONS = {
 
@@ -452,6 +550,47 @@ const SECTIONS = {
           <button type="button" onclick="editField('social.t3.quote'); editField('social.t3.author');" style="margin-top: 8px; padding: 6px 12px; background: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 12px;">Guardar</button>
         </div>
       </div>
+    `
+  },
+
+  orden: {
+    title: 'Orden de bloques',
+    desc: 'Reorganiza el orden de los items dentro de cada sección. Usa los botones ↑ ↓ y guarda.',
+    render: ()=>`
+      ${orderList('producto', 'Productos (Wagyu / Pescado / Base)', ['item1','item2','item3'], {
+        item1:'Carne · Wagyu A5 + Kobe',
+        item2:'Pescado · Toro / sashimi',
+        item3:'Base · Arroz / dashi'
+      })}
+      <hr class="divider"/>
+      ${orderList('pilares', 'Pilares (3 reglas)', ['p1','p2','p3'], {
+        p1:'Pilar 01 · El producto manda',
+        p2:'Pilar 02 · Cuatro asientos',
+        p3:'Pilar 03 · Catorce tiempos'
+      })}
+      <hr class="divider"/>
+      ${orderList('social', 'Testimonios', ['t1','t2','t3'], {
+        t1:'Reseña #1', t2:'Reseña #2', t3:'Reseña #3'
+      })}
+      <hr class="divider"/>
+      ${orderList('faq', 'FAQ (preguntas frecuentes)', ['q1','q2','q3','q4','q5','q6'], {
+        q1:'P1 · ¿Por qué solo abren sáb-dom?',
+        q2:'P2 · ¿El anticipo es reembolsable?',
+        q3:'P3 · ¿Puedo elegir lo que voy a comer?',
+        q4:'P4 · ¿Cuánto dura la cena?',
+        q5:'P5 · ¿Hay código de vestimenta?',
+        q6:'P6 · ¿Incluye bebidas?'
+      })}
+    `
+  },
+
+  botones: {
+    title: 'Botones (CTAs)',
+    desc: 'Activa o desactiva botones secundarios del sitio. Los CTAs principales de "Reservar" siempre quedan visibles.',
+    render: ()=>`
+      ${toggleField('cta.hero_secondary.show', 'Botón "Conocer la experiencia ↓" en hero', true)}
+      <hr class="divider"/>
+      ${toggleField('cta.reservar_section.show', 'Botón "Ver fechas disponibles →" en sección Reservar', true)}
     `
   }
 };
