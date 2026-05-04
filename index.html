@@ -1596,10 +1596,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /* ── Carga contenido editable (via backend, sin exponer keys) ── */
 (async function(){
-  try{
-    const r=await fetch('/api/content');
-    if(!r.ok)return;
-    const C=await r.json();
+  function applyContent(C){
     document.querySelectorAll('[data-ck]').forEach(el=>{
       const v=C[el.dataset.ck];if(v)el.textContent=v;
     });
@@ -1612,7 +1609,6 @@ window.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-ck-href]').forEach(el=>{
       const v=C[el.dataset.ckHref];if(v)el.href=v;
     });
-    // Reordenar items dentro de listas según <listId>.order (ej: "item2,item3,item1")
     document.querySelectorAll('[data-list-id]').forEach(list=>{
       const orderVal=C[list.dataset.listId+'.order'];
       if(!orderVal)return;
@@ -1621,10 +1617,22 @@ window.addEventListener('DOMContentLoaded', () => {
       list.querySelectorAll('[data-card-id]').forEach(el=>{byId[el.dataset.cardId]=el;});
       ids.forEach(id=>{if(byId[id])list.appendChild(byId[id]);});
     });
-    // Toggle visibilidad: data-ck-show="<key>" — oculta si valor es "false"
     document.querySelectorAll('[data-ck-show]').forEach(el=>{
       if(C[el.dataset.ckShow]==='false')el.style.display='none';
     });
+  }
+  try{
+    const cached=localStorage.getItem('site_content');
+    if(cached){
+      try{
+        applyContent(JSON.parse(cached));
+      }catch(e){}
+    }
+    const r=await fetch('/api/content');
+    if(!r.ok)return;
+    const C=await r.json();
+    applyContent(C);
+    localStorage.setItem('site_content',JSON.stringify(C));
   }catch(e){}
 })();
 </script>
