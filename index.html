@@ -1596,6 +1596,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /* ── Carga contenido editable (via backend, sin exponer keys) ── */
 (async function(){
+  const EDIT_MODE = new URLSearchParams(location.search).get('edit') === '1';
   function applyContent(C){
     document.querySelectorAll('[data-ck]').forEach(el=>{
       const v=C[el.dataset.ck];if(v)el.textContent=v;
@@ -1622,18 +1623,74 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
   try{
-    const cached=localStorage.getItem('site_content');
-    if(cached){
-      try{
-        applyContent(JSON.parse(cached));
-      }catch(e){}
+    if(!EDIT_MODE){
+      const cached=localStorage.getItem('site_content');
+      if(cached){
+        try{ applyContent(JSON.parse(cached)); }catch(e){}
+      }
     }
     const r=await fetch('/api/content');
-    if(!r.ok)return;
+    if(!r.ok){ if(EDIT_MODE) attachEditMode(); return; }
     const C=await r.json();
     applyContent(C);
-    localStorage.setItem('site_content',JSON.stringify(C));
-  }catch(e){}
+    if(!EDIT_MODE) localStorage.setItem('site_content',JSON.stringify(C));
+    if(EDIT_MODE) attachEditMode();
+  }catch(e){ if(EDIT_MODE) attachEditMode(); }
+
+  function attachEditMode(){
+    const style=document.createElement('style');
+    style.textContent=`
+      [data-ck-editable]{outline:1px dashed rgba(200,169,126,.4);outline-offset:2px;cursor:pointer;transition:outline-color .15s,background .15s;}
+      [data-ck-editable]:hover{outline:2px dashed #c8a97e;background:rgba(200,169,126,.08);}
+      [data-ck-editable].ck-active{outline:2px solid #c8a97e;background:rgba(200,169,126,.12);}
+      html,body{cursor:default;}
+    `;
+    document.head.appendChild(style);
+    function tag(el,key,kind){
+      el.setAttribute('data-ck-editable','');
+      el.dataset.ckKind=kind;
+      el.dataset.ckKey=key;
+      el.addEventListener('click',ev=>{
+        ev.preventDefault(); ev.stopPropagation();
+        document.querySelectorAll('[data-ck-editable].ck-active').forEach(x=>x.classList.remove('ck-active'));
+        el.classList.add('ck-active');
+        try{ window.parent.postMessage({type:'ck-clicked',key,kind},'*'); }catch(e){}
+      },true);
+    }
+    document.querySelectorAll('[data-ck]').forEach(el=>tag(el,el.dataset.ck,'text'));
+    document.querySelectorAll('[data-ck-html]').forEach(el=>tag(el,el.dataset.ckHtml,'html'));
+    document.querySelectorAll('[data-ck-src]').forEach(el=>tag(el,el.dataset.ckSrc,'src'));
+    document.querySelectorAll('[data-ck-href]').forEach(el=>tag(el,el.dataset.ckHref,'href'));
+    // Bloquear navegación por enlaces y submits en modo edición
+    document.addEventListener('click',ev=>{
+      const a=ev.target.closest('a[href]');
+      if(a){ ev.preventDefault(); }
+    },true);
+    // Listener de actualizaciones en vivo desde el parent
+    window.addEventListener('message',ev=>{
+      const d=ev.data; if(!d||typeof d!=='object') return;
+      if(d.type==='ck-preview'){
+        const sel=k=>`[data-ck-key="${(window.CSS&&CSS.escape)?CSS.escape(d.key):d.key}"]`;
+        document.querySelectorAll(sel(d.key)).forEach(el=>{
+          if(d.kind==='text') el.textContent=d.value;
+          else if(d.kind==='html') el.innerHTML=d.value;
+          else if(d.kind==='src') el.src=d.value;
+          else if(d.kind==='href') el.href=d.value;
+        });
+      } else if(d.type==='ck-scroll'){
+        const el=document.querySelector(`[data-ck-key="${(window.CSS&&CSS.escape)?CSS.escape(d.key):d.key}"]`);
+        if(el){
+          el.scrollIntoView({behavior:'smooth',block:'center'});
+          document.querySelectorAll('[data-ck-editable].ck-active').forEach(x=>x.classList.remove('ck-active'));
+          el.classList.add('ck-active');
+        }
+      } else if(d.type==='ck-reload'){
+        // Re-fetch fresh content (después de guardar)
+        fetch('/api/content').then(r=>r.json()).then(C=>{ applyContent(C); }).catch(()=>{});
+      }
+    });
+    try{ window.parent.postMessage({type:'ck-iframe-ready'},'*'); }catch(e){}
+  }
 })();
 </script>
 </body>
