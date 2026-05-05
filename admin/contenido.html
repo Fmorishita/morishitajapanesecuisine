@@ -114,6 +114,40 @@
 
   .html-hint{font-size:10px;color:var(--muted);margin-top:4px;}
 
+  /* CUSTOM SECTIONS */
+  .cs-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+  .cs-card{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:14px;}
+  .cs-card-head{display:flex;align-items:center;gap:10px;margin-bottom:0;}
+  .cs-card-icon{width:34px;height:34px;border-radius:4px;background:rgba(200,169,126,.1);border:1px solid rgba(200,169,126,.25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:15px;}
+  .cs-card-info{flex:1;min-width:0;}
+  .cs-card-title{font-size:12px;color:var(--fg);font-weight:500;margin-bottom:2px;}
+  .cs-card-meta{font-size:10px;color:var(--muted);letter-spacing:.05em;}
+  .cs-card-actions{display:flex;gap:6px;}
+  .cs-btn{background:transparent;border:1px solid var(--border);color:var(--fg);padding:6px 10px;border-radius:3px;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.2s;}
+  .cs-btn:hover{border-color:var(--gold);color:var(--gold);}
+  .cs-btn.danger:hover{border-color:var(--red);color:var(--red);}
+  .cs-card-body{padding-top:14px;margin-top:14px;border-top:1px dashed var(--border);display:none;}
+  .cs-card.open .cs-card-body{display:block;}
+  .cs-card.open .cs-toggle-icon{transform:rotate(180deg);}
+  .cs-toggle-icon{transition:transform .2s;display:inline-block;}
+  .cs-empty{padding:28px 16px;text-align:center;color:var(--muted);font-size:12px;background:var(--surface2);border:1px dashed var(--border);border-radius:4px;}
+
+  .cs-tpl-picker{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px;}
+  .cs-tpl-card{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:14px;cursor:pointer;transition:.2s;display:flex;align-items:flex-start;gap:12px;}
+  .cs-tpl-card:hover{border-color:var(--gold);}
+  .cs-tpl-thumb{width:54px;height:42px;border-radius:3px;background:#1a1a17;border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .cs-tpl-info{flex:1;min-width:0;}
+  .cs-tpl-name{font-size:12px;color:var(--fg);margin-bottom:3px;font-weight:500;}
+  .cs-tpl-desc{font-size:10px;color:var(--muted);line-height:1.5;}
+
+  .cs-add-btn{width:100%;background:transparent;border:1px dashed var(--border);color:var(--gold);padding:14px;border-radius:4px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:.2s;}
+  .cs-add-btn:hover{border-color:var(--gold);background:rgba(200,169,126,.04);}
+
+  .cs-radio-row{display:flex;gap:10px;margin-top:6px;}
+  .cs-radio{flex:1;background:var(--surface2);border:1px solid var(--border);padding:9px 11px;border-radius:3px;font-size:11px;color:var(--fg);cursor:pointer;text-align:center;transition:.2s;}
+  .cs-radio:hover{border-color:var(--gold);}
+  .cs-radio.active{border-color:var(--gold);background:rgba(200,169,126,.08);color:var(--gold);}
+
   /* DEVICE TOGGLE */
   .device-toggle{display:flex;gap:0;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
   .device-btn{background:transparent;border:0;color:var(--muted);padding:6px 11px;cursor:pointer;font-size:11px;transition:.2s;}
@@ -178,6 +212,7 @@
         <div class="nav-item" data-sec="reservar" onclick="showSection('reservar')">Reservar (CTA)</div>
         <div class="nav-item" data-sec="footer" onclick="showSection('footer')">Footer</div>
         <div class="nav-item" data-sec="imagenes" onclick="showSection('imagenes')">Imágenes</div>
+        <div class="nav-item" data-sec="custom" onclick="showSection('custom')">+ Secciones personalizadas</div>
         <div class="nav-item" data-sec="orden" onclick="showSection('orden')">Orden de bloques</div>
         <div class="nav-item" data-sec="botones" onclick="showSection('botones')">Botones</div>
       </nav>
@@ -502,6 +537,161 @@ function onToggleChange(key, checked, statusId){
   });
 }
 
+// ── CUSTOM SECTIONS ──
+const CUSTOM_TEMPLATES = {
+  'text-image': {
+    name: 'Texto + Imagen',
+    desc: 'Bloque con título, párrafo e imagen al lado. Ideal para presentar un servicio, plato o concepto.',
+    icon: '▦',
+    fields: [
+      {key:'eyebrow', label:'Eyebrow (texto pequeño)', type:'text', fallback:'Etiqueta'},
+      {key:'title', label:'Título (acepta <em>)', type:'html', fallback:'Título <em>en cursiva.</em>'},
+      {key:'paragraph', label:'Párrafo', type:'textarea', fallback:'Escribe aquí la descripción del bloque…'},
+      {key:'image', label:'Imagen', type:'image', fallback:''},
+      {key:'image_position', label:'Posición de la imagen', type:'radio', options:[['right','Derecha'],['left','Izquierda']], fallback:'right'},
+      {key:'button_show', label:'Mostrar botón', type:'toggle', fallback:'false'},
+      {key:'button_label', label:'Texto del botón', type:'text', fallback:'Saber más'},
+      {key:'button_url', label:'URL del botón', type:'url', fallback:'#'},
+      {key:'alt_bg', label:'Fondo alternativo (color cálido)', type:'toggle', fallback:'false'}
+    ]
+  },
+  'text-centered': {
+    name: 'Texto centrado',
+    desc: 'Bloque centrado con título, párrafo y botón opcional. Ideal para anuncios o secciones de contenido puro.',
+    icon: '▤',
+    fields: [
+      {key:'eyebrow', label:'Eyebrow', type:'text', fallback:'Etiqueta'},
+      {key:'title', label:'Título (acepta <em>)', type:'html', fallback:'Título <em>centrado.</em>'},
+      {key:'paragraph', label:'Párrafo', type:'textarea', fallback:'Escribe aquí la descripción…'},
+      {key:'button_show', label:'Mostrar botón', type:'toggle', fallback:'false'},
+      {key:'button_label', label:'Texto del botón', type:'text', fallback:'Saber más'},
+      {key:'button_url', label:'URL del botón', type:'url', fallback:'#'},
+      {key:'alt_bg', label:'Fondo alternativo (color cálido)', type:'toggle', fallback:'false'}
+    ]
+  },
+  'gallery': {
+    name: 'Galería (3 imágenes)',
+    desc: 'Bloque con título y grid de 3 imágenes con caption. Ideal para mostrar productos, ambientes o platos.',
+    icon: '◰',
+    fields: [
+      {key:'eyebrow', label:'Eyebrow', type:'text', fallback:'Galería'},
+      {key:'title', label:'Título (acepta <em>)', type:'html', fallback:'Una <em>selección.</em>'},
+      {key:'paragraph', label:'Párrafo introductorio', type:'textarea', fallback:''},
+      {key:'item1.image', label:'Imagen 1', type:'image', fallback:''},
+      {key:'item1.caption', label:'Caption 1', type:'text', fallback:'Imagen 1'},
+      {key:'item2.image', label:'Imagen 2', type:'image', fallback:''},
+      {key:'item2.caption', label:'Caption 2', type:'text', fallback:'Imagen 2'},
+      {key:'item3.image', label:'Imagen 3', type:'image', fallback:''},
+      {key:'item3.caption', label:'Caption 3', type:'text', fallback:'Imagen 3'},
+      {key:'alt_bg', label:'Fondo alternativo (color cálido)', type:'toggle', fallback:'false'}
+    ]
+  }
+};
+
+function customSectionList(){
+  return (val('custom.sections','')||'').split(',').map(s=>s.trim()).filter(Boolean);
+}
+
+function genCustomId(){
+  return 'cs'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+}
+
+async function addCustomSection(template){
+  const id=genCustomId();
+  const list=customSectionList();
+  list.push(id);
+  // Save in order: template first, then add to list, then to sections.order
+  pushUndo('custom.'+id+'.template');
+  await saveField('custom.'+id+'.template', template, null);
+  pushUndo('custom.sections');
+  await saveField('custom.sections', list.join(','), null);
+  // Add to sections.order
+  const order=val('sections.order','pilares,producto,chef,social,reservar,faq').split(',').map(s=>s.trim()).filter(Boolean);
+  // Insert custom id before 'social' if present, else at end
+  const insertIdx=order.indexOf('social');
+  const customId='custom-'+id;
+  if(!order.includes(customId)){
+    if(insertIdx>=0) order.splice(insertIdx, 0, customId);
+    else order.push(customId);
+    pushUndo('sections.order');
+    await saveField('sections.order', order.join(','), null);
+  }
+  // Pre-fill fallbacks for the chosen template
+  const tpl=CUSTOM_TEMPLATES[template];
+  for(const f of tpl.fields){
+    if(f.fallback!=='' && f.fallback!==undefined){
+      await saveField('custom.'+id+'.'+f.key, f.fallback, null);
+    }
+  }
+  showToast('Sección agregada');
+  reloadPreview();
+  showSection('custom');
+  // Auto-open the new card
+  setTimeout(()=>{
+    const card=document.querySelector('[data-cs-id="'+id+'"]');
+    if(card) card.classList.add('open');
+  }, 100);
+}
+
+async function deleteCustomSection(id){
+  if(!confirm('¿Eliminar esta sección personalizada? Esta acción se puede deshacer con el botón ↶.')) return;
+  const list=customSectionList().filter(x=>x!==id);
+  pushUndo('custom.sections');
+  await saveField('custom.sections', list.join(','), null);
+  // Remove from sections.order too
+  const order=val('sections.order','').split(',').map(s=>s.trim()).filter(Boolean);
+  const customId='custom-'+id;
+  if(order.includes(customId)){
+    const newOrder=order.filter(x=>x!==customId);
+    pushUndo('sections.order');
+    await saveField('sections.order', newOrder.join(','), null);
+  }
+  showToast('Sección eliminada');
+  reloadPreview();
+  showSection('custom');
+}
+
+function toggleCustomCard(id){
+  const card=document.querySelector('[data-cs-id="'+id+'"]');
+  if(card) card.classList.toggle('open');
+}
+
+function setCustomRadio(key, value, group){
+  pushUndo(key);
+  saveField(key, value, null).then(()=>{
+    document.querySelectorAll('[data-radio-group="'+group+'"]').forEach(el=>{
+      el.classList.toggle('active', el.dataset.radioValue===value);
+    });
+    setTimeout(reloadPreview, 200);
+  });
+}
+
+function renderCustomFields(id, template){
+  const tpl=CUSTOM_TEMPLATES[template];
+  if(!tpl) return '<p style="color:var(--red);font-size:12px;">Template desconocido: '+escHtml(template)+'</p>';
+  return tpl.fields.map(f=>{
+    const fkey='custom.'+id+'.'+f.key;
+    if(f.type==='text') return field(fkey, f.label, {multiline:false, fallback:f.fallback});
+    if(f.type==='textarea') return field(fkey, f.label, {multiline:true, fallback:f.fallback});
+    if(f.type==='html') return field(fkey, f.label, {html:true, fallback:f.fallback});
+    if(f.type==='url') return field(fkey, f.label, {multiline:false, url:true, fallback:f.fallback});
+    if(f.type==='image') return imgField(fkey, f.label, '', f.label);
+    if(f.type==='toggle') return toggleField(fkey, f.label, f.fallback==='true');
+    if(f.type==='radio'){
+      const current=val(fkey, f.fallback);
+      const groupId=fkey.replace(/\./g,'_');
+      return `
+        <div class="field">
+          <div class="field-label">${escHtml(f.label)}</div>
+          <div class="cs-radio-row">
+            ${f.options.map(([v,lbl])=>`<div class="cs-radio ${current===v?'active':''}" data-radio-group="${groupId}" data-radio-value="${escAttr(v)}" onclick="setCustomRadio('${fkey}','${escAttr(v)}','${groupId}')">${escHtml(lbl)}</div>`).join('')}
+          </div>
+        </div>`;
+    }
+    return '';
+  }).join('');
+}
+
 // ── KEY → SECTION MAP (para click-to-edit) ──
 function keyToSection(key){
   if(key === 'sections.order') return 'orden';
@@ -516,6 +706,7 @@ function keyToSection(key){
   if(key.startsWith('footer.')) return 'footer';
   if(key.startsWith('img.')) return 'imagenes';
   if(key.startsWith('cta.')) return 'botones';
+  if(key.startsWith('custom.')) return 'custom';
   if(/\.order$/.test(key)) return 'orden';
   return null;
 }
@@ -708,20 +899,80 @@ const SECTIONS = {
     `
   },
 
+  custom: {
+    title: 'Secciones personalizadas',
+    desc: 'Agrega bloques nuevos al sitio usando uno de los 3 templates. Cada bloque aparece en el preview y se puede reordenar en "Orden de bloques".',
+    render: ()=>{
+      const ids=customSectionList();
+      const cards=ids.length===0
+        ? '<div class="cs-empty">No hay secciones personalizadas todavía.<br>Agrega una con el botón de abajo.</div>'
+        : '<div class="cs-list">'+ids.map(id=>{
+            const tpl=val('custom.'+id+'.template','text-centered');
+            const tplDef=CUSTOM_TEMPLATES[tpl]||{name:tpl,icon:'?'};
+            const titleField=val('custom.'+id+'.title', val('custom.'+id+'.eyebrow','Sección sin título'));
+            const cleanTitle=titleField.replace(/<[^>]+>/g,'').slice(0,60);
+            return `
+              <div class="cs-card" data-cs-id="${id}">
+                <div class="cs-card-head">
+                  <div class="cs-card-icon">${tplDef.icon}</div>
+                  <div class="cs-card-info">
+                    <div class="cs-card-title">${escHtml(cleanTitle||'Sin título')}</div>
+                    <div class="cs-card-meta">${escHtml(tplDef.name)} · id ${id}</div>
+                  </div>
+                  <div class="cs-card-actions">
+                    <button class="cs-btn" onclick="toggleCustomCard('${id}')">Editar <span class="cs-toggle-icon">▾</span></button>
+                    <button class="cs-btn danger" onclick="deleteCustomSection('${id}')">Eliminar</button>
+                  </div>
+                </div>
+                <div class="cs-card-body">${renderCustomFields(id, tpl)}</div>
+              </div>`;
+          }).join('')+'</div>';
+      const picker=`
+        <div style="margin-top:24px;">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Agregar nueva sección</div>
+          <div class="cs-tpl-picker">
+            ${Object.entries(CUSTOM_TEMPLATES).map(([key,t])=>`
+              <div class="cs-tpl-card" onclick="addCustomSection('${key}')">
+                <div class="cs-tpl-thumb"><span style="font-size:22px;color:var(--gold);">${t.icon}</span></div>
+                <div class="cs-tpl-info">
+                  <div class="cs-tpl-name">${escHtml(t.name)}</div>
+                  <div class="cs-tpl-desc">${escHtml(t.desc)}</div>
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>`;
+      return cards+picker;
+    }
+  },
+
   orden: {
     title: 'Orden de bloques',
     desc: 'Reorganiza el orden de las secciones de la página y los elementos dentro de cada sección.',
-    render: ()=>`
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Secciones de la página</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Hero y Footer siempre fijos. El resto es libre.</div>
-      ${orderList('sections', 'Secciones', ['pilares','producto','chef','social','reservar','faq'], {
+    render: ()=>{
+      // Build base order including custom sections
+      const baseIds=['pilares','producto','chef','social','reservar','faq'];
+      const baseLabels={
         pilares: 'Pilares / Filosofía',
         producto: 'El producto (Wagyu, Pescado, etc.)',
         chef: 'El chef',
         social: 'Testimonios',
         reservar: 'Reservar (CTA)',
         faq: 'FAQ / Preguntas frecuentes'
-      })}
+      };
+      const customIds=customSectionList();
+      customIds.forEach(id=>{
+        const customSecId='custom-'+id;
+        baseIds.push(customSecId);
+        const tpl=val('custom.'+id+'.template','text-centered');
+        const tplDef=CUSTOM_TEMPLATES[tpl]||{name:tpl,icon:'?'};
+        const titleRaw=val('custom.'+id+'.title', val('custom.'+id+'.eyebrow','Sección personalizada'));
+        const cleanTitle=titleRaw.replace(/<[^>]+>/g,'').slice(0,40);
+        baseLabels[customSecId]='✦ '+(cleanTitle||'Personalizada')+' · '+tplDef.name;
+      });
+      return `
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Secciones de la página</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Hero y Footer siempre fijos. El resto es libre. ✦ = personalizada.</div>
+      ${orderList('sections', 'Secciones', baseIds, baseLabels)}
       <hr class="divider"/>
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Elementos dentro de secciones</div>
       ${orderList('producto', 'Productos (Wagyu / Pescado / Base)', ['item1','item2','item3'], {
@@ -748,7 +999,8 @@ const SECTIONS = {
         q5:'P5 · ¿Código de vestimenta?',
         q6:'P6 · ¿Incluye bebidas?'
       })}
-    `
+    `;
+    }
   },
 
   botones: {
@@ -783,7 +1035,15 @@ function showSection(key, opts={}){
     </div>
     ${s.render()}
   `;
-  if(opts.focusKey) setTimeout(()=>focusFieldInSection(opts.focusKey), 60);
+  // If the focusKey targets a custom section, open its card first
+  if(opts.focusKey && opts.focusKey.startsWith('custom.')){
+    const m=opts.focusKey.match(/^custom\.([^.]+)\./);
+    if(m){
+      const card=document.querySelector('[data-cs-id="'+m[1]+'"]');
+      if(card) card.classList.add('open');
+    }
+  }
+  if(opts.focusKey) setTimeout(()=>focusFieldInSection(opts.focusKey), 80);
 }
 
 // ── IFRAME MESSAGING ──
