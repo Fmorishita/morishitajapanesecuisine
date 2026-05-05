@@ -33,6 +33,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Antique+Soft&family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
 <style>
+/* ── PAGE LOADER ── */
+#page-loader{position:fixed;inset:0;z-index:9999;background:var(--paper);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;transition:opacity .35s ease;}
+#page-loader.hide{opacity:0;pointer-events:none;}
+.pl-kanji{font-family:var(--display);font-size:clamp(64px,12vw,110px);color:var(--ink);line-height:1;letter-spacing:-.02em;}
+.pl-brand{font-family:var(--mono);font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:var(--ink-soft);margin-top:-8px;}
+.pl-dots{display:flex;gap:8px;margin-top:16px;}
+.pl-dot{width:6px;height:6px;border-radius:50%;background:var(--sakura-d);animation:plPulse 1.2s ease-in-out infinite;}
+[data-theme="dark"] .pl-dot{background:var(--gold);}
+.pl-dot:nth-child(2){animation-delay:.2s;}
+.pl-dot:nth-child(3){animation-delay:.4s;}
+@keyframes plPulse{0%,80%,100%{transform:scale(0.7);opacity:.4}40%{transform:scale(1);opacity:1}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-font-smoothing:antialiased}
 :root{
@@ -737,24 +748,33 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
  <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
 </button>
+<div id="page-loader">
+ <div class="pl-kanji">森下</div>
+ <div class="pl-brand">Morishita</div>
+ <div class="pl-dots">
+  <div class="pl-dot"></div>
+  <div class="pl-dot"></div>
+  <div class="pl-dot"></div>
+ </div>
+</div>
 <div class="sakura-bg" id="sakBg"></div>
 <div class="app">
 
 <!-- TOPBAR -->
 <header class="topbar">
  <svg class="logo-svg" viewBox="0 0 360 72" xmlns="http://www.w3.org/2000/svg" fill="none" onclick="go('home')">
- <text x="2" y="58" font-family="'Zen Antique Soft',serif" font-size="60" fill="#0d0d0b" letter-spacing="1">森下</text>
+ <text x="8" y="58" font-family="'Zen Antique Soft',serif" font-size="60" fill="#0d0d0b" letter-spacing="1" data-ck="logo.kanji">森下</text>
  <line x1="135" y1="8" x2="135" y2="64" stroke="#ddd5c8" stroke-width="1"/>
- <text x="147" y="44" font-family="'DM Mono','Courier New',monospace" font-size="19.5" fill="#0d0d0b" letter-spacing="4">MORISHITA</text>
- <text x="147" y="60" font-family="'DM Mono','Courier New',monospace" font-size="8.5" fill="#6b6760" letter-spacing="3.2">AUTHENTIC JAPANESE CUISINE</text>
+ <text x="147" y="44" font-family="'DM Mono','Courier New',monospace" font-size="19.5" fill="#0d0d0b" letter-spacing="4" data-ck="logo.name">MORISHITA</text>
+ <text x="147" y="60" font-family="'DM Mono','Courier New',monospace" font-size="8.5" fill="#6b6760" letter-spacing="3.2" data-ck="logo.tagline">AUTHENTIC JAPANESE CUISINE</text>
  </svg>
  <button class="topbar-burger" id="topbarBurger" aria-label="Menú">≡</button>
  <nav class="topbar-nav" id="topbarNav">
-  <a onclick="navTo('experiencia')">La experiencia</a>
-  <a onclick="navTo('producto')">El producto</a>
-  <a onclick="navTo('chef')">El chef</a>
-  <a onclick="navTo('faq')">FAQ</a>
-  <button class="topbar-cta" onclick="goToBooking()">Reservar</button>
+  <a onclick="navTo('experiencia')" data-ck="nav.link1">La experiencia</a>
+  <a onclick="navTo('producto')" data-ck="nav.link2">El producto</a>
+  <a onclick="navTo('chef')" data-ck="nav.link3">El chef</a>
+  <a onclick="navTo('faq')" data-ck="nav.link4">FAQ</a>
+  <button class="topbar-cta" onclick="goToBooking()" data-ck="cta.topbar.label">Reservar</button>
  </nav>
 </header>
 
@@ -792,43 +812,43 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
    <div class="home-hero-text">
     <div class="home-hero-eyebrow" data-ck="hero.eyebrow">Omakase · Baja California</div>
     <h1 class="home-hero-h1" data-ck-html="hero.h1">El producto<em>al frente.</em></h1>
-    <p class="home-hero-sub" data-ck="hero.sub">Una barra de cuatro asientos. Catorce tiempos curados con Wagyu A5, Kobe importado de Japón y el mejor pescado de la temporada.</p>
+    <p class="home-hero-sub" data-ck-html="hero.sub">Una barra de cuatro asientos. Catorce tiempos curados con Wagyu A5, Kobe importado de Japón y el mejor pescado de la temporada.</p>
     <div class="home-hero-actions">
-     <button class="btn-pri-lg" onclick="goToBooking()">Reservar mesa <span class="ba">→</span></button>
-     <button class="btn-sec-lg" onclick="navTo('experiencia')">Conocer la experiencia ↓</button>
+     <button class="btn-pri-lg" onclick="goToBooking()"><span data-ck="cta.hero_primary.label">Reservar mesa</span> <span class="ba">→</span></button>
+     <button class="btn-sec-lg" onclick="navTo('experiencia')" data-ck-show="cta.hero_secondary.show"><span data-ck="cta.hero_secondary.label">Conocer la experiencia</span> ↓</button>
     </div>
-    <div class="home-hero-meta">
-     <span><i></i>Sáb · Dom</span>
-     <span><i></i>4 asientos</span>
-     <span><i></i>14 tiempos</span>
-     <span><i></i>$1,850 MXN p/p</span>
+    <div class="home-hero-meta" data-ck-show="hero.meta.show">
+     <span><i></i><span data-ck="hero.meta1">Sáb · Dom</span></span>
+     <span><i></i><span data-ck="hero.meta2">4 asientos</span></span>
+     <span><i></i><span data-ck="hero.meta3">14 tiempos</span></span>
+     <span><i></i><span data-ck="hero.meta4">$1,850 MXN p/p</span></span>
     </div>
    </div>
    <div class="home-hero-card">
     <img src="/img/hero-bar.jpg" alt="Barra Omakase Morishita · Baja California" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.hero">
-    <div class="home-hero-card-tag" data-ck="hero.card_tag">La barra · 4 asientos · Sáb &amp; Dom</div>
+    <div class="home-hero-card-tag" data-ck="hero.card_tag" data-ck-show="hero.card_tag.show">La barra · 4 asientos · Sáb &amp; Dom</div>
    </div>
   </div>
  </div>
 
  <!-- PILARES -->
- <div class="section-pad" id="experiencia">
+ <div class="section-pad" id="experiencia" data-section-id="pilares">
   <div class="section-inner">
    <div class="section-eyebrow">La filosofía</div>
    <h2 class="section-title" data-ck-html="pilares.title">Tres reglas. <em>Sin excepción.</em></h2>
    <p class="section-lead" data-ck="pilares.lead">Un Omakase no se mide por la receta. Se mide por la materia prima, el tiempo dedicado a cada pieza y la intimidad del servicio.</p>
-   <div class="pillars-grid">
-    <div class="pillar">
+   <div class="pillars-grid" data-list-id="pilares">
+    <div class="pillar" data-card-id="p1">
      <div class="pillar-num" data-ck="pilares.p1.num">01 · El producto manda</div>
      <div class="pillar-title" data-ck="pilares.p1.title">Cada pieza, seleccionada a mano.</div>
      <div class="pillar-body" data-ck="pilares.p1.body">Wagyu A5 y Kobe importados de Japón. Pescado de temporada de las mejores aguas. Si una pieza no llega al estándar, no entra a la barra.</div>
     </div>
-    <div class="pillar">
+    <div class="pillar" data-card-id="p2">
      <div class="pillar-num" data-ck="pilares.p2.num">02 · Cuatro asientos</div>
      <div class="pillar-title" data-ck="pilares.p2.title">Una barra. Dos noches por semana.</div>
      <div class="pillar-body" data-ck="pilares.p2.body">Solo abrimos sábado y domingo. Cuatro lugares por servicio. El chef cocina y narra cada tiempo frente a ti.</div>
     </div>
-    <div class="pillar">
+    <div class="pillar" data-card-id="p3">
      <div class="pillar-num" data-ck="pilares.p3.num">03 · Catorce tiempos</div>
      <div class="pillar-title" data-ck="pilares.p3.title">El menú lo dicta el día.</div>
      <div class="pillar-body" data-ck="pilares.p3.body">No hay carta. Hay una secuencia construida con el mejor producto que llegó esa semana. La misma cena no se repite jamás.</div>
@@ -838,7 +858,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- PRODUCTO -->
- <div class="product-section section-pad" id="producto">
+ <div class="product-section section-pad" id="producto" data-section-id="producto">
   <div class="section-inner">
    <div class="product-hero">
     <div class="product-hero-text">
@@ -853,8 +873,8 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
     </div>
    </div>
 
-   <div class="product-grid">
-    <div class="product-item">
+   <div class="product-grid" data-list-id="producto">
+    <div class="product-item" data-card-id="item1">
      <div class="product-item-img">
       <img src="/img/producto-carne.jpg" alt="Nigiri de Wagyu A5 con hoja de oro · Morishita" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.carne">
      </div>
@@ -862,7 +882,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
      <div class="product-item-title" data-ck="producto.item1.title">Wagyu A5 + Kobe</div>
      <div class="product-item-body" data-ck="producto.item1.body">Importados directo de Japón con certificación de origen. Marmoleado A5, el grado más alto del estándar japonés. Servido en preparaciones que respetan la pieza: tataki, sumibiyaki, nigiri.</div>
     </div>
-    <div class="product-item">
+    <div class="product-item" data-card-id="item2">
      <div class="product-item-img">
       <img src="/img/producto-pescado.jpg" alt="Toro sashimi en plato celadón · Morishita" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.pescado">
      </div>
@@ -870,7 +890,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
      <div class="product-item-title" data-ck="producto.item2.title">Pescado de temporada</div>
      <div class="product-item-body" data-ck="producto.item2.body">Selección semanal. Cortes premium del Pacífico y de importación japonesa cuando la temporada lo requiere. Lo que no esté en el punto, no entra al servicio.</div>
     </div>
-    <div class="product-item">
+    <div class="product-item" data-card-id="item3">
      <div class="product-item-img">
       <img src="/img/producto-base.jpg" alt="Nigiri con detalle de arroz japonés · Morishita" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" data-ck-src="img.base">
      </div>
@@ -883,7 +903,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- CHEF -->
- <div class="chef-section" id="chef">
+ <div class="chef-section" id="chef" data-section-id="chef">
   <div class="chef-card">
    <img src="/img/chef-morishita.jpg" alt="Chef Morishita en la barra · Omakase Baja California" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;object-position:center top;" data-ck-src="img.chef">
   </div>
@@ -898,25 +918,24 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- PRUEBA SOCIAL -->
- <div class="social-section section-pad">
+ <div class="social-section section-pad" data-section-id="social">
   <div class="section-inner">
    <div class="section-eyebrow">Lo que dicen quienes ya estuvieron</div>
    <h2 class="section-title">La barra <em>habla por sí sola.</em></h2>
-   <div class="testimonials">
-    <!-- TODO: Reemplazar con testimonios reales (capturas de Google/IG/DMs) -->
-    <div class="testimonial">
+   <div class="testimonials" data-list-id="social">
+    <div class="testimonial" data-card-id="t1">
      <div class="testimonial-stars">★★★★★</div>
      <div class="testimonial-quote" data-ck="social.t1.quote">"Una experiencia espectacular de principio a fin. La chef explica cada pieza con detalle, los ingredientes frescos y cada tiempo perfectamente balanceado. Un omakase auténtico, de calidad y lleno de detalles."</div>
      <div class="testimonial-author" data-ck="social.t1.author">— Lucia Ojeda · Google</div>
      <div class="testimonial-badge">Reseña verificada · Google</div>
     </div>
-    <div class="testimonial">
+    <div class="testimonial" data-card-id="t2">
      <div class="testimonial-stars">★★★★★</div>
      <div class="testimonial-quote" data-ck="social.t2.quote">"Me encantó todo — ingredientes frescos, ambiente agradable y la chef muy amigable. Es toda una experiencia ver la preparación de cada platillo. 100% recomendado, definitivamente volvería."</div>
      <div class="testimonial-author" data-ck="social.t2.author">— Angelica Serrano Silva · Google</div>
      <div class="testimonial-badge">Reseña verificada · Google</div>
     </div>
-    <div class="testimonial">
+    <div class="testimonial" data-card-id="t3">
      <div class="testimonial-stars">★★★★★</div>
      <div class="testimonial-quote" data-ck="social.t3.quote">"Sin duda de la mejor cocina japonesa en Baja. Disfrutamos muchísimo el omakase que reservamos en Morishita. La comida deliciosa y una experiencia que vale cada peso."</div>
      <div class="testimonial-author" data-ck="social.t3.author">— Cyn RM · Local Guide · Google</div>
@@ -927,13 +946,13 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- RESERVAR (CTA) -->
- <div class="reserve-cta-section">
+ <div class="reserve-cta-section" data-section-id="reservar">
   <div class="section-inner">
-   <div class="section-eyebrow">Reserva tu lugar</div>
-   <h2 class="section-title">Cuatro asientos.<em>Dos noches por semana.</em></h2>
-   <p class="section-lead">El menú se construye pieza por pieza el día del servicio. Por eso pedimos un anticipo del 50% al reservar — se aplica directamente a tu cuenta final, no es un cargo adicional.</p>
+   <div class="section-eyebrow" data-ck="reservar.eyebrow">Reserva tu lugar</div>
+   <h2 class="section-title" data-ck-html="reservar.h2">Cuatro asientos.<em>Dos noches por semana.</em></h2>
+   <p class="section-lead" data-ck="reservar.lead">El menú se construye pieza por pieza el día del servicio. Por eso pedimos un anticipo del 50% al reservar — se aplica directamente a tu cuenta final, no es un cargo adicional.</p>
    <div class="reserve-cta-actions">
-    <button class="btn-pri-lg" onclick="goToBooking()">Ver fechas disponibles <span class="ba">→</span></button>
+    <button class="btn-pri-lg" onclick="goToBooking()" data-ck-show="cta.reservar_section.show"><span data-ck="cta.reservar_section.label">Ver fechas disponibles</span> <span class="ba">→</span></button>
    </div>
    <dl class="reserve-detail">
     <div class="reserve-detail-item"><dt>Servicio</dt><dd>Sáb · Dom</dd></div>
@@ -946,33 +965,33 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- FAQ -->
- <div class="faq-section" id="faq">
+ <div class="faq-section" id="faq" data-section-id="faq">
   <div class="section-inner">
    <div class="section-eyebrow">Antes de reservar</div>
    <h2 class="section-title">Lo que <em>conviene saber.</em></h2>
    <p class="section-lead">Si tu pregunta no está aquí, escríbenos por WhatsApp. Respondemos personalmente.</p>
-   <div class="faq-grid">
-    <div class="faq-item">
+   <div class="faq-grid" data-list-id="faq">
+    <div class="faq-item" data-card-id="q1">
      <div class="faq-q" data-ck="faq.q1">¿Por qué solo abren sábado y domingo?</div>
      <div class="faq-a" data-ck="faq.a1">Trabajamos con producto fresco seleccionado pieza por pieza. Mantener el estándar requiere ciclos de servicio acotados. Dos noches por semana es lo que nos permite no comprometer la calidad.</div>
     </div>
-    <div class="faq-item">
+    <div class="faq-item" data-card-id="q2">
      <div class="faq-q" data-ck="faq.q2">¿El anticipo es reembolsable?</div>
      <div class="faq-a" data-ck="faq.a2">Reembolsable hasta 72 horas antes del servicio. Después de ese momento, el anticipo se aplica al producto que ya separamos para tu mesa.</div>
     </div>
-    <div class="faq-item">
+    <div class="faq-item" data-card-id="q3">
      <div class="faq-q" data-ck="faq.q3">¿Puedo elegir lo que voy a comer?</div>
      <div class="faq-a" data-ck="faq.a3">No hay carta. El menú lo construye el chef según el mejor producto del día. Si tienes alergias o restricciones, indícalas al reservar y se adapta el menú sin sacrificar la experiencia.</div>
     </div>
-    <div class="faq-item">
+    <div class="faq-item" data-card-id="q4">
      <div class="faq-q" data-ck="faq.q4">¿Cuánto dura la cena?</div>
      <div class="faq-a" data-ck="faq.a4">Aproximadamente dos horas. Cada uno de los 14 tiempos se prepara a la vista y se sirve en su momento. Es una experiencia para disfrutar sin prisa.</div>
     </div>
-    <div class="faq-item">
+    <div class="faq-item" data-card-id="q5">
      <div class="faq-q" data-ck="faq.q5">¿Hay código de vestimenta?</div>
      <div class="faq-a" data-ck="faq.a5">No hay código formal. Sugerimos vestir cómodo pero cuidado. La barra es íntima — vístete como te vestirías para una cena que importa.</div>
     </div>
-    <div class="faq-item">
+    <div class="faq-item" data-card-id="q6">
      <div class="faq-q" data-ck="faq.q6">¿Incluye bebidas?</div>
      <div class="faq-a" data-ck="faq.a6">El precio del Omakase es solo el menú de 14 tiempos. Bebidas (sake, vino de Valle, agua, etc.) se cobran aparte. Te recomendamos el sake del chef.</div>
     </div>
@@ -1524,11 +1543,14 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ── Carga contenido editable (via backend, sin exponer keys) ── */
+function hideLoader(){
+  const l=document.getElementById('page-loader');
+  if(l){l.classList.add('hide');setTimeout(()=>l.remove(),400);}
+}
+setTimeout(hideLoader,3000);
 (async function(){
-  try{
-    const r=await fetch('/api/content');
-    if(!r.ok)return;
-    const C=await r.json();
+  const EDIT_MODE = new URLSearchParams(location.search).get('edit') === '1';
+  function applyContent(C){
     document.querySelectorAll('[data-ck]').forEach(el=>{
       const v=C[el.dataset.ck];if(v)el.textContent=v;
     });
@@ -1541,7 +1563,96 @@ window.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-ck-href]').forEach(el=>{
       const v=C[el.dataset.ckHref];if(v)el.href=v;
     });
-  }catch(e){}
+    document.querySelectorAll('[data-list-id]').forEach(list=>{
+      const orderVal=C[list.dataset.listId+'.order'];
+      if(!orderVal)return;
+      const ids=orderVal.split(',').map(s=>s.trim()).filter(Boolean);
+      const byId={};
+      list.querySelectorAll('[data-card-id]').forEach(el=>{byId[el.dataset.cardId]=el;});
+      ids.forEach(id=>{if(byId[id])list.appendChild(byId[id]);});
+    });
+    document.querySelectorAll('[data-ck-show]').forEach(el=>{
+      if(C[el.dataset.ckShow]==='false')el.style.display='none';
+    });
+    const secOrder=C['sections.order'];
+    if(secOrder){
+      const secIds=secOrder.split(',').map(s=>s.trim()).filter(Boolean);
+      const homeScreen=document.getElementById('screen-home');
+      const secById={};
+      homeScreen.querySelectorAll('[data-section-id]').forEach(el=>{secById[el.dataset.sectionId]=el;});
+      secIds.forEach(id=>{if(secById[id])homeScreen.appendChild(secById[id]);});
+    }
+  }
+  try{
+    if(!EDIT_MODE){
+      const cached=localStorage.getItem('site_content');
+      if(cached){
+        try{ applyContent(JSON.parse(cached)); }catch(e){}
+      }
+    }
+    const r=await fetch('/api/content');
+    if(!r.ok){ if(EDIT_MODE) attachEditMode(); hideLoader(); return; }
+    const C=await r.json();
+    applyContent(C);
+    if(!EDIT_MODE) localStorage.setItem('site_content',JSON.stringify(C));
+    if(EDIT_MODE) attachEditMode();
+    hideLoader();
+  }catch(e){ if(EDIT_MODE) attachEditMode(); hideLoader(); }
+
+  function attachEditMode(){
+    const style=document.createElement('style');
+    style.textContent=`
+      [data-ck-editable]{outline:1px dashed rgba(200,169,126,.4);outline-offset:2px;cursor:pointer;transition:outline-color .15s,background .15s;}
+      [data-ck-editable]:hover{outline:2px dashed #c8a97e;background:rgba(200,169,126,.08);}
+      [data-ck-editable].ck-active{outline:2px solid #c8a97e;background:rgba(200,169,126,.12);}
+      html,body{cursor:default;}
+    `;
+    document.head.appendChild(style);
+    function tag(el,key,kind){
+      el.setAttribute('data-ck-editable','');
+      el.dataset.ckKind=kind;
+      el.dataset.ckKey=key;
+      el.addEventListener('click',ev=>{
+        ev.preventDefault(); ev.stopPropagation();
+        document.querySelectorAll('[data-ck-editable].ck-active').forEach(x=>x.classList.remove('ck-active'));
+        el.classList.add('ck-active');
+        try{ window.parent.postMessage({type:'ck-clicked',key,kind},'*'); }catch(e){}
+      },true);
+    }
+    document.querySelectorAll('[data-ck]').forEach(el=>tag(el,el.dataset.ck,'text'));
+    document.querySelectorAll('[data-ck-html]').forEach(el=>tag(el,el.dataset.ckHtml,'html'));
+    document.querySelectorAll('[data-ck-src]').forEach(el=>tag(el,el.dataset.ckSrc,'src'));
+    document.querySelectorAll('[data-ck-href]').forEach(el=>tag(el,el.dataset.ckHref,'href'));
+    // Bloquear navegación por enlaces y submits en modo edición
+    document.addEventListener('click',ev=>{
+      const a=ev.target.closest('a[href]');
+      if(a){ ev.preventDefault(); }
+    },true);
+    // Listener de actualizaciones en vivo desde el parent
+    window.addEventListener('message',ev=>{
+      const d=ev.data; if(!d||typeof d!=='object') return;
+      if(d.type==='ck-preview'){
+        const sel=k=>`[data-ck-key="${(window.CSS&&CSS.escape)?CSS.escape(d.key):d.key}"]`;
+        document.querySelectorAll(sel(d.key)).forEach(el=>{
+          if(d.kind==='text') el.textContent=d.value;
+          else if(d.kind==='html') el.innerHTML=d.value;
+          else if(d.kind==='src') el.src=d.value;
+          else if(d.kind==='href') el.href=d.value;
+        });
+      } else if(d.type==='ck-scroll'){
+        const el=document.querySelector(`[data-ck-key="${(window.CSS&&CSS.escape)?CSS.escape(d.key):d.key}"]`);
+        if(el){
+          el.scrollIntoView({behavior:'smooth',block:'center'});
+          document.querySelectorAll('[data-ck-editable].ck-active').forEach(x=>x.classList.remove('ck-active'));
+          el.classList.add('ck-active');
+        }
+      } else if(d.type==='ck-reload'){
+        // Re-fetch fresh content (después de guardar)
+        fetch('/api/content').then(r=>r.json()).then(C=>{ applyContent(C); }).catch(()=>{});
+      }
+    });
+    try{ window.parent.postMessage({type:'ck-iframe-ready'},'*'); }catch(e){}
+  }
 })();
 </script>
 </body>
