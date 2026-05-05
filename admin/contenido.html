@@ -36,7 +36,8 @@
   .admin-link{color:var(--muted);font-size:11px;text-decoration:none;letter-spacing:1px;}
   .admin-link:hover{color:var(--gold);}
   .reload-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:7px 12px;border-radius:4px;cursor:pointer;font-size:13px;transition:.2s;}
-  .reload-btn:hover{border-color:var(--gold);color:var(--gold);}
+  .reload-btn:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}
+  .reload-btn:disabled{opacity:.35;cursor:not-allowed;}
 
   /* SPLIT VIEW */
   .split{display:grid;grid-template-columns:480px 1fr;flex:1;overflow:hidden;}
@@ -156,7 +157,7 @@
         <button class="device-btn" data-device="tablet" onclick="setDevice('tablet')">Tablet</button>
         <button class="device-btn" data-device="mobile" onclick="setDevice('mobile')">Móvil</button>
       </div>
-      <button class="reload-btn" id="undoBtn" onclick="undoLast()" title="Deshacer último cambio guardado">↶ Deshacer</button>
+      <button class="reload-btn" id="undoBtn" onclick="undoLast()" title="Deshacer último cambio guardado" disabled>↶ Deshacer</button>
       <button class="reload-btn" onclick="reloadPreview()" title="Recargar previsualización">↻</button>
       <a href="/" target="_blank" class="preview-btn">Ver sitio ↗</a>
       <a href="/admin" class="admin-link">← Reservas</a>
@@ -249,6 +250,14 @@ function setDevice(d){
 }
 
 // ── SAVE ──
+const undoStack = [];
+
+function pushUndo(key){
+  // Snapshot del valor actual ANTES de sobrescribirlo
+  undoStack.push({ key, value: CONTENT[key] ?? null });
+  document.getElementById('undoBtn').disabled = false;
+}
+
 async function saveField(key, value, statusEl){
   if(statusEl){ statusEl.textContent='Guardando...'; statusEl.className='save-status'; }
   try{
@@ -269,26 +278,29 @@ async function saveField(key, value, statusEl){
 }
 
 async function undoLast(){
-  if(!confirm('¿Deshacer el último cambio guardado?')) return;
+  if(!undoStack.length){ showToast('No hay cambios para deshacer', true); return; }
   const btn = document.getElementById('undoBtn');
-  const orig = btn.textContent;
   btn.disabled = true; btn.textContent = '↶ Deshaciendo…';
   try{
-    const r = await fetch('/api/content/undo',{
+    const { key, value } = undoStack.pop();
+    // Guardar el valor revertido (sin apilar de nuevo)
+    const r = await fetch('/api/content/update',{
       method:'POST',
-      headers:{'x-admin-token':ADMIN_TOKEN}
+      headers:{'Content-Type':'application/json','x-admin-token':ADMIN_TOKEN},
+      body: JSON.stringify({key, value: value ?? ''})
     });
     const j = await r.json();
     if(!r.ok) throw new Error(j.error||'Error desconocido');
-    if(!j.ok) { showToast(j.error || 'No hay cambios para deshacer', true); return; }
-    CONTENT[j.key] = j.value ?? '';
+    CONTENT[key] = value ?? '';
+    livePreview(key, value ?? '', 'text');
     if(currentSection) showSection(currentSection);
     reloadPreview();
-    showToast('Restaurado: '+j.key);
+    showToast('Restaurado: '+key);
   }catch(e){
     showToast('No se pudo deshacer: '+e.message, true);
   }finally{
-    btn.disabled = false; btn.textContent = orig;
+    btn.textContent = '↶ Deshacer';
+    btn.disabled = undoStack.length === 0;
   }
 }
 
@@ -324,6 +336,7 @@ async function uploadImage(key, file, previewEl, statusEl){
   if(!file) return;
   const MAX_MB = 15;
   if(file.size > MAX_MB*1024*1024){ showToast('Imagen demasiado grande (máx '+MAX_MB+'MB)', true); return; }
+  pushUndo(key);
   if(statusEl){ statusEl.textContent='Comprimiendo...'; statusEl.className='save-status'; }
   try{
     const {base64, type, filename} = await compressImage(file);
@@ -377,7 +390,7 @@ function field(key, label, opts={}){
       ${inputEl}
       ${htmlHint}
       <div class="field-actions">
-        <button class="btn-save" onclick="saveField('${key}',document.getElementById('${id}').value,document.getElementById('${statusId}'))">Guardar</button>
+        <button class="btn-save" onclick="pushUndo('${key}');saveField('${key}',document.getElementById('${id}').value,document.getElementById('${statusId}'))">Guardar</button>
         <span class="save-status" id="${statusId}"></span>
       </div>
     </div>`;
@@ -462,6 +475,7 @@ function moveOrderItem(listId, id, delta){
 
 function saveOrder(listId){
   const arr = ORDER_STATE[listId]; if(!arr) return;
+  pushUndo(listId+'.order');
   saveField(listId+'.order', arr.join(','), document.getElementById('ord_'+listId)).then(()=>{
     setTimeout(reloadPreview, 300);
   });
@@ -482,6 +496,7 @@ function toggleField(key, label, defaultOn=true){
 }
 
 function onToggleChange(key, checked, statusId){
+  pushUndo(key);
   saveField(key, checked?'true':'false', document.getElementById(statusId)).then(()=>{
     setTimeout(reloadPreview, 300);
   });
