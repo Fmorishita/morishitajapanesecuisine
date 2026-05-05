@@ -17,6 +17,8 @@
     { "src": "/disponibilidad\\?(.*)", "dest": "backend/server.js" },
     { "src": "/api/content/upload-image", "dest": "backend/server.js" },
     { "src": "/api/content/update", "dest": "backend/server.js" },
+    { "src": "/api/content/undo", "dest": "backend/server.js" },
+    { "src": "/api/content/history", "dest": "backend/server.js" },
     { "src": "/api/content", "dest": "backend/server.js" },
     { "src": "/health", "dest": "backend/server.js" },
     { "src": "/favicon.png", "dest": "/favicon.png", "headers": { "cache-control": "public, max-age=86400" } },
