@@ -504,6 +504,7 @@ function onToggleChange(key, checked, statusId){
 
 // ── KEY → SECTION MAP (para click-to-edit) ──
 function keyToSection(key){
+  if(key === 'sections.order') return 'orden';
   if(key.startsWith('hero.')) return 'hero';
   if(key.startsWith('logo.') || key.startsWith('nav.') || key === 'cta.topbar.label') return 'topbar';
   if(key.startsWith('pilares.')) return 'pilares';
@@ -709,8 +710,20 @@ const SECTIONS = {
 
   orden: {
     title: 'Orden de bloques',
-    desc: 'Reorganiza el orden dentro de cada sección.',
+    desc: 'Reorganiza el orden de las secciones de la página y los elementos dentro de cada sección.',
     render: ()=>`
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Secciones de la página</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Hero y Footer siempre fijos. El resto es libre.</div>
+      ${orderList('sections', 'Secciones', ['pilares','producto','chef','social','reservar','faq'], {
+        pilares: 'Pilares / Filosofía',
+        producto: 'El producto (Wagyu, Pescado, etc.)',
+        chef: 'El chef',
+        social: 'Testimonios',
+        reservar: 'Reservar (CTA)',
+        faq: 'FAQ / Preguntas frecuentes'
+      })}
+      <hr class="divider"/>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Elementos dentro de secciones</div>
       ${orderList('producto', 'Productos (Wagyu / Pescado / Base)', ['item1','item2','item3'], {
         item1:'Carne · Wagyu A5 + Kobe',
         item2:'Pescado · Toro / sashimi',

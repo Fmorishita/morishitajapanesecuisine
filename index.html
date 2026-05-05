@@ -833,7 +833,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- PILARES -->
- <div class="section-pad" id="experiencia">
+ <div class="section-pad" id="experiencia" data-section-id="pilares">
   <div class="section-inner">
    <div class="section-eyebrow">La filosofía</div>
    <h2 class="section-title" data-ck-html="pilares.title">Tres reglas. <em>Sin excepción.</em></h2>
@@ -859,7 +859,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- PRODUCTO -->
- <div class="product-section section-pad" id="producto">
+ <div class="product-section section-pad" id="producto" data-section-id="producto">
   <div class="section-inner">
    <div class="product-hero">
     <div class="product-hero-text">
@@ -904,7 +904,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- CHEF -->
- <div class="chef-section" id="chef">
+ <div class="chef-section" id="chef" data-section-id="chef">
   <div class="chef-card">
    <img src="/img/chef-morishita.jpg" alt="Chef Morishita en la barra · Omakase Baja California" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;object-position:center top;" data-ck-src="img.chef">
   </div>
@@ -919,7 +919,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- PRUEBA SOCIAL -->
- <div class="social-section section-pad">
+ <div class="social-section section-pad" data-section-id="social">
   <div class="section-inner">
    <div class="section-eyebrow">Lo que dicen quienes ya estuvieron</div>
    <h2 class="section-title">La barra <em>habla por sí sola.</em></h2>
@@ -945,7 +945,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- RESERVAR (CTA) -->
- <div class="reserve-cta-section">
+ <div class="reserve-cta-section" data-section-id="reservar">
   <div class="section-inner">
    <div class="section-eyebrow" data-ck="reservar.eyebrow">Reserva tu lugar</div>
    <h2 class="section-title" data-ck-html="reservar.h2">Cuatro asientos.<em>Dos noches por semana.</em></h2>
@@ -964,7 +964,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- FAQ -->
- <div class="faq-section" id="faq">
+ <div class="faq-section" id="faq" data-section-id="faq">
   <div class="section-inner">
    <div class="section-eyebrow">Antes de reservar</div>
    <h2 class="section-title">Lo que <em>conviene saber.</em></h2>
@@ -1621,6 +1621,14 @@ window.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-ck-show]').forEach(el=>{
       if(C[el.dataset.ckShow]==='false')el.style.display='none';
     });
+    const secOrder=C['sections.order'];
+    if(secOrder){
+      const secIds=secOrder.split(',').map(s=>s.trim()).filter(Boolean);
+      const homeScreen=document.getElementById('screen-home');
+      const secById={};
+      homeScreen.querySelectorAll('[data-section-id]').forEach(el=>{secById[el.dataset.sectionId]=el;});
+      secIds.forEach(id=>{if(secById[id])homeScreen.appendChild(secById[id]);});
+    }
   }
   try{
     if(!EDIT_MODE){

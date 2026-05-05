@@ -383,7 +383,6 @@ app.post('/api/content/update', requireAdmin, async (req, res) => {
   try {
     const { key, value } = req.body;
     if (!key) return res.status(400).json({ error: 'Falta key' });
-    await logHistory(key, 'edit');
     const { error } = await supabase
       .from('site_content')
       .upsert({ key, value: value ?? '', updated_at: new Date().toISOString() });
@@ -415,7 +414,6 @@ app.post('/api/content/upload-image', requireAdmin, async (req, res) => {
       .from('site-images')
       .getPublicUrl(storagePath);
 
-    await logHistory(key, 'edit');
     await supabase
       .from('site_content')
       .upsert({ key, value: publicUrl, updated_at: new Date().toISOString() });
