@@ -504,7 +504,6 @@ function onToggleChange(key, checked, statusId){
 
 // ── KEY → SECTION MAP (para click-to-edit) ──
 function keyToSection(key){
-  if(key === 'hero.card_tag.show') return 'botones';
   if(key.startsWith('hero.')) return 'hero';
   if(key.startsWith('logo.') || key.startsWith('nav.') || key === 'cta.topbar.label') return 'topbar';
   if(key.startsWith('pilares.')) return 'pilares';
@@ -541,9 +540,11 @@ const SECTIONS = {
       ${field('hero.eyebrow','Eyebrow',{multiline:false,fallback:'Omakase · Baja California'})}
       ${field('hero.h1','Título principal (H1)',{html:true,fallback:'El producto<em>al frente.</em>'})}
       ${field('hero.sub','Descripción principal',{html:true,fallback:'Una barra de cuatro asientos. Catorce tiempos.'})}
-      ${field('hero.card_tag','Overlay sobre la imagen',{multiline:false,fallback:'La barra · 4 asientos · Sáb & Dom'})}
+      ${toggleField('hero.card_tag.show', 'Mostrar overlay sobre la imagen', true)}
+      ${field('hero.card_tag','Texto del overlay',{multiline:false,fallback:'La barra · 4 asientos · Sáb & Dom'})}
       <hr class="divider"/>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Bullets debajo de los botones</div>
+      ${toggleField('hero.meta.show', 'Mostrar bullets debajo de los botones', true)}
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;margin-top:6px;">Bullets debajo de los botones</div>
       ${field('hero.meta1','Bullet 1',{multiline:false,fallback:'Sáb · Dom'})}
       ${field('hero.meta2','Bullet 2',{multiline:false,fallback:'4 asientos'})}
       ${field('hero.meta3','Bullet 3',{multiline:false,fallback:'14 tiempos'})}
@@ -750,8 +751,6 @@ const SECTIONS = {
       ${toggleField('cta.hero_secondary.show', 'Mostrar botón "Conocer la experiencia ↓" en hero', true)}
       <hr class="divider"/>
       ${toggleField('cta.reservar_section.show', 'Mostrar botón "Ver fechas disponibles →" en sección Reservar', true)}
-      <hr class="divider"/>
-      ${toggleField('hero.card_tag.show', 'Mostrar overlay "La barra · 4 asientos…" sobre la imagen del hero', true)}
     `
   }
 };
