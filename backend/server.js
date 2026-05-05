@@ -128,6 +128,22 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+// Antes de sobrescribir una key en site_content, guarda el valor actual
+// en site_content_history para que el botón "Deshacer" pueda revertirlo.
+async function logHistory(key, action = 'edit') {
+  try {
+    const { data } = await supabase
+      .from('site_content').select('value').eq('key', key).maybeSingle();
+    if (data) {
+      await supabase.from('site_content_history').insert({
+        key, value: data.value, action
+      });
+    }
+  } catch (e) {
+    console.error('history log failed:', e);
+  }
+}
+
 // ================================================================
 // ENDPOINT: Consultar disponibilidad de una fecha
 // GET /disponibilidad?fecha=YYYY-MM-DD
@@ -367,6 +383,7 @@ app.post('/api/content/update', requireAdmin, async (req, res) => {
   try {
     const { key, value } = req.body;
     if (!key) return res.status(400).json({ error: 'Falta key' });
+    await logHistory(key, 'edit');
     const { error } = await supabase
       .from('site_content')
       .upsert({ key, value: value ?? '', updated_at: new Date().toISOString() });
@@ -398,11 +415,59 @@ app.post('/api/content/upload-image', requireAdmin, async (req, res) => {
       .from('site-images')
       .getPublicUrl(storagePath);
 
+    await logHistory(key, 'edit');
     await supabase
       .from('site_content')
       .upsert({ key, value: publicUrl, updated_at: new Date().toISOString() });
 
     res.json({ ok: true, url: publicUrl });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/content/undo — revierte el último cambio guardado en site_content.
+// Devuelve { ok, key, value, more } donde `more` indica si quedan más undos.
+app.post('/api/content/undo', requireAdmin, async (req, res) => {
+  try {
+    const { data: last, error: e1 } = await supabase
+      .from('site_content_history')
+      .select('id, key, value')
+      .order('changed_at', { ascending: false })
+      .limit(1).maybeSingle();
+    if (e1) throw e1;
+    if (!last) return res.json({ ok: false, error: 'No hay cambios para deshacer' });
+
+    // Loguear el valor ACTUAL antes de revertir, para que un segundo undo funcione como redo.
+    await logHistory(last.key, 'undo');
+
+    const { error: e2 } = await supabase
+      .from('site_content')
+      .upsert({ key: last.key, value: last.value ?? '', updated_at: new Date().toISOString() });
+    if (e2) throw e2;
+
+    await supabase.from('site_content_history').delete().eq('id', last.id);
+
+    const { count } = await supabase
+      .from('site_content_history')
+      .select('id', { count: 'exact', head: true });
+
+    res.json({ ok: true, key: last.key, value: last.value, more: (count || 0) > 0 });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/content/history — lista los últimos 50 cambios (admin).
+app.get('/api/content/history', requireAdmin, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('site_content_history')
+      .select('id, key, value, changed_at, action')
+      .order('changed_at', { ascending: false })
+      .limit(50);
+    if (error) throw error;
+    res.json({ entries: data || [] });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
