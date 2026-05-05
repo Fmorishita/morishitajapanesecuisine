@@ -500,8 +500,7 @@ const SECTIONS = {
     render: ()=>`
       ${field('hero.eyebrow','Eyebrow',{multiline:false,fallback:'Omakase · Baja California'})}
       ${field('hero.h1','Título principal (H1)',{html:true,fallback:'El producto<em>al frente.</em>'})}
-      ${field('hero.subtitle','Subtítulo (curva, con HTML)',{html:true,fallback:'Confía en el <strong>chef</strong>.'})}
-      ${field('hero.sub','Descripción principal',{fallback:'Una barra de cuatro asientos. Catorce tiempos.'})}
+      ${field('hero.sub','Descripción principal',{html:true,fallback:'Una barra de cuatro asientos. Catorce tiempos.'})}
       ${field('hero.card_tag','Overlay sobre la imagen',{multiline:false,fallback:'La barra · 4 asientos · Sáb & Dom'})}
       <hr class="divider"/>
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Bullets debajo de los botones</div>
