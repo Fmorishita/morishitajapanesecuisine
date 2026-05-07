@@ -148,6 +148,39 @@
   .cs-radio:hover{border-color:var(--gold);}
   .cs-radio.active{border-color:var(--gold);background:rgba(200,169,126,.08);color:var(--gold);}
 
+  /* RESERVE-DETAIL ROW EDITOR (compact 3-col table) */
+  .rd-table{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:10px;margin-bottom:20px;}
+  .rd-row{display:grid;grid-template-columns:30px 1fr 1.2fr;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--border);}
+  .rd-row:last-child{border-bottom:0;}
+  .rd-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer;justify-self:center;}
+  .rd-row input[type=text]{background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:7px 9px;border-radius:3px;font-size:12px;outline:none;transition:border-color .2s;}
+  .rd-row input[type=text]:focus{border-color:var(--gold);}
+  .rd-row .rd-status{grid-column:1/-1;font-size:10px;color:var(--muted);min-height:0;}
+
+  /* "EDITANDO X" BANNER */
+  .ck-now-editing{position:sticky;top:0;background:linear-gradient(90deg,rgba(200,169,126,.18),rgba(200,169,126,.05));border-left:3px solid var(--gold);padding:9px 14px;font-size:11px;letter-spacing:.05em;color:var(--gold);z-index:10;margin:-24px -24px 18px;}
+  .ck-now-editing strong{color:var(--fg);font-weight:600;}
+  .ck-now-editing .ck-close{float:right;cursor:pointer;color:var(--muted);font-size:14px;line-height:1;margin-left:10px;}
+  .ck-now-editing .ck-close:hover{color:var(--fg);}
+
+  /* PULSE animation for the highlighted field in panel */
+  @keyframes ck-panel-pulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(200,169,126,.0);}
+    25%{box-shadow:0 0 0 6px rgba(200,169,126,.45);}
+    50%{box-shadow:0 0 0 12px rgba(200,169,126,.0);}
+  }
+  .field.ck-pulse textarea, .field.ck-pulse input{animation:ck-panel-pulse 1.4s ease-out 3;border-color:var(--gold);}
+
+  /* VISIBILIDAD panel */
+  .vis-group{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:14px;margin-bottom:14px;}
+  .vis-group-title{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;font-weight:600;}
+  .vis-row{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:12px;color:var(--fg);border-bottom:1px dashed rgba(255,255,255,.04);}
+  .vis-row:last-child{border-bottom:0;}
+  .vis-row input[type=checkbox]{width:14px;height:14px;accent-color:var(--gold);cursor:pointer;}
+  .vis-row label{flex:1;cursor:pointer;}
+  .vis-row .vis-key{font-family:'DM Mono','Courier New',monospace;font-size:9px;color:var(--muted);letter-spacing:.04em;}
+  .vis-empty{padding:18px;text-align:center;color:var(--muted);font-size:12px;background:var(--surface2);border:1px dashed var(--border);border-radius:4px;}
+
   /* DEVICE TOGGLE */
   .device-toggle{display:flex;gap:0;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
   .device-btn{background:transparent;border:0;color:var(--muted);padding:6px 11px;cursor:pointer;font-size:11px;transition:.2s;}
@@ -202,19 +235,21 @@
     <div class="editor-pane">
       <nav class="sidebar">
         <div class="sidebar-label">Secciones</div>
-        <div class="nav-item active" data-sec="hero" onclick="showSection('hero')">Hero principal</div>
         <div class="nav-item" data-sec="topbar" onclick="showSection('topbar')">Topbar / Logo</div>
+        <div class="nav-item active" data-sec="hero" onclick="showSection('hero')">Hero principal</div>
         <div class="nav-item" data-sec="pilares" onclick="showSection('pilares')">Pilares</div>
         <div class="nav-item" data-sec="producto" onclick="showSection('producto')">El producto</div>
         <div class="nav-item" data-sec="chef" onclick="showSection('chef')">El chef</div>
         <div class="nav-item" data-sec="testimonios" onclick="showSection('testimonios')">Testimonios</div>
-        <div class="nav-item" data-sec="faq" onclick="showSection('faq')">FAQ</div>
-        <div class="nav-item" data-sec="reservar" onclick="showSection('reservar')">Reservar (CTA)</div>
-        <div class="nav-item" data-sec="footer" onclick="showSection('footer')">Footer</div>
-        <div class="nav-item" data-sec="imagenes" onclick="showSection('imagenes')">Imágenes</div>
         <div class="nav-item" data-sec="custom" onclick="showSection('custom')">+ Secciones personalizadas</div>
-        <div class="nav-item" data-sec="orden" onclick="showSection('orden')">Orden de bloques</div>
+        <div class="nav-item" data-sec="reservar" onclick="showSection('reservar')">Reservar (CTA)</div>
+        <div class="nav-item" data-sec="faq" onclick="showSection('faq')">FAQ</div>
+        <div class="nav-item" data-sec="footer" onclick="showSection('footer')">Footer</div>
+        <div class="sidebar-label" style="margin-top:18px;">Configuración</div>
+        <div class="nav-item" data-sec="imagenes" onclick="showSection('imagenes')">Imágenes</div>
         <div class="nav-item" data-sec="botones" onclick="showSection('botones')">Botones</div>
+        <div class="nav-item" data-sec="visibilidad" onclick="showSection('visibilidad')">Visibilidad</div>
+        <div class="nav-item" data-sec="orden" onclick="showSection('orden')">Orden de bloques</div>
       </nav>
       <main class="content" id="mainContent"></main>
     </div>
@@ -537,6 +572,33 @@ function onToggleChange(key, checked, statusId){
   });
 }
 
+// ── RESERVE-DETAIL ROW (compact 3-col label/value editor with show toggle) ──
+function rdRow(slug, defaultLabel, defaultValue){
+  const showKey='reserve.row.'+slug+'.show';
+  const labelKey='reserve.row.'+slug+'.label';
+  const valueKey='reserve.row.'+slug+'.value';
+  const showId='rds_'+slug;
+  const labelId='rdl_'+slug;
+  const valueId='rdv_'+slug;
+  const statusId='rdst_'+slug;
+  const showStored=val(showKey,'');
+  const isOn=showStored===''?true:(showStored!=='false');
+  return `
+    <div class="rd-row" data-field-key="${escAttr(labelKey)}">
+      <input type="checkbox" ${isOn?'checked':''} title="Mostrar fila"
+        onchange="onToggleChange('${showKey}', this.checked, '${statusId}')"/>
+      <input type="text" id="${labelId}" data-ck-key="${labelKey}" data-ck-kind="text" placeholder="Etiqueta"
+        value="${escAttr(val(labelKey, defaultLabel))}"
+        oninput="markDirty('${statusId}');livePreview('${labelKey}',this.value,'text')"
+        onblur="pushUndo('${labelKey}');saveField('${labelKey}', this.value, document.getElementById('${statusId}'))"/>
+      <input type="text" id="${valueId}" data-ck-key="${valueKey}" data-ck-kind="text" placeholder="Valor"
+        value="${escAttr(val(valueKey, defaultValue))}"
+        oninput="markDirty('${statusId}');livePreview('${valueKey}',this.value,'text')"
+        onblur="pushUndo('${valueKey}');saveField('${valueKey}', this.value, document.getElementById('${statusId}'))"/>
+      <span class="rd-status save-status" id="${statusId}"></span>
+    </div>`;
+}
+
 // ── CUSTOM SECTIONS ──
 const CUSTOM_TEMPLATES = {
   'text-image': {
@@ -703,7 +765,8 @@ function keyToSection(key){
   if(key.startsWith('social.')) return 'testimonios';
   if(key.startsWith('faq.')) return 'faq';
   if(key.startsWith('reservar.')) return 'reservar';
-  if(key.startsWith('footer.')) return 'footer';
+  if(key.startsWith('reserve.')) return 'reservar';     // reserve.row.*, reserve.detail.*
+  if(key.startsWith('footer.')) return 'footer';        // includes footer.link.*, footer.col*, etc.
   if(key.startsWith('img.')) return 'imagenes';
   if(key.startsWith('cta.')) return 'botones';
   if(key.startsWith('custom.')) return 'custom';
@@ -715,11 +778,46 @@ function keyToSection(key){
 function focusFieldInSection(key){
   const field = document.querySelector(`[data-field-key="${(window.CSS&&CSS.escape)?CSS.escape(key):key}"]`);
   if(!field) return;
-  field.scrollIntoView({behavior:'smooth', block:'center'});
-  field.classList.add('ck-highlighted');
-  setTimeout(()=>field.classList.remove('ck-highlighted'), 1800);
-  const input = field.querySelector('input,textarea');
-  if(input) setTimeout(()=>input.focus(), 350);
+  // Show "Editando: X" banner at top of mainContent
+  showEditingBanner(key, field);
+  // Scroll panel content area to ensure banner is visible, then bring field into view
+  const main = document.getElementById('mainContent');
+  if(main && main.scrollTo) main.scrollTo({top:0, behavior:'instant'});
+  setTimeout(()=>{
+    field.scrollIntoView({behavior:'smooth', block:'center'});
+    field.classList.add('ck-highlighted','ck-pulse');
+    setTimeout(()=>field.classList.remove('ck-highlighted'), 1800);
+    setTimeout(()=>field.classList.remove('ck-pulse'), 4500);
+    const input = field.querySelector('input,textarea');
+    if(input) setTimeout(()=>{
+      try{ input.focus(); input.select && input.select(); }catch(e){}
+    }, 380);
+  }, 60);
+}
+
+function showEditingBanner(key, fieldEl){
+  const main = document.getElementById('mainContent');
+  if(!main) return;
+  const labelEl = fieldEl.querySelector('.field-label, .toggle-label');
+  let label = labelEl ? labelEl.childNodes[0].textContent.trim() : key;
+  // Strip the "·" suffix tip if present
+  label = label.replace(/\s*·.*$/,'').trim() || key;
+  let banner = document.getElementById('ck-now-editing');
+  if(!banner){
+    banner = document.createElement('div');
+    banner.id = 'ck-now-editing';
+    banner.className = 'ck-now-editing';
+    main.insertBefore(banner, main.firstChild);
+  }
+  banner.innerHTML = `<span class="ck-close" onclick="hideEditingBanner()">×</span>Editando: <strong>${escHtml(label)}</strong> <span style="opacity:.55;font-family:'DM Mono',monospace;font-size:9px;margin-left:6px;">${escHtml(key)}</span>`;
+  // Auto-hide on first input change anywhere
+  const dismiss = ()=>{ hideEditingBanner(); document.removeEventListener('input', dismiss, true); };
+  setTimeout(()=>document.addEventListener('input', dismiss, true), 500);
+}
+
+function hideEditingBanner(){
+  const b = document.getElementById('ck-now-editing');
+  if(b) b.remove();
 }
 
 // ── SECTIONS ──
@@ -770,6 +868,19 @@ const SECTIONS = {
       ${field('reservar.eyebrow','Eyebrow',{multiline:false,fallback:'Reserva tu lugar'})}
       ${field('reservar.h2','Título (H2)',{html:true,fallback:'Cuatro asientos.<em>Dos noches por semana.</em>'})}
       ${field('reservar.lead','Párrafo introductorio',{fallback:'El menú se construye pieza por pieza el día del servicio.'})}
+      <hr class="divider"/>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Caja de detalles (debajo del CTA)</div>
+      ${toggleField('reserve.detail.show','Mostrar caja de detalles entera',true)}
+      <div class="rd-table" style="margin-top:10px;">
+        <div style="display:grid;grid-template-columns:30px 1fr 1.2fr;gap:8px;font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:6px;">
+          <span style="text-align:center;">Ver</span><span>Etiqueta</span><span>Valor</span>
+        </div>
+        ${rdRow('servicio','Servicio','Sáb · Dom')}
+        ${rdRow('capacidad','Capacidad','4 asientos')}
+        ${rdRow('tiempos','Tiempos','14')}
+        ${rdRow('precio','Precio','$1,850 MXN p/p')}
+        ${rdRow('anticipo','Anticipo','50% Stripe')}
+      </div>
     `
   },
 
@@ -777,17 +888,21 @@ const SECTIONS = {
     title: 'Pilares',
     desc: 'Los tres principios de la experiencia.',
     render: ()=>`
+      ${field('pilares.eyebrow','Eyebrow (sobre el título)',{multiline:false,fallback:'La filosofía'})}
       ${field('pilares.title','Título de sección',{html:true,fallback:'Tres reglas. <em>Sin excepción.</em>'})}
       ${field('pilares.lead','Párrafo introductorio',{fallback:'Un Omakase no se mide por la receta.'})}
       <hr class="divider"/>
+      ${toggleField('pilares.p1.show','Mostrar Pilar 1',true)}
       ${field('pilares.p1.num','Pilar 1 · Etiqueta',{multiline:false,fallback:'01 · El producto manda'})}
       ${field('pilares.p1.title','Pilar 1 · Título',{multiline:false,fallback:'Cada pieza, seleccionada a mano.'})}
       ${field('pilares.p1.body','Pilar 1 · Texto',{fallback:'Wagyu A5 y Kobe importados de Japón.'})}
       <hr class="divider"/>
+      ${toggleField('pilares.p2.show','Mostrar Pilar 2',true)}
       ${field('pilares.p2.num','Pilar 2 · Etiqueta',{multiline:false,fallback:'02 · Cuatro asientos'})}
       ${field('pilares.p2.title','Pilar 2 · Título',{multiline:false,fallback:'Una barra. Dos noches por semana.'})}
       ${field('pilares.p2.body','Pilar 2 · Texto',{fallback:'Solo abrimos sábado y domingo.'})}
       <hr class="divider"/>
+      ${toggleField('pilares.p3.show','Mostrar Pilar 3',true)}
       ${field('pilares.p3.num','Pilar 3 · Etiqueta',{multiline:false,fallback:'03 · Catorce tiempos'})}
       ${field('pilares.p3.title','Pilar 3 · Título',{multiline:false,fallback:'El menú lo dicta el día.'})}
       ${field('pilares.p3.body','Pilar 3 · Texto',{fallback:'No hay carta.'})}
@@ -798,6 +913,7 @@ const SECTIONS = {
     title: 'El producto',
     desc: 'Sección de Wagyu A5, Kobe y pescado.',
     render: ()=>`
+      ${field('producto.eyebrow','Eyebrow (sobre el título)',{multiline:false,fallback:'El insumo'})}
       ${field('producto.h2','Título de sección',{html:true,fallback:'Wagyu A5. Kobe.<em>Importados directo de Japón.</em>'})}
       ${field('producto.p1','Párrafo 1',{fallback:'El corazón de un Omakase serio no es la técnica.'})}
       ${field('producto.p2','Párrafo 2',{fallback:'Carnes Wagyu A5 y Kobe certificadas.'})}
@@ -821,10 +937,14 @@ const SECTIONS = {
     title: 'El chef',
     desc: 'Sección de presentación del chef.',
     render: ()=>`
+      ${field('chef.eyebrow','Eyebrow (sobre el título)',{multiline:false,fallback:'El chef'})}
       ${field('chef.h2','Título',{html:true,fallback:'Chef Morishita.<em>Una vida en la barra.</em>'})}
       ${field('chef.p1','Párrafo 1',{fallback:'Formado en la disciplina clásica japonesa.'})}
       ${field('chef.p2','Párrafo 2',{fallback:'En cada servicio, cada plato se construye delante del comensal.'})}
       ${field('chef.quote','Cita del chef',{fallback:'"El producto manda."'})}
+      <hr class="divider"/>
+      ${toggleField('chef.sign.show','Mostrar firma final',true)}
+      ${field('chef.sign','Firma final',{multiline:false,fallback:'— Chef Morishita · 森下'})}
     `
   },
 
@@ -832,12 +952,20 @@ const SECTIONS = {
     title: 'Testimonios',
     desc: 'Reseñas de clientes.',
     render: ()=>`
+      ${toggleField('social.section.show','Mostrar la sección entera',true)}
+      ${field('social.eyebrow','Eyebrow (sobre el título)',{multiline:false,fallback:'Lo que dicen quienes ya estuvieron'})}
+      ${field('social.title','Título de sección',{html:true,fallback:'La barra <em>habla por sí sola.</em>'})}
+      ${field('social.badge','Texto del badge (igual en las 3 reseñas)',{multiline:false,fallback:'Reseña verificada · Google'})}
+      <hr class="divider"/>
+      ${toggleField('social.t1.show','Mostrar Reseña 1',true)}
       ${field('social.t1.quote','Reseña 1 · Texto',{fallback:'"La mejor experiencia gastronómica que he tenido en Baja."'})}
       ${field('social.t1.author','Reseña 1 · Autor',{multiline:false,fallback:'— Ana R. · Tijuana'})}
       <hr class="divider"/>
+      ${toggleField('social.t2.show','Mostrar Reseña 2',true)}
       ${field('social.t2.quote','Reseña 2 · Texto',{fallback:'"Pagué los $1,850 con dudas. Salí convencido."'})}
       ${field('social.t2.author','Reseña 2 · Autor',{multiline:false,fallback:'— Luis M. · San Diego'})}
       <hr class="divider"/>
+      ${toggleField('social.t3.show','Mostrar Reseña 3',true)}
       ${field('social.t3.quote','Reseña 3 · Texto',{fallback:'"Cuatro asientos, dos horas, una experiencia que no se repite."'})}
       ${field('social.t3.author','Reseña 3 · Autor',{multiline:false,fallback:'— María C. · Mexicali'})}
     `
@@ -847,21 +975,32 @@ const SECTIONS = {
     title: 'FAQ',
     desc: 'Preguntas frecuentes.',
     render: ()=>`
+      ${toggleField('faq.section.show','Mostrar la sección entera',true)}
+      ${field('faq.eyebrow','Eyebrow (sobre el título)',{multiline:false,fallback:'Antes de reservar'})}
+      ${field('faq.title','Título de sección',{html:true,fallback:'Lo que <em>conviene saber.</em>'})}
+      ${field('faq.lead','Párrafo introductorio',{fallback:'Si tu pregunta no está aquí, escríbenos por WhatsApp. Respondemos personalmente.'})}
+      <hr class="divider"/>
+      ${toggleField('faq.q1.show','Mostrar Pregunta 1',true)}
       ${field('faq.q1','Pregunta 1',{multiline:false,fallback:'¿Por qué solo abren sábado y domingo?'})}
       ${field('faq.a1','Respuesta 1',{fallback:'Trabajamos con producto fresco.'})}
       <hr class="divider"/>
+      ${toggleField('faq.q2.show','Mostrar Pregunta 2',true)}
       ${field('faq.q2','Pregunta 2',{multiline:false,fallback:'¿El anticipo es reembolsable?'})}
       ${field('faq.a2','Respuesta 2',{fallback:'Reembolsable hasta 72 horas antes.'})}
       <hr class="divider"/>
+      ${toggleField('faq.q3.show','Mostrar Pregunta 3',true)}
       ${field('faq.q3','Pregunta 3',{multiline:false,fallback:'¿Puedo elegir lo que voy a comer?'})}
       ${field('faq.a3','Respuesta 3',{fallback:'No hay carta.'})}
       <hr class="divider"/>
+      ${toggleField('faq.q4.show','Mostrar Pregunta 4',true)}
       ${field('faq.q4','Pregunta 4',{multiline:false,fallback:'¿Cuánto dura la cena?'})}
       ${field('faq.a4','Respuesta 4',{fallback:'Aproximadamente dos horas.'})}
       <hr class="divider"/>
+      ${toggleField('faq.q5.show','Mostrar Pregunta 5',true)}
       ${field('faq.q5','Pregunta 5',{multiline:false,fallback:'¿Hay código de vestimenta?'})}
       ${field('faq.a5','Respuesta 5',{fallback:'No hay código formal.'})}
       <hr class="divider"/>
+      ${toggleField('faq.q6.show','Mostrar Pregunta 6',true)}
       ${field('faq.q6','Pregunta 6',{multiline:false,fallback:'¿Incluye bebidas?'})}
       ${field('faq.a6','Respuesta 6',{fallback:'Bebidas se cobran aparte.'})}
     `
@@ -869,15 +1008,50 @@ const SECTIONS = {
 
   footer: {
     title: 'Footer',
-    desc: 'Información de contacto y descripción del pie.',
+    desc: 'Información de contacto, marca y enlaces del pie de página.',
     render: ()=>`
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Marca</div>
+      ${field('footer.brand_name','Nombre de marca (col 1)',{multiline:false,fallback:'森下 Morishita'})}
+      ${field('footer.brand_tagline','Tagline corto (col 1)',{multiline:false,fallback:'Authentic Japanese Cuisine'})}
       ${field('footer.desc','Descripción de la marca',{fallback:'Una barra de cuatro asientos.'})}
+      <hr class="divider"/>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Columna 2 · Visítanos</div>
+      ${toggleField('footer.col2.show','Mostrar columna entera',true)}
+      ${field('footer.col2.title','Título de columna',{multiline:false,fallback:'Visítanos'})}
       ${field('footer.location','Ubicación',{multiline:false,fallback:'Baja California, México'})}
       ${field('footer.hours','Horario',{multiline:false,fallback:'Sáb · Dom'})}
+      ${toggleField('footer.service_note.show','Mostrar nota de servicio',true)}
+      ${field('footer.service_note','Nota de servicio',{multiline:false,fallback:'Servicio por reservación'})}
       <hr class="divider"/>
-      ${field('footer.whatsapp_url','WhatsApp URL',{multiline:false,url:true,fallback:'https://wa.me/'})}
-      ${field('footer.instagram_url','Instagram URL',{multiline:false,url:true,fallback:'https://instagram.com/morishitajapanesecuisine'})}
-      ${field('footer.email_href','Email',{multiline:false,url:true,fallback:'mailto:reservas@morishitajapanesecuisine.com'})}
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Columna 3 · Contacto</div>
+      ${toggleField('footer.col3.show','Mostrar columna entera',true)}
+      ${field('footer.col3.title','Título de columna',{multiline:false,fallback:'Contacto'})}
+      ${toggleField('footer.link.whatsapp.show','Mostrar enlace WhatsApp',true)}
+      ${field('footer.link.whatsapp.label','WhatsApp · Texto',{multiline:false,fallback:'WhatsApp'})}
+      ${field('footer.whatsapp_url','WhatsApp · URL',{multiline:false,url:true,fallback:'https://wa.me/'})}
+      ${toggleField('footer.link.instagram.show','Mostrar enlace Instagram',true)}
+      ${field('footer.link.instagram.label','Instagram · Texto',{multiline:false,fallback:'Instagram'})}
+      ${field('footer.instagram_url','Instagram · URL',{multiline:false,url:true,fallback:'https://instagram.com/morishitajapanesecuisine'})}
+      ${toggleField('footer.link.email.show','Mostrar enlace Email',true)}
+      ${field('footer.link.email.label','Email · Texto',{multiline:false,fallback:'Email'})}
+      ${field('footer.email_href','Email · URL (mailto:)',{multiline:false,url:true,fallback:'mailto:reservas@morishitajapanesecuisine.com'})}
+      <hr class="divider"/>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Columna 4 · Reservar</div>
+      ${toggleField('footer.col4.show','Mostrar columna entera',true)}
+      ${field('footer.col4.title','Título de columna',{multiline:false,fallback:'Reservar'})}
+      ${toggleField('footer.link.booking.show','Mostrar "Ver disponibilidad"',true)}
+      ${field('footer.link.booking.label','Texto: Ver disponibilidad',{multiline:false,fallback:'Ver disponibilidad'})}
+      ${toggleField('footer.link.experiencia.show','Mostrar "La experiencia"',true)}
+      ${field('footer.link.experiencia.label','Texto: La experiencia',{multiline:false,fallback:'La experiencia'})}
+      ${toggleField('footer.link.producto.show','Mostrar "El producto"',true)}
+      ${field('footer.link.producto.label','Texto: El producto',{multiline:false,fallback:'El producto'})}
+      ${toggleField('footer.link.faq.show','Mostrar "Preguntas frecuentes"',true)}
+      ${field('footer.link.faq.label','Texto: Preguntas frecuentes',{multiline:false,fallback:'Preguntas frecuentes'})}
+      <hr class="divider"/>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Pie inferior</div>
+      ${field('footer.copyright','Copyright',{multiline:false,fallback:'© 2026 森下 Morishita · Authentic Japanese Cuisine'})}
+      ${toggleField('footer.payment_note.show','Mostrar nota de pagos',true)}
+      ${field('footer.payment_note','Nota de pagos',{multiline:false,fallback:'Pagos seguros vía Stripe · SSL'})}
     `
   },
 
@@ -1004,21 +1178,141 @@ const SECTIONS = {
   },
 
   botones: {
-    title: 'Botones (CTAs) y visibilidad',
-    desc: 'Edita el texto de los botones y activa/desactiva elementos opcionales.',
+    title: 'Botones (CTAs)',
+    desc: 'Edita el texto de los botones del sitio.',
     render: ()=>`
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Texto de los botones</div>
       ${field('cta.hero_primary.label','Botón principal del hero (Reservar mesa)',{multiline:false,fallback:'Reservar mesa'})}
       ${field('cta.hero_secondary.label','Botón secundario del hero (Conocer la experiencia)',{multiline:false,fallback:'Conocer la experiencia'})}
       ${field('cta.reservar_section.label','Botón de sección Reservar (Ver fechas)',{multiline:false,fallback:'Ver fechas disponibles'})}
       <hr class="divider"/>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Mostrar / ocultar</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Mostrar / ocultar botones</div>
       ${toggleField('cta.hero_secondary.show', 'Mostrar botón "Conocer la experiencia ↓" en hero', true)}
-      <hr class="divider"/>
       ${toggleField('cta.reservar_section.show', 'Mostrar botón "Ver fechas disponibles →" en sección Reservar', true)}
     `
+  },
+
+  visibilidad: {
+    title: 'Visibilidad',
+    desc: 'Vista consolidada de qué elementos están visibles u ocultos. Útil para auditoría rápida.',
+    render: ()=>renderVisibilidad()
   }
 };
+
+// ── VISIBILIDAD: panel auto-descubierto de todos los toggles *.show ──
+const VIS_GROUPS = [
+  {id:'hero', name:'Hero', prefixes:['hero.']},
+  {id:'pilares', name:'Pilares', prefixes:['pilares.']},
+  {id:'producto', name:'El producto', prefixes:['producto.']},
+  {id:'chef', name:'El chef', prefixes:['chef.']},
+  {id:'testimonios', name:'Testimonios', prefixes:['social.']},
+  {id:'reservar', name:'Reservar (CTA)', prefixes:['reservar.','reserve.']},
+  {id:'faq', name:'FAQ', prefixes:['faq.']},
+  {id:'footer', name:'Footer', prefixes:['footer.']},
+  {id:'cta', name:'Botones / CTAs', prefixes:['cta.']},
+  {id:'custom', name:'Secciones personalizadas', prefixes:['custom.']}
+];
+
+const VIS_LABELS = {
+  'hero.card_tag.show':'Overlay sobre la imagen del hero',
+  'hero.meta.show':'Bullets debajo de los botones del hero',
+  'pilares.p1.show':'Pilar 1', 'pilares.p2.show':'Pilar 2', 'pilares.p3.show':'Pilar 3',
+  'chef.sign.show':'Firma final del chef',
+  'social.section.show':'Sección entera de testimonios',
+  'social.t1.show':'Reseña 1','social.t2.show':'Reseña 2','social.t3.show':'Reseña 3',
+  'reserve.detail.show':'Caja de detalles de Reservar',
+  'reserve.row.servicio.show':'Fila: Servicio',
+  'reserve.row.capacidad.show':'Fila: Capacidad',
+  'reserve.row.tiempos.show':'Fila: Tiempos',
+  'reserve.row.precio.show':'Fila: Precio',
+  'reserve.row.anticipo.show':'Fila: Anticipo',
+  'faq.section.show':'Sección entera de FAQ',
+  'faq.q1.show':'Pregunta 1','faq.q2.show':'Pregunta 2','faq.q3.show':'Pregunta 3',
+  'faq.q4.show':'Pregunta 4','faq.q5.show':'Pregunta 5','faq.q6.show':'Pregunta 6',
+  'footer.col2.show':'Columna 2 · Visítanos',
+  'footer.col3.show':'Columna 3 · Contacto',
+  'footer.col4.show':'Columna 4 · Reservar',
+  'footer.service_note.show':'Nota "Servicio por reservación"',
+  'footer.payment_note.show':'Nota "Pagos seguros vía Stripe"',
+  'footer.link.whatsapp.show':'Enlace WhatsApp',
+  'footer.link.instagram.show':'Enlace Instagram',
+  'footer.link.email.show':'Enlace Email',
+  'footer.link.booking.show':'Enlace "Ver disponibilidad"',
+  'footer.link.experiencia.show':'Enlace "La experiencia"',
+  'footer.link.producto.show':'Enlace "El producto"',
+  'footer.link.faq.show':'Enlace "Preguntas frecuentes"',
+  'cta.hero_secondary.show':'Botón "Conocer la experiencia"',
+  'cta.reservar_section.show':'Botón "Ver fechas disponibles"'
+};
+
+// All known toggle keys (for default-on behaviour even if not yet in CONTENT)
+const KNOWN_TOGGLE_KEYS = Object.keys(VIS_LABELS);
+
+function visLabel(key){
+  if(VIS_LABELS[key]) return VIS_LABELS[key];
+  // Custom section button toggles like custom.<id>.button_show / alt_bg
+  const m = key.match(/^custom\.([^.]+)\.(.+)\.show$/);
+  if(m){
+    const sub = m[2].replace(/_/g,' ');
+    return 'Custom '+m[1]+' · '+sub;
+  }
+  return key.replace(/\.show$/,'').replace(/\./g,' › ');
+}
+
+function renderVisibilidad(){
+  // Discover all *.show keys present in CONTENT, plus all KNOWN_TOGGLE_KEYS
+  const allKeys = new Set(KNOWN_TOGGLE_KEYS);
+  Object.keys(CONTENT||{}).forEach(k=>{ if(k.endsWith('.show')) allKeys.add(k); });
+  // Group keys by VIS_GROUPS prefix order
+  const grouped = {};
+  VIS_GROUPS.forEach(g=>{ grouped[g.id] = []; });
+  Array.from(allKeys).forEach(k=>{
+    const grp = VIS_GROUPS.find(g=>g.prefixes.some(p=>k.startsWith(p)));
+    if(grp) grouped[grp.id].push(k);
+    else { if(!grouped['_other']) grouped['_other']=[]; grouped['_other'].push(k); }
+  });
+  const groupHtml = VIS_GROUPS.map(g=>{
+    const keys = grouped[g.id]||[];
+    if(keys.length===0) return '';
+    keys.sort();
+    return `
+      <div class="vis-group">
+        <div class="vis-group-title">${escHtml(g.name)}</div>
+        ${keys.map(k=>{
+          const id='vis_'+k.replace(/[.\[\]]/g,'_');
+          const stored=val(k,'');
+          const isOn=stored===''?true:(stored!=='false');
+          return `
+            <div class="vis-row" data-field-key="${escAttr(k)}">
+              <input type="checkbox" id="${id}" ${isOn?'checked':''} onchange="onToggleChange('${k}', this.checked, 'vs_${id}')"/>
+              <label for="${id}">${escHtml(visLabel(k))}</label>
+              <span class="vis-key">${escHtml(k)}</span>
+              <span class="save-status" id="vs_${id}"></span>
+            </div>`;
+        }).join('')}
+      </div>`;
+  }).join('');
+  const empty = !VIS_GROUPS.some(g=>(grouped[g.id]||[]).length>0);
+  if(empty) return '<div class="vis-empty">Aún no hay toggles de visibilidad guardados.<br>Activa o desactiva un elemento desde su sección y aparecerá aquí.</div>';
+  return `
+    <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+      <button class="cs-btn" onclick="resetAllVisibility()">Restaurar todo a visible</button>
+    </div>
+    ${groupHtml}`;
+}
+
+async function resetAllVisibility(){
+  if(!confirm('¿Mostrar TODOS los elementos? Esto guarda "true" en cada toggle de visibilidad conocido.')) return;
+  const keys = new Set(KNOWN_TOGGLE_KEYS);
+  Object.keys(CONTENT||{}).forEach(k=>{ if(k.endsWith('.show')) keys.add(k); });
+  for(const k of keys){
+    pushUndo(k);
+    await saveField(k, 'true', null);
+  }
+  showToast('Visibilidad restaurada');
+  reloadPreview();
+  if(currentSection==='visibilidad') showSection('visibilidad');
+}
 
 // ── NAV ──
 let currentSection = 'hero';
