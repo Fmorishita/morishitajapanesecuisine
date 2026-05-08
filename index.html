@@ -1672,7 +1672,7 @@ setTimeout(hideLoader,3000);
           <div class="custom-eyebrow" data-ck="${k}.eyebrow"></div>
           <h2 class="custom-title" data-ck-html="${k}.title"></h2>
           <p class="custom-paragraph" data-ck="${k}.paragraph"></p>
-          <a class="custom-cta" data-ck="${k}.button_label" data-ck-href="${k}.button_url" data-ck-show="${k}.button_show"></a>
+          <a class="custom-cta" data-ck-href="${k}.button_url" data-ck-show="${k}.button_show"><span data-ck="${k}.button_label"></span></a>
         </div>`;
     }
     return div;
@@ -1701,7 +1701,7 @@ setTimeout(hideLoader,3000);
       ids.forEach(id=>{if(byId[id])list.appendChild(byId[id]);});
     });
     document.querySelectorAll('[data-ck-show]').forEach(el=>{
-      if(C[el.dataset.ckShow]==='false')el.style.display='none';
+      el.style.display = (C[el.dataset.ckShow]==='false') ? 'none' : '';
     });
     const secOrder=C['sections.order'];
     if(secOrder){
@@ -1750,10 +1750,13 @@ setTimeout(hideLoader,3000);
     function positionPill(){
       if(!activeEl){ pill.classList.remove('show'); return; }
       const r=activeEl.getBoundingClientRect();
+      const pillW=90, pillH=26;
       const top=r.top+window.scrollY-30;
-      const left=r.left+window.scrollX+Math.max(0, r.width-90);
-      pill.style.top=Math.max(8, top)+'px';
-      pill.style.left=Math.max(8, left)+'px';
+      const left=r.left+window.scrollX+Math.max(0, r.width-pillW);
+      const maxTop=window.scrollY+window.innerHeight-pillH-8;
+      const maxLeft=window.scrollX+window.innerWidth-pillW-8;
+      pill.style.top=Math.max(8, Math.min(maxTop, top))+'px';
+      pill.style.left=Math.max(8, Math.min(maxLeft, left))+'px';
       pill.classList.add('show');
     }
     function setActive(el, key, kind){

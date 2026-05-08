@@ -618,6 +618,12 @@ function closeGallery(){
   _galleryCallback = null;
 }
 
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && document.getElementById('galleryModal').style.display === 'flex'){
+    closeGallery();
+  }
+});
+
 // ORDER LIST
 const ORDER_STATE = {};
 function orderList(listId, label, defaultOrder, labels){
