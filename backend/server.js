@@ -424,6 +424,26 @@ app.post('/api/content/upload-image', requireAdmin, async (req, res) => {
   }
 });
 
+// GET /api/content/images — admin: lista imágenes del bucket site-images
+app.get('/api/content/images', requireAdmin, async (req, res) => {
+  try {
+    const { data, error } = await supabase.storage
+      .from('site-images')
+      .list('', { limit: 200, sortBy: { column: 'created_at', order: 'desc' } });
+    if (error) throw error;
+    const images = (data || [])
+      .filter(f => f.id) // excluir carpetas/prefijos
+      .map(f => {
+        const { data: { publicUrl } } = supabase.storage
+          .from('site-images').getPublicUrl(f.name);
+        return { name: f.name, url: publicUrl, size: f.metadata?.size };
+      });
+    res.json({ images });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // POST /api/content/undo — revierte el último cambio guardado en site_content.
 // Devuelve { ok, key, value, more } donde `more` indica si quedan más undos.
 app.post('/api/content/undo', requireAdmin, async (req, res) => {

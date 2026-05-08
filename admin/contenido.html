@@ -202,6 +202,20 @@
     .nav-item{white-space:nowrap;border-left:0;border-bottom:2px solid transparent;padding:8px 12px;flex-shrink:0;}
     .nav-item.active{border-left:0;border-bottom-color:var(--gold);}
   }
+
+  /* GALLERY MODAL */
+  .gallery-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;}
+  .gallery-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.78);}
+  .gallery-panel{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:6px;width:720px;max-width:96vw;max-height:82vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.6);}
+  .gallery-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-shrink:0;}
+  .gallery-title{font-size:13px;font-weight:600;letter-spacing:.05em;}
+  .gallery-close{background:transparent;border:0;color:var(--muted);font-size:18px;cursor:pointer;padding:2px 6px;line-height:1;}
+  .gallery-close:hover{color:var(--fg);}
+  .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;padding:14px;overflow-y:auto;flex:1;}
+  .gallery-item{cursor:pointer;border-radius:4px;overflow:hidden;border:2px solid transparent;transition:.2s;aspect-ratio:4/3;background:var(--surface2);}
+  .gallery-item:hover{border-color:var(--gold);}
+  .gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
+  .gallery-loading,.gallery-empty{grid-column:1/-1;text-align:center;color:var(--muted);font-size:12px;padding:28px;letter-spacing:.05em;}
 </style>
 </head>
 <body>
@@ -225,6 +239,7 @@
         <button class="device-btn" data-device="mobile" onclick="setDevice('mobile')">Móvil</button>
       </div>
       <button class="reload-btn" id="undoBtn" onclick="undoLast()" title="Deshacer último cambio guardado" disabled>↶ Deshacer</button>
+      <button class="reload-btn" id="redoBtn" onclick="redoLast()" title="Rehacer cambio deshecho" disabled>↷ Rehacer</button>
       <button class="reload-btn" onclick="reloadPreview()" title="Recargar previsualización">↻</button>
       <a href="/" target="_blank" class="preview-btn">Ver sitio ↗</a>
       <a href="/admin" class="admin-link">← Reservas</a>
@@ -262,6 +277,18 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- GALLERY MODAL -->
+<div class="gallery-modal" id="galleryModal" style="display:none">
+  <div class="gallery-backdrop" onclick="closeGallery()"></div>
+  <div class="gallery-panel">
+    <div class="gallery-header">
+      <span class="gallery-title">GALERÍA DE IMÁGENES</span>
+      <button class="gallery-close" onclick="closeGallery()">✕</button>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</div>
 
 <script>
 let ADMIN_TOKEN = '';
@@ -321,11 +348,13 @@ function setDevice(d){
 
 // ── SAVE ──
 const undoStack = [];
+const redoStack = [];
 
 function pushUndo(key){
-  // Snapshot del valor actual ANTES de sobrescribirlo
   undoStack.push({ key, value: CONTENT[key] ?? null });
+  redoStack.length = 0; // nueva acción borra el historial de redo
   document.getElementById('undoBtn').disabled = false;
+  document.getElementById('redoBtn').disabled = true;
 }
 
 async function saveField(key, value, statusEl){
@@ -353,7 +382,8 @@ async function undoLast(){
   btn.disabled = true; btn.textContent = '↶ Deshaciendo…';
   try{
     const { key, value } = undoStack.pop();
-    // Guardar el valor revertido (sin apilar de nuevo)
+    redoStack.push({ key, value: CONTENT[key] ?? null }); // guardar estado actual para redo
+    document.getElementById('redoBtn').disabled = false;
     const r = await fetch('/api/content/update',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-admin-token':ADMIN_TOKEN},
@@ -367,10 +397,42 @@ async function undoLast(){
     reloadPreview();
     showToast('Restaurado: '+key);
   }catch(e){
+    redoStack.pop(); // revertir si el servidor falló
+    document.getElementById('redoBtn').disabled = redoStack.length === 0;
     showToast('No se pudo deshacer: '+e.message, true);
   }finally{
     btn.textContent = '↶ Deshacer';
     btn.disabled = undoStack.length === 0;
+  }
+}
+
+async function redoLast(){
+  if(!redoStack.length){ showToast('No hay cambios para rehacer', true); return; }
+  const btn = document.getElementById('redoBtn');
+  btn.disabled = true; btn.textContent = '↷ Rehaciendo…';
+  try{
+    const { key, value } = redoStack.pop();
+    undoStack.push({ key, value: CONTENT[key] ?? null }); // guardar estado actual para undo
+    document.getElementById('undoBtn').disabled = false;
+    const r = await fetch('/api/content/update',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-admin-token':ADMIN_TOKEN},
+      body: JSON.stringify({key, value: value ?? ''})
+    });
+    const j = await r.json();
+    if(!r.ok) throw new Error(j.error||'Error desconocido');
+    CONTENT[key] = value ?? '';
+    livePreview(key, value ?? '', 'text');
+    if(currentSection) showSection(currentSection);
+    reloadPreview();
+    showToast('Rehecho: '+key);
+  }catch(e){
+    undoStack.pop();
+    document.getElementById('undoBtn').disabled = undoStack.length === 0;
+    showToast('No se pudo rehacer: '+e.message, true);
+  }finally{
+    btn.textContent = '↷ Rehacer';
+    btn.disabled = redoStack.length === 0;
   }
 }
 
@@ -489,11 +551,71 @@ function imgField(key, label, defaultSrc, altText){
           <div class="img-upload-row">
             <input type="file" id="${fileId}" accept="image/*" onchange="uploadImage('${key}',this.files[0],document.getElementById('${id}'),document.getElementById('${statusId}'))"/>
             <button class="btn-upload" onclick="document.getElementById('${fileId}').click()">Cambiar imagen</button>
+            <button class="btn-upload" onclick="showImageGallery(url=>selectImage('${key}',url,document.getElementById('${id}'),document.getElementById('${statusId}')))">Galería</button>
             <span class="save-status" id="${statusId}"></span>
           </div>
         </div>
       </div>
     </div>`;
+}
+
+// Select a previously-uploaded image (no upload, just save the URL)
+async function selectImage(key, url, previewEl, statusEl){
+  pushUndo(key);
+  if(statusEl){ statusEl.textContent='Guardando...'; statusEl.className='save-status'; }
+  try{
+    const r = await fetch('/api/content/update',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-admin-token':ADMIN_TOKEN},
+      body: JSON.stringify({key, value: url})
+    });
+    const j = await r.json();
+    if(!r.ok) throw new Error(j.error||'Error desconocido');
+    CONTENT[key] = url;
+    if(previewEl) previewEl.src = url;
+    livePreview(key, url, 'src');
+    if(statusEl){ statusEl.textContent='✓ Imagen seleccionada'; statusEl.className='save-status ok'; setTimeout(()=>{ if(statusEl)statusEl.textContent=''; },2500); }
+    showToast('Imagen actualizada');
+  }catch(e){
+    if(statusEl){ statusEl.textContent='✗ '+e.message; statusEl.className='save-status err'; }
+    showToast('Error: '+e.message, true);
+  }
+}
+
+// Image gallery
+let _galleryCallback = null;
+
+async function showImageGallery(callback){
+  _galleryCallback = callback;
+  const modal = document.getElementById('galleryModal');
+  const grid = document.getElementById('galleryGrid');
+  modal.style.display = 'flex';
+  grid.innerHTML = '<div class="gallery-loading">CARGANDO…</div>';
+  try{
+    const r = await fetch('/api/content/images',{headers:{'x-admin-token':ADMIN_TOKEN}});
+    const j = await r.json();
+    if(!r.ok) throw new Error(j.error||'Error');
+    if(!j.images || !j.images.length){
+      grid.innerHTML = '<div class="gallery-empty">No hay imágenes subidas todavía. Sube una imagen primero.</div>';
+      return;
+    }
+    grid.innerHTML = j.images.map(img=>`
+      <div class="gallery-item" onclick="selectGalleryImage('${escAttr(img.url)}')" title="${escAttr(img.name)}">
+        <img src="${escAttr(img.url)}" loading="lazy" alt="${escAttr(img.name)}"/>
+      </div>`).join('');
+  }catch(e){
+    grid.innerHTML = `<div class="gallery-empty">Error al cargar galería: ${escHtml(e.message)}</div>`;
+  }
+}
+
+function selectGalleryImage(url){
+  if(_galleryCallback) _galleryCallback(url);
+  closeGallery();
+}
+
+function closeGallery(){
+  document.getElementById('galleryModal').style.display = 'none';
+  _galleryCallback = null;
 }
 
 // ORDER LIST

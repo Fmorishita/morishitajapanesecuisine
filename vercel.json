@@ -16,6 +16,7 @@
     { "src": "/disponibilidad", "dest": "backend/server.js" },
     { "src": "/disponibilidad\\?(.*)", "dest": "backend/server.js" },
     { "src": "/api/content/upload-image", "dest": "backend/server.js" },
+    { "src": "/api/content/images", "dest": "backend/server.js" },
     { "src": "/api/content/update", "dest": "backend/server.js" },
     { "src": "/api/content/undo", "dest": "backend/server.js" },
     { "src": "/api/content/history", "dest": "backend/server.js" },
