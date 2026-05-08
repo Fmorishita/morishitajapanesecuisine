@@ -1811,9 +1811,21 @@ setTimeout(hideLoader,3000);
         }
       } else if(d.type==='ck-reload'){
         // Re-fetch fresh content (después de guardar)
-        fetch('/api/content').then(r=>r.json()).then(C=>{ applyContent(C); }).catch(()=>{});
+        fetch('/api/content').then(r=>r.json()).then(C=>{ applyContent(C); sendContentSnapshot(); }).catch(()=>{});
       }
     });
+    function sendContentSnapshot(){
+      // Enviar al panel admin el contenido real renderizado de cada elemento editable.
+      // Esto permite al panel usar el texto completo del HTML como fallback cuando no
+      // hay valor guardado en BD, en vez de un fallback corto hardcoded.
+      const snap = {};
+      document.querySelectorAll('[data-ck]').forEach(el=>{ snap[el.dataset.ck] = el.textContent; });
+      document.querySelectorAll('[data-ck-html]').forEach(el=>{ snap[el.dataset.ckHtml] = el.innerHTML; });
+      document.querySelectorAll('[data-ck-src]').forEach(el=>{ snap[el.dataset.ckSrc] = el.getAttribute('src') || ''; });
+      document.querySelectorAll('[data-ck-href]').forEach(el=>{ snap[el.dataset.ckHref] = el.getAttribute('href') || ''; });
+      try{ window.parent.postMessage({type:'ck-content-snapshot', content: snap},'*'); }catch(e){}
+    }
+    sendContentSnapshot();
     try{ window.parent.postMessage({type:'ck-iframe-ready'},'*'); }catch(e){}
   }
 })();

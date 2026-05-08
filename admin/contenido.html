@@ -293,6 +293,7 @@
 <script>
 let ADMIN_TOKEN = '';
 let CONTENT = {};
+let IFRAME_CONTENT = {}; // snapshot del contenido real del HTML, enviado por el iframe al cargar
 let IFRAME_READY = false;
 
 // ── AUTH ──
@@ -319,7 +320,10 @@ async function loadContent(){
 }
 
 function val(key, fallback=''){
-  return CONTENT[key] !== undefined ? CONTENT[key] : fallback;
+  // Prioridad: valor guardado en BD > snapshot del HTML real (iframe) > fallback hardcoded
+  if(CONTENT[key] !== undefined && CONTENT[key] !== '') return CONTENT[key];
+  if(IFRAME_CONTENT[key] !== undefined && IFRAME_CONTENT[key] !== '') return IFRAME_CONTENT[key];
+  return fallback;
 }
 
 // ── LIVE PREVIEW (parent → iframe) ──
@@ -1475,6 +1479,12 @@ window.addEventListener('message', e=>{
   if(d.type === 'ck-iframe-ready'){
     IFRAME_READY = true;
     document.getElementById('previewLoading').classList.add('hide');
+  } else if(d.type === 'ck-content-snapshot'){
+    // El iframe nos manda el contenido real renderizado de cada elemento data-ck/html/src/href.
+    // Lo usamos como fallback en val() para que los textareas muestren el texto completo del HTML
+    // cuando todavía no hay un valor guardado en BD.
+    IFRAME_CONTENT = d.content || {};
+    if(currentSection) showSection(currentSection); // re-render para reflejar el snapshot
   } else if(d.type === 'ck-clicked'){
     // Click-to-edit: navega a la sección correspondiente y hace focus del campo
     const sec = keyToSection(d.key);
