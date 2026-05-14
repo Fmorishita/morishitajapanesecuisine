@@ -339,19 +339,31 @@ function val(key, fallback=''){
 }
 
 // ── LIVE PREVIEW (parent → iframe) ──
+// Para imágenes (zoom/position/src) hace DOM directo al iframe (mismo origen).
+// Para texto/html/href usa postMessage normal.
 function livePreview(key, value, kind){
   const frame = document.getElementById('previewFrame');
   if(!frame || !frame.contentWindow) return;
-  // Encuadre de imagen: acceso directo al DOM del iframe (mismo origen, más fiable que postMessage)
-  if(key.endsWith('.position')){
-    const baseKey = key.slice(0, -9);
+  // Recorte o encuadre de imagen
+  if(key.endsWith('.zoom') || key.endsWith('.position')){
+    const isZoom = key.endsWith('.zoom');
+    const baseKey = key.slice(0, isZoom ? -5 : -9);
     try{
       const doc = frame.contentDocument || frame.contentWindow.document;
       const img = doc && doc.querySelector('[data-ck-src="'+baseKey+'"]');
-      if(img){ img.style.objectPosition = (value && value !== '') ? ('center '+value) : ''; return; }
-    }catch(e){}
+      if(img){
+        const v = parseFloat((value||'').replace(/%$/,''));
+        if(isZoom){
+          img.style.transformOrigin = 'center';
+          img.style.transform = (!isNaN(v) && v > 0) ? ('scale('+(1+v/100)+')') : '';
+        } else {
+          img.style.objectPosition = (!isNaN(v) && v !== 50) ? ('center '+v+'%') : '';
+        }
+        return;
+      }
+    }catch(e){ console.warn('livePreview DOM directo falló', e); }
   }
-  // Fuente de imagen: acceso directo
+  // Cambio de imagen (src)
   if(kind === 'src'){
     try{
       const doc = frame.contentDocument || frame.contentWindow.document;
@@ -359,7 +371,7 @@ function livePreview(key, value, kind){
       if(img){ img.src = value; return; }
     }catch(e){}
   }
-  // Resto: postMessage
+  // Resto (texto, html, href): postMessage
   try{ frame.contentWindow.postMessage({type:'ck-preview', key, value, kind}, '*'); }catch(e){}
 }
 
@@ -625,9 +637,12 @@ function imgField(key, label, defaultSrc, altText){
   const id = 'img_'+key.replace(/\./g,'_');
   const fileId = 'file_'+key.replace(/\./g,'_');
   const statusId = 'imgs_'+key.replace(/\./g,'_');
+  const zoomId = 'z_'+key.replace(/\./g,'_');
+  const zoomStatusId = 'zs_'+key.replace(/\./g,'_');
   const posId = 'p_'+key.replace(/\./g,'_');
   const posStatusId = 'ps_'+key.replace(/\./g,'_');
   const src = val(key, defaultSrc);
+  const zoomVal = parseInt((val(key+'.zoom','')||'0').replace(/%$/,''),10)||0;
   const posVal = parseInt((val(key+'.position','')||'50').replace(/%$/,''),10)||50;
   return `
     <div class="field" data-field-key="${escAttr(key)}">
@@ -645,15 +660,41 @@ function imgField(key, label, defaultSrc, altText){
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
-        <span style="font-size:11px;color:var(--muted);letter-spacing:.05em;flex:0 0 auto;">Encuadre:</span>
-        <span style="font-size:9px;color:var(--muted);flex:0 0 auto;">↑ Arriba</span>
-        <input type="range" id="${posId}_r" min="0" max="100" step="5" value="${posVal}" style="flex:1;" oninput="document.getElementById('${posId}').value=this.value;trackDirty('${key}.position',this.value+'%','text','${posStatusId}')"/>
-        <span style="font-size:9px;color:var(--muted);flex:0 0 auto;">Abajo ↓</span>
-        <input type="number" id="${posId}" min="0" max="100" step="5" value="${posVal}" placeholder="50" style="width:52px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:5px 7px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('${posId}_r').value=this.value||50;trackDirty('${key}.position',(this.value||50)+'%','text','${posStatusId}')"/>
+        <span style="font-size:11px;color:var(--muted);letter-spacing:.05em;flex:0 0 60px;">Recortar:</span>
+        <input type="range" id="${zoomId}_r" min="0" max="100" step="5" value="${zoomVal}" style="flex:1;" oninput="applyCrop('${key}',this.value,document.getElementById('${posId}_r').value);document.getElementById('${zoomId}').value=this.value;trackDirty('${key}.zoom',this.value+'%','text','${zoomStatusId}')"/>
+        <input type="number" id="${zoomId}" min="0" max="100" step="5" value="${zoomVal}" placeholder="0" style="width:52px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:5px 7px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('${zoomId}_r').value=this.value||0;applyCrop('${key}',this.value||0,document.getElementById('${posId}_r').value);trackDirty('${key}.zoom',(this.value||0)+'%','text','${zoomStatusId}')"/>
+        <span style="font-size:10px;color:var(--muted);">%</span>
+        <span class="save-status" id="${zoomStatusId}"></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
+        <span style="font-size:11px;color:var(--muted);letter-spacing:.05em;flex:0 0 60px;">Encuadre:</span>
+        <span style="font-size:9px;color:var(--muted);flex:0 0 auto;">↑</span>
+        <input type="range" id="${posId}_r" min="0" max="100" step="5" value="${posVal}" style="flex:1;" oninput="applyCrop('${key}',document.getElementById('${zoomId}_r').value,this.value);document.getElementById('${posId}').value=this.value;trackDirty('${key}.position',this.value+'%','text','${posStatusId}')"/>
+        <span style="font-size:9px;color:var(--muted);flex:0 0 auto;">↓</span>
+        <input type="number" id="${posId}" min="0" max="100" step="5" value="${posVal}" placeholder="50" style="width:52px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:5px 7px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('${posId}_r').value=this.value||50;applyCrop('${key}',document.getElementById('${zoomId}_r').value,this.value||50);trackDirty('${key}.position',(this.value||50)+'%','text','${posStatusId}')"/>
         <span style="font-size:10px;color:var(--muted);">%</span>
         <span class="save-status" id="${posStatusId}"></span>
       </div>
     </div>`;
+}
+
+// Aplica recorte (zoom via transform:scale) + encuadre (object-position) al iframe directamente.
+// Acceso DOM directo (mismo origen) — no depende del code del iframe.
+function applyCrop(key, zoomPct, posPct){
+  const frame = document.getElementById('previewFrame');
+  if(!frame) return;
+  try{
+    const doc = frame.contentDocument || frame.contentWindow.document;
+    if(!doc) return;
+    const img = doc.querySelector('[data-ck-src="'+key+'"]');
+    if(!img) return;
+    const z = parseFloat(zoomPct) || 0;
+    const p = parseFloat(posPct);
+    const scale = 1 + z/100;
+    img.style.transform = z > 0 ? ('scale('+scale+')') : '';
+    img.style.transformOrigin = 'center';
+    img.style.objectPosition = (!isNaN(p) && p !== 50) ? ('center '+p+'%') : '';
+  }catch(e){ console.warn('applyCrop falló', e); }
 }
 
 // Select a previously-uploaded image (no upload, just save the URL)
