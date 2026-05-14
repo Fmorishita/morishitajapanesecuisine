@@ -1811,7 +1811,7 @@ setTimeout(hideLoader,3000);
         try{ applyContent(JSON.parse(cached)); }catch(e){}
       }
     }
-    const r=await fetch('/api/content');
+    const r=await fetch(EDIT_MODE ? '/api/content?_='+Date.now() : '/api/content');
     if(!r.ok){ if(EDIT_MODE) attachEditMode(); hideLoader(); return; }
     const C=await r.json();
     applyContent(C);
@@ -1902,8 +1902,8 @@ setTimeout(hideLoader,3000);
           setActive(el, el.dataset.ckKey, el.dataset.ckKind);
         }
       } else if(d.type==='ck-reload'){
-        // Re-fetch fresh content (después de guardar)
-        fetch('/api/content').then(r=>r.json()).then(C=>{ applyContent(C); sendContentSnapshot(); }).catch(()=>{});
+        // Re-fetch fresh content (después de guardar) — bustear caché CDN
+        fetch('/api/content?_='+Date.now()).then(r=>r.json()).then(C=>{ applyContent(C); sendContentSnapshot(); }).catch(()=>{});
       }
     });
     function sendContentSnapshot(){
