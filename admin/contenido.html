@@ -687,19 +687,25 @@ function applyTopBottomCropToImg(img, t, b){
   if(t+b === 0){
     wrap.style.aspectRatio = '';
     wrap.style.height = '';
+    wrap.style.overflow = '';
     img.style.objectPosition = '';
+    img.style.objectFit = 'cover';
+    img.style.position = 'absolute';
+    img.style.height = '100%';
+    img.style.inset = '0';
     return;
   }
+  // img-contain CSS usa !important — sobreescribir con inline !important para que el recorte funcione
+  img.style.setProperty('object-fit', 'cover', 'important');
+  img.style.setProperty('position', 'absolute', 'important');
+  img.style.setProperty('height', '100%', 'important');
+  img.style.setProperty('inset', '0', 'important');
+  img.style.setProperty('object-position', '50% ' + (t/(t+b)*100) + '%', 'important');
+  wrap.style.overflow = 'hidden';
   const vKeep = (100-t-b)/100;
   const nW = img.naturalWidth || 4;
   const nH = img.naturalHeight || 5;
-  // Aspect-ratio: ancho original / (alto original * proporción que queda)
-  // Esto reduce el alto del contenedor proporcionalmente al recorte
   wrap.style.aspectRatio = nW + ' / ' + (nH * vKeep);
-  // object-position-y: 0% si solo recorta el bottom, 100% si solo recorta el top,
-  // intermedio si recorta ambos. Fórmula: t/(t+b)*100
-  const yPos = t/(t+b)*100;
-  img.style.objectPosition = '50% ' + yPos + '%';
 }
 
 // Select a previously-uploaded image (no upload, just save the URL)

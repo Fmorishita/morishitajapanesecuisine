@@ -1695,15 +1695,25 @@ setTimeout(hideLoader,3000);
     if(t+b >= 95){ t = Math.min(t,47); b = Math.min(b,47); }
     if(t+b === 0){
       wrap.style.aspectRatio = '';
+      wrap.style.overflow = '';
       img.style.objectPosition = '';
+      img.style.objectFit = 'cover';
+      img.style.position = 'absolute';
+      img.style.height = '100%';
+      img.style.inset = '0';
       return;
     }
+    // img-contain CSS usa !important — sobreescribir con inline !important para que el recorte funcione
+    img.style.setProperty('object-fit', 'cover', 'important');
+    img.style.setProperty('position', 'absolute', 'important');
+    img.style.setProperty('height', '100%', 'important');
+    img.style.setProperty('inset', '0', 'important');
+    img.style.setProperty('object-position', '50% ' + (t/(t+b)*100) + '%', 'important');
+    wrap.style.overflow = 'hidden';
     const vKeep = (100-t-b)/100;
     const nW = img.naturalWidth || 4;
     const nH = img.naturalHeight || 5;
     wrap.style.aspectRatio = nW + ' / ' + (nH * vKeep);
-    const yPos = t/(t+b)*100;
-    img.style.objectPosition = '50% ' + yPos + '%';
   }
 
   function applyContent(C){
