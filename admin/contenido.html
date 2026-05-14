@@ -969,6 +969,7 @@ const SECTIONS = {
       ${field('hero.h1','Título principal (H1)',{html:true,fallback:'El producto<em>al frente.</em>'})}
       ${field('hero.sub','Descripción principal',{html:true,fallback:'Una barra de cuatro asientos. Catorce tiempos.'})}
       ${toggleField('hero.img_first', 'Imagen arriba de los botones (en móvil / tablet)', false)}
+      ${toggleField('hero.img_contain', 'Mostrar imagen completa (sin recorte)', false)}
       <hr class="divider"/>
       ${toggleField('hero.card_tag.show', 'Mostrar overlay sobre la imagen', true)}
       ${field('hero.card_tag','Texto del overlay',{multiline:false,fallback:'La barra · 4 asientos · Sáb & Dom'})}
