@@ -241,6 +241,7 @@
       <button class="reload-btn" id="undoBtn" onclick="undoLast()" title="Deshacer último cambio guardado" disabled>↶ Deshacer</button>
       <button class="reload-btn" id="redoBtn" onclick="redoLast()" title="Rehacer cambio deshecho" disabled>↷ Rehacer</button>
       <button class="reload-btn" onclick="reloadPreview()" title="Recargar previsualización">↻</button>
+      <button class="preview-btn primary" id="globalSaveBtn" onclick="saveAllDirty()" disabled style="position:relative;padding-right:22px;"><span id="globalSaveLabel">Guardar cambios</span><span id="globalSaveBadge" style="display:none;position:absolute;top:-7px;right:-7px;background:#e66;color:#fff;border-radius:50%;width:19px;height:19px;font-size:10px;font-weight:700;align-items:center;justify-content:center;line-height:19px;text-align:center;"></span></button>
       <a href="/" target="_blank" class="preview-btn">Ver sitio ↗</a>
       <a href="/admin" class="admin-link">← Reservas</a>
     </div>
@@ -293,8 +294,10 @@
 <script>
 let ADMIN_TOKEN = '';
 let CONTENT = {};
-let IFRAME_CONTENT = {}; // snapshot del contenido real del HTML, enviado por el iframe al cargar
+let IFRAME_CONTENT = {};
 let IFRAME_READY = false;
+let currentDevice = 'desktop';
+const DIRTY_FIELDS = new Map(); // effectiveKey → {value, kind, statusId}
 
 // ── AUTH ──
 function checkPin(){
@@ -324,7 +327,12 @@ async function loadContent(){
 }
 
 function val(key, fallback=''){
-  // Prioridad: valor guardado en BD > snapshot del HTML real (iframe) > fallback hardcoded
+  // Prioridad: override de dispositivo > valor base guardado > snapshot iframe > fallback
+  if(currentDevice !== 'desktop'){
+    const dk = key + '.' + currentDevice;
+    if(CONTENT[dk] !== undefined && CONTENT[dk] !== '') return CONTENT[dk];
+    if(IFRAME_CONTENT[dk] !== undefined && IFRAME_CONTENT[dk] !== '') return IFRAME_CONTENT[dk];
+  }
   if(CONTENT[key] !== undefined && CONTENT[key] !== '') return CONTENT[key];
   if(IFRAME_CONTENT[key] !== undefined && IFRAME_CONTENT[key] !== '') return IFRAME_CONTENT[key];
   return fallback;
@@ -352,6 +360,8 @@ function setDevice(d){
   if(d==='mobile') pane.classList.add('mobile');
   if(d==='tablet') pane.classList.add('tablet');
   document.querySelectorAll('.device-btn').forEach(b=>b.classList.toggle('active', b.dataset.device===d));
+  currentDevice = d;
+  if(currentSection) showSection(currentSection);
 }
 
 // ── SAVE ──
@@ -521,7 +531,7 @@ function field(key, label, opts={}){
   const statusId = 's_'+key.replace(/\./g,'_');
   const inputType = url ? 'url' : 'text';
   const kind = html ? 'html' : (url ? 'href' : 'text');
-  const onInput = `markDirty('${statusId}');livePreview('${key}',this.value,'${kind}')`;
+  const onInput = `trackDirty('${key}',this.value,'${kind}','${statusId}')`;
   const inputEl = multiline && !url
     ? `<textarea id="${id}" data-ck-key="${key}" data-ck-kind="${kind}" oninput="${onInput}">${escHtml(val(key, fallback))}</textarea>`
     : `<input type="${inputType}" id="${id}" data-ck-key="${key}" data-ck-kind="${kind}" oninput="${onInput}" value="${escAttr(val(key, fallback))}"/>`;
@@ -532,7 +542,6 @@ function field(key, label, opts={}){
       ${inputEl}
       ${htmlHint}
       <div class="field-actions">
-        <button class="btn-save" onclick="pushUndo('${key}');saveField('${key}',document.getElementById('${id}').value,document.getElementById('${statusId}'))">Guardar</button>
         <span class="save-status" id="${statusId}"></span>
       </div>
     </div>`;
@@ -541,8 +550,56 @@ function field(key, label, opts={}){
 function markDirty(statusId){
   const el = document.getElementById(statusId);
   if(el && el.textContent !== '✓ Guardado'){
-    el.textContent = '● cambios sin guardar';
+    el.textContent = '● no guardado';
     el.className = 'save-status dirty';
+  }
+}
+
+function effectiveKey(key){
+  if(currentDevice === 'mobile') return key + '.mobile';
+  if(currentDevice === 'tablet') return key + '.tablet';
+  return key;
+}
+
+function trackDirty(key, value, kind, statusId){
+  DIRTY_FIELDS.set(effectiveKey(key), {value, kind, statusId});
+  markDirty(statusId);
+  updateSaveBtn();
+  livePreview(key, value, kind); // usa la key base para que el iframe encuentre el elemento
+}
+
+function updateSaveBtn(){
+  const btn = document.getElementById('globalSaveBtn');
+  const badge = document.getElementById('globalSaveBadge');
+  const n = DIRTY_FIELDS.size;
+  if(btn) btn.disabled = n === 0;
+  if(badge){
+    badge.textContent = n;
+    badge.style.display = n > 0 ? 'inline-flex' : 'none';
+  }
+}
+
+async function saveAllDirty(){
+  if(!DIRTY_FIELDS.size){ showToast('No hay cambios pendientes'); return; }
+  const btn = document.getElementById('globalSaveBtn');
+  const lbl = document.getElementById('globalSaveLabel');
+  if(btn) btn.disabled = true;
+  if(lbl) lbl.textContent = 'Guardando…';
+  const entries = Array.from(DIRTY_FIELDS.entries());
+  let errCount = 0;
+  for(const [ek, {value, statusId}] of entries){
+    pushUndo(ek);
+    const ok = await saveField(ek, value, document.getElementById(statusId));
+    if(ok) DIRTY_FIELDS.delete(ek);
+    else errCount++;
+  }
+  if(lbl) lbl.textContent = 'Guardar cambios';
+  updateSaveBtn();
+  if(!errCount){
+    showToast('✓ Todos los cambios guardados');
+    setTimeout(reloadPreview, 300);
+  } else {
+    showToast('Se guardaron '+(entries.length-errCount)+'/'+entries.length+' campos', true);
   }
 }
 
@@ -1463,11 +1520,17 @@ function showSection(key, opts={}){
     el.classList.toggle('active', el.dataset.sec === key);
   });
   const s = SECTIONS[key];
+  const devWarn = currentDevice !== 'desktop'
+    ? `<div style="background:rgba(200,169,126,.12);border:1px solid rgba(200,169,126,.35);border-radius:4px;padding:8px 14px;font-size:11px;color:var(--gold);margin-bottom:16px;text-align:center;letter-spacing:.04em;">
+        Vista ${currentDevice==='mobile'?'MÓVIL':'TABLET'} — Los cambios solo afectarán la vista ${currentDevice==='mobile'?'móvil':'tablet'}
+      </div>`
+    : '';
   document.getElementById('mainContent').innerHTML = `
     <div class="section-header">
       <h2>${s.title}</h2>
       <p>${s.desc}</p>
     </div>
+    ${devWarn}
     ${s.render()}
   `;
   // If the focusKey targets a custom section, open its card first

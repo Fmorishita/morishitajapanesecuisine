@@ -1706,6 +1706,24 @@ setTimeout(hideLoader,3000);
     document.querySelectorAll('[data-ck-show]').forEach(el=>{
       el.style.display = (C[el.dataset.ckShow]==='false') ? 'none' : '';
     });
+    // Device-specific overrides: keys stored as key.mobile / key.tablet override the base value
+    const _isMob = window.matchMedia('(max-width:980px)').matches;
+    const _isTbl = !_isMob && window.matchMedia('(max-width:1200px)').matches;
+    const _ds = _isMob ? '.mobile' : (_isTbl ? '.tablet' : '');
+    if(_ds){
+      document.querySelectorAll('[data-ck]').forEach(el=>{
+        const v=C[el.dataset.ck+_ds]; if(v!==undefined) el.textContent=v;
+      });
+      document.querySelectorAll('[data-ck-html]').forEach(el=>{
+        const v=C[el.dataset.ckHtml+_ds]; if(v!==undefined) el.innerHTML=v;
+      });
+      document.querySelectorAll('[data-ck-src]').forEach(el=>{
+        const v=C[el.dataset.ckSrc+_ds]; if(v!==undefined) el.src=v;
+      });
+      document.querySelectorAll('[data-ck-href]').forEach(el=>{
+        const v=C[el.dataset.ckHref+_ds]; if(v!==undefined) el.href=v;
+      });
+    }
     const heroCard = document.querySelector('.home-hero-card');
     if(heroCard) heroCard.classList.toggle('img-contain', C['hero.img_contain']==='true');
     placeHeroImage(C);
