@@ -556,7 +556,11 @@ footer{padding:24px 28px;border-top:1px solid var(--line-soft);font-family:var(-
 .home-hero-meta i{width:5px;height:5px;background:var(--sakura-d);border-radius:50%;}
 [data-theme="dark"] .home-hero-meta i{background:var(--gold);}
 .home-hero-card{position:relative;aspect-ratio:4/5;background:var(--paper-deep);overflow:hidden;box-shadow:0 30px 90px rgba(13,13,11,.18);border:1px solid var(--line);}
+.home-hero-card.img-contain{aspect-ratio:auto;overflow:visible;background:transparent;border:0;box-shadow:none;max-width:none!important;}
+.home-hero-card.img-contain>img{position:static!important;height:auto!important;width:100%!important;object-fit:contain!important;inset:auto!important;}
 [data-theme="dark"] .home-hero-card{background:#1a1814;border-color:#2e2a23;box-shadow:0 30px 90px rgba(0,0,0,.6);}
+img.ck-no-crop{position:static!important;inset:auto!important;width:100%!important;height:auto!important;object-fit:contain!important;max-height:none!important;}
+.ck-no-crop-wrap{aspect-ratio:auto!important;overflow:visible!important;height:auto!important;background:transparent!important;box-shadow:none!important;border:0!important;}
 .home-hero-card-inner{position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg,transparent 0 8px,rgba(0,0,0,.025) 8px 16px),linear-gradient(135deg,var(--paper-warm),var(--paper-deep));font-family:var(--display);font-size:240px;color:rgba(196,96,122,.12);line-height:1;}
 [data-theme="dark"] .home-hero-card-inner{background:repeating-linear-gradient(45deg,transparent 0 8px,rgba(255,255,255,.02) 8px 16px),linear-gradient(135deg,#1a1814,#13110e);color:rgba(212,175,106,.13);}
 .home-hero-card-tag{position:absolute;bottom:24px;left:24px;right:24px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--paper);background:rgba(13,13,11,.78);padding:14px 18px;backdrop-filter:blur(8px);}
@@ -613,6 +617,7 @@ footer{padding:24px 28px;border-top:1px solid var(--line-soft);font-family:var(-
 
 /* CHEF */
 .chef-section{display:grid;grid-template-columns:1fr 1.25fr;gap:80px;align-items:center;max-width:1240px;margin:0 auto;padding:100px 28px;}
+@media(min-width:981px){.chef-section > .chef-card{order:0!important;}.chef-section > .chef-text > [data-card-id]{order:0!important;}}
 .chef-card{aspect-ratio:4/5;background:var(--paper-deep);border:1px solid var(--line);position:relative;overflow:hidden;}
 [data-theme="dark"] .chef-card{background:#1a1814;border-color:#2e2a23;}
 .chef-card-inner{position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg,transparent 0 6px,rgba(0,0,0,.028) 6px 12px),linear-gradient(135deg,var(--paper-warm),var(--paper-deep));font-family:var(--display);font-size:220px;color:rgba(196,96,122,.13);line-height:1;}
@@ -647,10 +652,49 @@ footer{padding:24px 28px;border-top:1px solid var(--line-soft);font-family:var(-
 [data-theme="dark"] .testimonial-stars{color:var(--gold);}
 .testimonial-quote{font-family:var(--serif);font-style:italic;font-size:17px;line-height:1.55;color:var(--paper);}
 .testimonial-author{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(250,248,244,.55);margin-top:auto;}
+.testimonial-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(250,248,244,.4);margin-top:8px;}
+.testimonial-badge::before{content:'';display:inline-block;width:12px;height:12px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234285F4' d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z'/%3E%3Cpath fill='%2334A853' d='M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z'/%3E%3Cpath fill='%23FBBC05' d='M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z'/%3E%3Cpath fill='%23EA4335' d='M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z'/%3E%3C/svg%3E") no-repeat center/contain;}
 [data-theme="dark"] .testimonial-quote{color:#f5f0e8;}
 [data-theme="dark"] .testimonial-author{color:rgba(245,240,232,.7);}
-.testimonial-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:rgba(250,248,244,.35);margin-top:4px;letter-spacing:.04em;}
-.testimonial-badge::before{content:'';display:inline-block;width:13px;height:13px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234285F4' d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z'/%3E%3Cpath fill='%2334A853' d='M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z'/%3E%3Cpath fill='%23FBBC05' d='M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z'/%3E%3Cpath fill='%23EA4335' d='M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z'/%3E%3C/svg%3E") no-repeat center/contain;}
+[data-theme="dark"] .testimonial-badge{color:rgba(245,240,232,.45);}
+
+/* CUSTOM SECTIONS (admin-managed, dynamic templates) */
+.custom-section{padding:120px 28px;background:var(--paper);position:relative;}
+[data-theme="dark"] .custom-section{background:var(--paper);}
+.custom-section.alt-bg{background:var(--paper-warm);}
+[data-theme="dark"] .custom-section.alt-bg{background:#0d0b09;}
+.custom-inner{max-width:1240px;margin:0 auto;}
+.custom-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--sakura-d);margin-bottom:18px;}
+[data-theme="dark"] .custom-eyebrow{color:var(--gold);}
+.custom-title{font-family:var(--display);font-size:44px;line-height:1.08;letter-spacing:-.015em;color:var(--ink);margin-bottom:24px;font-weight:400;}
+.custom-title em{font-style:italic;color:var(--sakura-d);font-weight:400;}
+[data-theme="dark"] .custom-title em{color:var(--gold);}
+.custom-paragraph{font-family:var(--serif);font-size:18px;line-height:1.65;color:var(--ink-soft);margin-bottom:18px;}
+.custom-paragraph:last-of-type{margin-bottom:0;}
+.custom-cta{display:inline-block;margin-top:28px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:18px 32px;text-decoration:none;border:1px solid var(--ink);transition:.25s;cursor:pointer;}
+.custom-cta:hover{background:transparent;color:var(--ink);}
+[data-theme="dark"] .custom-cta{background:var(--gold);color:var(--ink);border-color:var(--gold);}
+[data-theme="dark"] .custom-cta:hover{background:transparent;color:var(--gold);}
+
+/* Template: text-image */
+.custom-text-image .custom-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.custom-text-image.image-right .custom-inner{direction:ltr;}
+.custom-text-image.image-left .custom-image-wrap{order:-1;}
+.custom-image-wrap{position:relative;overflow:hidden;background:var(--paper-warm);}
+.custom-image-wrap img{width:100%;height:100%;object-fit:cover;display:block;aspect-ratio:4/5;}
+
+/* Template: text-centered */
+.custom-text-centered{text-align:center;}
+.custom-text-centered .custom-inner{max-width:780px;}
+.custom-text-centered .custom-paragraph{font-size:19px;}
+
+/* Template: gallery */
+.custom-gallery-header{text-align:center;margin-bottom:56px;}
+.custom-gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.custom-gallery-item{display:flex;flex-direction:column;gap:14px;}
+.custom-gallery-item-img{aspect-ratio:1/1;overflow:hidden;background:var(--paper-warm);}
+.custom-gallery-item-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.custom-gallery-item-caption{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);text-align:center;}
 
 /* RESERVE CTA */
 .reserve-cta-section{text-align:center;padding:120px 28px 80px;background:var(--paper);position:relative;}
@@ -695,20 +739,30 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
 
 /* HOMEPAGE responsive */
 @media(max-width:980px){
- .home-hero-grid{grid-template-columns:1fr;gap:56px;}
+ .home-hero-grid{grid-template-columns:1fr;gap:32px;}
  .home-hero{min-height:auto;padding:60px 22px 80px;}
  .home-hero-card{max-width:480px;margin:0 auto;width:100%;}
+ .home-hero-card.img-contain{max-width:680px;}
+ .home-hero-text > .home-hero-card{margin:28px auto 36px;}
  .pillars-grid{grid-template-columns:1fr;}
  .product-hero{grid-template-columns:1fr;gap:48px;}
  .product-hero-text .section-title{font-size:38px;}
  .product-grid{grid-template-columns:1fr;}
- .chef-section{grid-template-columns:1fr;gap:48px;padding:60px 22px;}
+ .chef-section{display:flex;flex-direction:column;gap:24px;padding:60px 22px;}
+ .chef-section > .chef-text{display:contents;}
  .chef-card{max-width:420px;margin:0 auto;width:100%;}
  .testimonials{grid-template-columns:1fr;}
  .faq-grid{grid-template-columns:1fr;}
  .footer-grid{grid-template-columns:1fr 1fr;gap:36px;}
  .section-pad{padding:64px 22px;}
  .reserve-cta-section{padding:80px 22px 60px;}
+ .custom-section{padding:64px 22px;}
+ .custom-text-image .custom-inner{grid-template-columns:1fr;gap:36px;}
+ .custom-text-image.image-left .custom-image-wrap{order:0;}
+ .custom-title{font-size:32px;}
+ .custom-paragraph{font-size:16px;}
+ .custom-text-centered .custom-paragraph{font-size:17px;}
+ .custom-gallery-grid{grid-template-columns:1fr;gap:18px;}
  .topbar-nav{display:none;}
  .topbar-nav.mobile-open{display:flex;flex-direction:column;align-items:stretch;position:absolute;top:100%;right:0;left:0;background:var(--paper);padding:18px 22px;border-bottom:1px solid var(--line);box-shadow:0 14px 36px rgba(0,0,0,.12);gap:18px;}
  [data-theme="dark"] .topbar-nav.mobile-open{background:#0a0908;border-bottom-color:#2e2a23;}
@@ -835,21 +889,21 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <!-- PILARES -->
  <div class="section-pad" id="experiencia" data-section-id="pilares">
   <div class="section-inner">
-   <div class="section-eyebrow">La filosofía</div>
+   <div class="section-eyebrow" data-ck="pilares.eyebrow">La filosofía</div>
    <h2 class="section-title" data-ck-html="pilares.title">Tres reglas. <em>Sin excepción.</em></h2>
    <p class="section-lead" data-ck="pilares.lead">Un Omakase no se mide por la receta. Se mide por la materia prima, el tiempo dedicado a cada pieza y la intimidad del servicio.</p>
    <div class="pillars-grid" data-list-id="pilares">
-    <div class="pillar" data-card-id="p1">
+    <div class="pillar" data-card-id="p1" data-ck-show="pilares.p1.show">
      <div class="pillar-num" data-ck="pilares.p1.num">01 · El producto manda</div>
      <div class="pillar-title" data-ck="pilares.p1.title">Cada pieza, seleccionada a mano.</div>
      <div class="pillar-body" data-ck="pilares.p1.body">Wagyu A5 y Kobe importados de Japón. Pescado de temporada de las mejores aguas. Si una pieza no llega al estándar, no entra a la barra.</div>
     </div>
-    <div class="pillar" data-card-id="p2">
+    <div class="pillar" data-card-id="p2" data-ck-show="pilares.p2.show">
      <div class="pillar-num" data-ck="pilares.p2.num">02 · Cuatro asientos</div>
      <div class="pillar-title" data-ck="pilares.p2.title">Una barra. Dos noches por semana.</div>
      <div class="pillar-body" data-ck="pilares.p2.body">Solo abrimos sábado y domingo. Cuatro lugares por servicio. El chef cocina y narra cada tiempo frente a ti.</div>
     </div>
-    <div class="pillar" data-card-id="p3">
+    <div class="pillar" data-card-id="p3" data-ck-show="pilares.p3.show">
      <div class="pillar-num" data-ck="pilares.p3.num">03 · Catorce tiempos</div>
      <div class="pillar-title" data-ck="pilares.p3.title">El menú lo dicta el día.</div>
      <div class="pillar-body" data-ck="pilares.p3.body">No hay carta. Hay una secuencia construida con el mejor producto que llegó esa semana. La misma cena no se repite jamás.</div>
@@ -863,7 +917,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
   <div class="section-inner">
    <div class="product-hero">
     <div class="product-hero-text">
-     <div class="section-eyebrow">El insumo</div>
+     <div class="section-eyebrow" data-ck="producto.eyebrow">El insumo</div>
      <h2 class="section-title" data-ck-html="producto.h2">Wagyu A5. Kobe.<em>Importados directo de Japón.</em></h2>
      <p data-ck="producto.p1">El corazón de un Omakase serio no es la técnica: es la pieza. Por eso trabajamos con una sola exigencia, sin atajos.</p>
      <p data-ck="producto.p2">Carnes Wagyu A5 y Kobe certificadas, importadas pieza por pieza. Pescado fresco de selección. Arroz japonés, vinagre maderado y dashi preparado en casa. Cada elemento pasa por un solo filtro: ¿es lo mejor que se puede conseguir hoy?</p>
@@ -904,43 +958,46 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- CHEF -->
- <div class="chef-section" id="chef" data-section-id="chef">
-  <div class="chef-card">
+ <div class="chef-section" id="chef" data-section-id="chef" data-list-id="chef.blocks" data-list-mode="order">
+  <div class="chef-card" data-card-id="image">
    <img src="/img/chef-morishita.jpg" alt="Chef Morishita en la barra · Omakase Baja California" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;object-position:center top;" data-ck-src="img.chef">
   </div>
   <div class="chef-text">
-   <div class="section-eyebrow">El chef</div>
-   <h2 data-ck-html="chef.h2">Chef Morishita.<em>Una vida en la barra.</em></h2>
-   <p data-ck="chef.p1">Formado en la disciplina clásica japonesa, el chef Morishita lleva años perfeccionando el oficio del Omakase: la lectura del producto, la temperatura exacta, el corte preciso, el silencio entre tiempos.</p>
-   <p data-ck="chef.p2">En cada servicio, cada plato se construye delante del comensal. No hay carta porque no hay receta fija — hay una conversación entre el chef, el producto del día y los cuatro invitados que se sientan a la barra.</p>
-   <div class="chef-quote" data-ck="chef.quote">"El producto manda. Nuestra técnica solo lo acompaña."</div>
-   <div class="chef-sign">— Chef Morishita · 森下</div>
+   <div class="section-eyebrow" data-ck="chef.eyebrow" data-card-id="eyebrow">El chef</div>
+   <h2 data-ck-html="chef.h2" data-card-id="title">Chef Morishita.<em>Una vida en la barra.</em></h2>
+   <p data-ck="chef.p1" data-card-id="p1">Formado en la disciplina clásica japonesa, el chef Morishita lleva años perfeccionando el oficio del Omakase: la lectura del producto, la temperatura exacta, el corte preciso, el silencio entre tiempos.</p>
+   <p data-ck="chef.p2" data-card-id="p2">En cada servicio, cada plato se construye delante del comensal. No hay carta porque no hay receta fija — hay una conversación entre el chef, el producto del día y los cuatro invitados que se sientan a la barra.</p>
+   <div class="chef-quote" data-ck="chef.quote" data-card-id="quote">"El producto manda. Nuestra técnica solo lo acompaña."</div>
+   <div class="chef-sign" data-ck="chef.sign" data-ck-show="chef.sign.show" data-card-id="sign">— Chef Morishita · 森下</div>
   </div>
  </div>
 
+ <!-- CUSTOM SECTIONS MOUNT POINT (admin-managed) -->
+ <div id="custom-sections-mount"></div>
+
  <!-- PRUEBA SOCIAL -->
- <div class="social-section section-pad" data-section-id="social">
+ <div class="social-section section-pad" data-section-id="social" data-ck-show="social.section.show">
   <div class="section-inner">
-   <div class="section-eyebrow">Lo que dicen quienes ya estuvieron</div>
-   <h2 class="section-title">La barra <em>habla por sí sola.</em></h2>
+   <div class="section-eyebrow" data-ck="social.eyebrow">Lo que dicen quienes ya estuvieron</div>
+   <h2 class="section-title" data-ck-html="social.title">La barra <em>habla por sí sola.</em></h2>
    <div class="testimonials" data-list-id="social">
-    <div class="testimonial" data-card-id="t1">
+    <div class="testimonial" data-card-id="t1" data-ck-show="social.t1.show">
      <div class="testimonial-stars">★★★★★</div>
      <div class="testimonial-quote" data-ck="social.t1.quote">"Una experiencia espectacular de principio a fin. La chef explica cada pieza con detalle, los ingredientes frescos y cada tiempo perfectamente balanceado. Un omakase auténtico, de calidad y lleno de detalles."</div>
      <div class="testimonial-author" data-ck="social.t1.author">— Lucia Ojeda · Google</div>
-     <div class="testimonial-badge">Reseña verificada · Google</div>
+     <div class="testimonial-badge" data-ck="social.badge">Reseña verificada · Google</div>
     </div>
-    <div class="testimonial" data-card-id="t2">
+    <div class="testimonial" data-card-id="t2" data-ck-show="social.t2.show">
      <div class="testimonial-stars">★★★★★</div>
      <div class="testimonial-quote" data-ck="social.t2.quote">"Me encantó todo — ingredientes frescos, ambiente agradable y la chef muy amigable. Es toda una experiencia ver la preparación de cada platillo. 100% recomendado, definitivamente volvería."</div>
      <div class="testimonial-author" data-ck="social.t2.author">— Angelica Serrano Silva · Google</div>
-     <div class="testimonial-badge">Reseña verificada · Google</div>
+     <div class="testimonial-badge" data-ck="social.badge">Reseña verificada · Google</div>
     </div>
-    <div class="testimonial" data-card-id="t3">
+    <div class="testimonial" data-card-id="t3" data-ck-show="social.t3.show">
      <div class="testimonial-stars">★★★★★</div>
      <div class="testimonial-quote" data-ck="social.t3.quote">"Sin duda de la mejor cocina japonesa en Baja. Disfrutamos muchísimo el omakase que reservamos en Morishita. La comida deliciosa y una experiencia que vale cada peso."</div>
      <div class="testimonial-author" data-ck="social.t3.author">— Cyn RM · Local Guide · Google</div>
-     <div class="testimonial-badge">Reseña verificada · Google</div>
+     <div class="testimonial-badge" data-ck="social.badge">Reseña verificada · Google</div>
     </div>
    </div>
   </div>
@@ -955,44 +1012,44 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
    <div class="reserve-cta-actions">
     <button class="btn-pri-lg" onclick="goToBooking()" data-ck-show="cta.reservar_section.show"><span data-ck="cta.reservar_section.label">Ver fechas disponibles</span> <span class="ba">→</span></button>
    </div>
-   <dl class="reserve-detail">
-    <div class="reserve-detail-item"><dt>Servicio</dt><dd>Sáb · Dom</dd></div>
-    <div class="reserve-detail-item"><dt>Capacidad</dt><dd>4 asientos</dd></div>
-    <div class="reserve-detail-item"><dt>Tiempos</dt><dd>14</dd></div>
-    <div class="reserve-detail-item"><dt>Precio</dt><dd>$1,850 MXN p/p</dd></div>
-    <div class="reserve-detail-item"><dt>Anticipo</dt><dd>50% Stripe</dd></div>
+   <dl class="reserve-detail" data-ck-show="reserve.detail.show">
+    <div class="reserve-detail-item" data-ck-show="reserve.row.servicio.show"><dt data-ck="reserve.row.servicio.label">Servicio</dt><dd data-ck="reserve.row.servicio.value">Sáb · Dom</dd></div>
+    <div class="reserve-detail-item" data-ck-show="reserve.row.capacidad.show"><dt data-ck="reserve.row.capacidad.label">Capacidad</dt><dd data-ck="reserve.row.capacidad.value">4 asientos</dd></div>
+    <div class="reserve-detail-item" data-ck-show="reserve.row.tiempos.show"><dt data-ck="reserve.row.tiempos.label">Tiempos</dt><dd data-ck="reserve.row.tiempos.value">14</dd></div>
+    <div class="reserve-detail-item" data-ck-show="reserve.row.precio.show"><dt data-ck="reserve.row.precio.label">Precio</dt><dd data-ck="reserve.row.precio.value">$1,850 MXN p/p</dd></div>
+    <div class="reserve-detail-item" data-ck-show="reserve.row.anticipo.show"><dt data-ck="reserve.row.anticipo.label">Anticipo</dt><dd data-ck="reserve.row.anticipo.value">50% Stripe</dd></div>
    </dl>
   </div>
  </div>
 
  <!-- FAQ -->
- <div class="faq-section" id="faq" data-section-id="faq">
+ <div class="faq-section" id="faq" data-section-id="faq" data-ck-show="faq.section.show">
   <div class="section-inner">
-   <div class="section-eyebrow">Antes de reservar</div>
-   <h2 class="section-title">Lo que <em>conviene saber.</em></h2>
-   <p class="section-lead">Si tu pregunta no está aquí, escríbenos por WhatsApp. Respondemos personalmente.</p>
+   <div class="section-eyebrow" data-ck="faq.eyebrow">Antes de reservar</div>
+   <h2 class="section-title" data-ck-html="faq.title">Lo que <em>conviene saber.</em></h2>
+   <p class="section-lead" data-ck="faq.lead">Si tu pregunta no está aquí, escríbenos por WhatsApp. Respondemos personalmente.</p>
    <div class="faq-grid" data-list-id="faq">
-    <div class="faq-item" data-card-id="q1">
+    <div class="faq-item" data-card-id="q1" data-ck-show="faq.q1.show">
      <div class="faq-q" data-ck="faq.q1">¿Por qué solo abren sábado y domingo?</div>
      <div class="faq-a" data-ck="faq.a1">Trabajamos con producto fresco seleccionado pieza por pieza. Mantener el estándar requiere ciclos de servicio acotados. Dos noches por semana es lo que nos permite no comprometer la calidad.</div>
     </div>
-    <div class="faq-item" data-card-id="q2">
+    <div class="faq-item" data-card-id="q2" data-ck-show="faq.q2.show">
      <div class="faq-q" data-ck="faq.q2">¿El anticipo es reembolsable?</div>
      <div class="faq-a" data-ck="faq.a2">Reembolsable hasta 72 horas antes del servicio. Después de ese momento, el anticipo se aplica al producto que ya separamos para tu mesa.</div>
     </div>
-    <div class="faq-item" data-card-id="q3">
+    <div class="faq-item" data-card-id="q3" data-ck-show="faq.q3.show">
      <div class="faq-q" data-ck="faq.q3">¿Puedo elegir lo que voy a comer?</div>
      <div class="faq-a" data-ck="faq.a3">No hay carta. El menú lo construye el chef según el mejor producto del día. Si tienes alergias o restricciones, indícalas al reservar y se adapta el menú sin sacrificar la experiencia.</div>
     </div>
-    <div class="faq-item" data-card-id="q4">
+    <div class="faq-item" data-card-id="q4" data-ck-show="faq.q4.show">
      <div class="faq-q" data-ck="faq.q4">¿Cuánto dura la cena?</div>
      <div class="faq-a" data-ck="faq.a4">Aproximadamente dos horas. Cada uno de los 14 tiempos se prepara a la vista y se sirve en su momento. Es una experiencia para disfrutar sin prisa.</div>
     </div>
-    <div class="faq-item" data-card-id="q5">
+    <div class="faq-item" data-card-id="q5" data-ck-show="faq.q5.show">
      <div class="faq-q" data-ck="faq.q5">¿Hay código de vestimenta?</div>
      <div class="faq-a" data-ck="faq.a5">No hay código formal. Sugerimos vestir cómodo pero cuidado. La barra es íntima — vístete como te vestirías para una cena que importa.</div>
     </div>
-    <div class="faq-item" data-card-id="q6">
+    <div class="faq-item" data-card-id="q6" data-ck-show="faq.q6.show">
      <div class="faq-q" data-ck="faq.q6">¿Incluye bebidas?</div>
      <div class="faq-a" data-ck="faq.a6">El precio del Omakase es solo el menú de 14 tiempos. Bebidas (sake, vino de Valle, agua, etc.) se cobran aparte. Te recomendamos el sake del chef.</div>
     </div>
@@ -1153,33 +1210,33 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
 <footer class="home-footer">
  <div class="footer-grid">
   <div class="footer-col">
-   <div class="footer-brand">森下 Morishita</div>
-   <div class="footer-brand-sub">Authentic Japanese Cuisine</div>
+   <div class="footer-brand" data-ck="footer.brand_name">森下 Morishita</div>
+   <div class="footer-brand-sub" data-ck="footer.brand_tagline">Authentic Japanese Cuisine</div>
    <p class="footer-desc" data-ck="footer.desc">Una barra de cuatro asientos. Catorce tiempos. Wagyu A5, Kobe importado de Japón y pescado de temporada. Sábados y domingos en Baja California.</p>
   </div>
-  <div class="footer-col">
-   <h4>Visítanos</h4>
+  <div class="footer-col" data-ck-show="footer.col2.show">
+   <h4 data-ck="footer.col2.title">Visítanos</h4>
    <p data-ck="footer.location">Baja California, México</p>
    <p data-ck="footer.hours">Sáb · Dom</p>
-   <p>Servicio por reservación</p>
+   <p data-ck="footer.service_note" data-ck-show="footer.service_note.show">Servicio por reservación</p>
   </div>
-  <div class="footer-col">
-   <h4>Contacto</h4>
-   <a href="https://wa.me/" target="_blank" rel="noopener" data-ck-href="footer.whatsapp_url">WhatsApp</a>
-   <a href="https://instagram.com/morishitajapanesecuisine" target="_blank" rel="noopener" data-ck-href="footer.instagram_url">Instagram</a>
-   <a href="mailto:reservas@morishitajapanesecuisine.com" data-ck-href="footer.email_href">Email</a>
+  <div class="footer-col" data-ck-show="footer.col3.show">
+   <h4 data-ck="footer.col3.title">Contacto</h4>
+   <a href="https://wa.me/" target="_blank" rel="noopener" data-ck-href="footer.whatsapp_url" data-ck-show="footer.link.whatsapp.show"><span data-ck="footer.link.whatsapp.label">WhatsApp</span></a>
+   <a href="https://instagram.com/morishitajapanesecuisine" target="_blank" rel="noopener" data-ck-href="footer.instagram_url" data-ck-show="footer.link.instagram.show"><span data-ck="footer.link.instagram.label">Instagram</span></a>
+   <a href="mailto:reservas@morishitajapanesecuisine.com" data-ck-href="footer.email_href" data-ck-show="footer.link.email.show"><span data-ck="footer.link.email.label">Email</span></a>
   </div>
-  <div class="footer-col">
-   <h4>Reservar</h4>
-   <a onclick="goToBooking()">Ver disponibilidad</a>
-   <a onclick="navTo('experiencia')">La experiencia</a>
-   <a onclick="navTo('producto')">El producto</a>
-   <a onclick="navTo('faq')">Preguntas frecuentes</a>
+  <div class="footer-col" data-ck-show="footer.col4.show">
+   <h4 data-ck="footer.col4.title">Reservar</h4>
+   <a onclick="goToBooking()" data-ck-show="footer.link.booking.show"><span data-ck="footer.link.booking.label">Ver disponibilidad</span></a>
+   <a onclick="navTo('experiencia')" data-ck-show="footer.link.experiencia.show"><span data-ck="footer.link.experiencia.label">La experiencia</span></a>
+   <a onclick="navTo('producto')" data-ck-show="footer.link.producto.show"><span data-ck="footer.link.producto.label">El producto</span></a>
+   <a onclick="navTo('faq')" data-ck-show="footer.link.faq.show"><span data-ck="footer.link.faq.label">Preguntas frecuentes</span></a>
   </div>
  </div>
  <div class="footer-bottom">
-  <span>© 2026 森下 Morishita · Authentic Japanese Cuisine</span>
-  <span>Pagos seguros vía Stripe · SSL</span>
+  <span data-ck="footer.copyright">© 2026 森下 Morishita · Authentic Japanese Cuisine</span>
+  <span data-ck="footer.payment_note" data-ck-show="footer.payment_note.show">Pagos seguros vía Stripe · SSL</span>
  </div>
 </footer>
 </div>
@@ -1594,7 +1651,116 @@ function hideLoader(){
 setTimeout(hideLoader,3000);
 (async function(){
   const EDIT_MODE = new URLSearchParams(location.search).get('edit') === '1';
+  function renderCustomSections(C){
+    const mount=document.getElementById('custom-sections-mount');
+    if(!mount) return;
+    const list=(C['custom.sections']||'').split(',').map(s=>s.trim()).filter(Boolean);
+    // Build a set of desired section ids
+    const desired={};
+    list.forEach(id=>{ desired['custom-'+id]=true; });
+    // Remove existing custom sections that are no longer in the list
+    document.querySelectorAll('[data-section-id^="custom-"]').forEach(el=>{
+      if(!desired[el.dataset.sectionId]) el.remove();
+    });
+    list.forEach(id=>{
+      const sectionId='custom-'+id;
+      let sec=document.querySelector('[data-section-id="'+sectionId+'"]');
+      const tpl=C['custom.'+id+'.template']||'text-centered';
+      const altBg=C['custom.'+id+'.alt_bg']==='true';
+      const expectedTpl=sec&&sec.dataset.tplKind;
+      // If template changed or section doesn't exist, (re)create it
+      if(!sec||expectedTpl!==tpl){
+        if(sec) sec.remove();
+        sec=buildCustomSection(id, tpl);
+        sec.dataset.tplKind=tpl;
+        mount.appendChild(sec);
+      }
+      sec.classList.toggle('alt-bg', altBg);
+      // Image position toggle for text-image template
+      if(tpl==='text-image'){
+        const pos=C['custom.'+id+'.image_position']||'right';
+        sec.classList.toggle('image-left', pos==='left');
+        sec.classList.toggle('image-right', pos!=='left');
+      }
+    });
+  }
+
+  function buildCustomSection(id, tpl){
+    const div=document.createElement('div');
+    div.className='custom-section custom-'+tpl;
+    div.setAttribute('data-section-id','custom-'+id);
+    const k='custom.'+id;
+    if(tpl==='text-image'){
+      div.innerHTML=`
+        <div class="custom-inner">
+          <div class="custom-text">
+            <div class="custom-eyebrow" data-ck="${k}.eyebrow"></div>
+            <h2 class="custom-title" data-ck-html="${k}.title"></h2>
+            <p class="custom-paragraph" data-ck="${k}.paragraph"></p>
+            <a class="custom-cta" data-ck-href="${k}.button_url" data-ck-show="${k}.button_show"><span data-ck="${k}.button_label"></span></a>
+          </div>
+          <div class="custom-image-wrap">
+            <img data-ck-src="${k}.image" alt=""/>
+          </div>
+        </div>`;
+    } else if(tpl==='gallery'){
+      div.innerHTML=`
+        <div class="custom-inner">
+          <div class="custom-gallery-header">
+            <div class="custom-eyebrow" data-ck="${k}.eyebrow"></div>
+            <h2 class="custom-title" data-ck-html="${k}.title"></h2>
+            <p class="custom-paragraph" data-ck="${k}.paragraph"></p>
+          </div>
+          <div class="custom-gallery-grid">
+            ${[1,2,3].map(n=>`
+              <div class="custom-gallery-item">
+                <div class="custom-gallery-item-img"><img data-ck-src="${k}.item${n}.image" alt=""/></div>
+                <div class="custom-gallery-item-caption" data-ck="${k}.item${n}.caption"></div>
+              </div>`).join('')}
+          </div>
+        </div>`;
+    } else { // text-centered (default)
+      div.innerHTML=`
+        <div class="custom-inner">
+          <div class="custom-eyebrow" data-ck="${k}.eyebrow"></div>
+          <h2 class="custom-title" data-ck-html="${k}.title"></h2>
+          <p class="custom-paragraph" data-ck="${k}.paragraph"></p>
+          <a class="custom-cta" data-ck-href="${k}.button_url" data-ck-show="${k}.button_show"><span data-ck="${k}.button_label"></span></a>
+        </div>`;
+    }
+    return div;
+  }
+
+  // Aplica recorte arriba/abajo a una imagen ajustando aspect-ratio del contenedor + object-position.
+  // El contenedor se hace más chico → los elementos abajo suben con él.
+  function _applyTopBottomCropToImg(img, t, b){
+    const wrap = img.parentElement;
+    if(!wrap) return;
+    t = parseFloat(t)||0; b = parseFloat(b)||0;
+    if(t+b >= 95){ t = Math.min(t,47); b = Math.min(b,47); }
+    if(t+b === 0){
+      wrap.style.aspectRatio = '';
+      wrap.style.overflow = '';
+      img.style.objectPosition = '';
+      // Quitar !important de object-fit/height para que CSS/inline original tome control
+      img.style.objectFit = 'cover';
+      img.style.height = '100%';
+      return;
+    }
+    // Usar !important para superar reglas CSS de img-contain que bloquean object-fit:cover
+    // No se tocan position/inset — las imágenes custom dependen de su CSS original para eso
+    img.style.setProperty('object-fit', 'cover', 'important');
+    img.style.setProperty('height', '100%', 'important');
+    img.style.setProperty('object-position', '50% ' + (t/(t+b)*100) + '%', 'important');
+    wrap.style.overflow = 'hidden';
+    const vKeep = (100-t-b)/100;
+    const nW = img.naturalWidth || 4;
+    const nH = img.naturalHeight || 5;
+    wrap.style.aspectRatio = nW + ' / ' + (nH * vKeep);
+  }
+
   function applyContent(C){
+    renderCustomSections(C);
     document.querySelectorAll('[data-ck]').forEach(el=>{
       const v=C[el.dataset.ck];if(v)el.textContent=v;
     });
@@ -1611,13 +1777,51 @@ setTimeout(hideLoader,3000);
       const orderVal=C[list.dataset.listId+'.order'];
       if(!orderVal)return;
       const ids=orderVal.split(',').map(s=>s.trim()).filter(Boolean);
-      const byId={};
-      list.querySelectorAll('[data-card-id]').forEach(el=>{byId[el.dataset.cardId]=el;});
-      ids.forEach(id=>{if(byId[id])list.appendChild(byId[id]);});
+      if(list.dataset.listMode === 'order'){
+        ids.forEach((id, idx)=>{
+          const el = list.querySelector('[data-card-id="'+id+'"]');
+          if(el) el.style.order = idx;
+        });
+      } else {
+        const byId={};
+        list.querySelectorAll('[data-card-id]').forEach(el=>{byId[el.dataset.cardId]=el;});
+        ids.forEach(id=>{if(byId[id])list.appendChild(byId[id]);});
+      }
     });
     document.querySelectorAll('[data-ck-show]').forEach(el=>{
-      if(C[el.dataset.ckShow]==='false')el.style.display='none';
+      el.style.display = (C[el.dataset.ckShow]==='false') ? 'none' : '';
     });
+    // Device-specific overrides: keys stored as key.mobile / key.tablet override the base value
+    const _isMob = window.matchMedia('(max-width:980px)').matches;
+    const _isTbl = !_isMob && window.matchMedia('(max-width:1200px)').matches;
+    const _ds = _isMob ? '.mobile' : (_isTbl ? '.tablet' : '');
+    if(_ds){
+      document.querySelectorAll('[data-ck]').forEach(el=>{
+        const v=C[el.dataset.ck+_ds]; if(v!==undefined) el.textContent=v;
+      });
+      document.querySelectorAll('[data-ck-html]').forEach(el=>{
+        const v=C[el.dataset.ckHtml+_ds]; if(v!==undefined) el.innerHTML=v;
+      });
+      document.querySelectorAll('[data-ck-src]').forEach(el=>{
+        const v=C[el.dataset.ckSrc+_ds]; if(v!==undefined) el.src=v;
+      });
+      document.querySelectorAll('[data-ck-href]').forEach(el=>{
+        const v=C[el.dataset.ckHref+_ds]; if(v!==undefined) el.href=v;
+      });
+    }
+    // Recorte arriba/abajo por imagen — img.X.crop_top y img.X.crop_bottom en %
+    // El contenedor se ajusta al área visible. Los elementos abajo suben con él.
+    document.querySelectorAll('[data-ck-src]').forEach(el=>{
+      const k = el.dataset.ckSrc;
+      const t = parseFloat((C[k+'.crop_top']||'').replace(/%$/,''))||0;
+      const b = parseFloat((C[k+'.crop_bottom']||'').replace(/%$/,''))||0;
+      const applyNow = ()=> _applyTopBottomCropToImg(el, t, b);
+      if(el.complete && el.naturalWidth > 0) applyNow();
+      else el.addEventListener('load', applyNow, {once:true});
+    });
+    const heroCard = document.querySelector('.home-hero-card');
+    if(heroCard) heroCard.classList.toggle('img-contain', C['hero.img_contain']==='true');
+    placeHeroImage(C);
     const secOrder=C['sections.order'];
     if(secOrder){
       const secIds=secOrder.split(',').map(s=>s.trim()).filter(Boolean);
@@ -1627,6 +1831,24 @@ setTimeout(hideLoader,3000);
       secIds.forEach(id=>{if(secById[id])homeScreen.appendChild(secById[id]);});
     }
   }
+  // En móvil, opcionalmente mueve la imagen del hero entre la descripción y los botones
+  let _heroImgFirst = false;
+  function placeHeroImage(C){
+    const grid = document.querySelector('.home-hero-grid');
+    if(!grid) return;
+    const text = grid.querySelector('.home-hero-text');
+    const card = grid.querySelector('.home-hero-card');
+    const actions = text && text.querySelector('.home-hero-actions');
+    if(!text || !card || !actions) return;
+    _heroImgFirst = C['hero.img_first']==='true';
+    const isMobile = window.matchMedia('(max-width:980px)').matches;
+    if(_heroImgFirst && isMobile){
+      if(card.parentNode!==text || card.nextSibling!==actions) text.insertBefore(card, actions);
+    } else {
+      if(card.parentNode!==grid) grid.appendChild(card);
+    }
+  }
+  window.addEventListener('resize', ()=>placeHeroImage({'hero.img_first': _heroImgFirst?'true':'false'}), {passive:true});
   try{
     if(!EDIT_MODE){
       const cached=localStorage.getItem('site_content');
@@ -1634,7 +1856,7 @@ setTimeout(hideLoader,3000);
         try{ applyContent(JSON.parse(cached)); }catch(e){}
       }
     }
-    const r=await fetch('/api/content');
+    const r=await fetch(EDIT_MODE ? '/api/content?_='+Date.now() : '/api/content');
     if(!r.ok){ if(EDIT_MODE) attachEditMode(); hideLoader(); return; }
     const C=await r.json();
     applyContent(C);
@@ -1648,18 +1870,53 @@ setTimeout(hideLoader,3000);
     style.textContent=`
       [data-ck-editable]{outline:1px dashed rgba(200,169,126,.4);outline-offset:2px;cursor:pointer;transition:outline-color .15s,background .15s;}
       [data-ck-editable]:hover{outline:2px dashed #c8a97e;background:rgba(200,169,126,.08);}
-      [data-ck-editable].ck-active{outline:2px solid #c8a97e;background:rgba(200,169,126,.12);}
+      [data-ck-editable].ck-active{outline:2px solid #c8a97e;background:rgba(200,169,126,.18);animation:ck-pulse 1.4s ease-out 2;}
+      @keyframes ck-pulse{0%,100%{box-shadow:0 0 0 0 rgba(200,169,126,.7);}50%{box-shadow:0 0 0 10px rgba(200,169,126,0);}}
+      #ck-edit-pill{position:absolute;background:#c8a97e;color:#0a0a0a;padding:5px 11px;border-radius:14px;font-family:'DM Mono','Courier New',monospace;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;z-index:99999;box-shadow:0 6px 18px rgba(0,0,0,.28);opacity:0;transform:translateY(-4px);transition:opacity .18s,transform .18s;pointer-events:auto;}
+      #ck-edit-pill.show{opacity:1;transform:translateY(0);}
+      #ck-edit-pill:hover{background:#e0c298;}
       html,body{cursor:default;}
     `;
     document.head.appendChild(style);
+    // Floating "Editar" pill that follows the active element
+    const pill=document.createElement('div');
+    pill.id='ck-edit-pill';
+    pill.textContent='✎ Editar →';
+    document.body.appendChild(pill);
+    let activeEl=null, activeMeta=null;
+    function positionPill(){
+      if(!activeEl){ pill.classList.remove('show'); return; }
+      const r=activeEl.getBoundingClientRect();
+      const pillW=90, pillH=26;
+      const top=r.top+window.scrollY-30;
+      const left=r.left+window.scrollX+Math.max(0, r.width-pillW);
+      const maxTop=window.scrollY+window.innerHeight-pillH-8;
+      const maxLeft=window.scrollX+window.innerWidth-pillW-8;
+      pill.style.top=Math.max(8, Math.min(maxTop, top))+'px';
+      pill.style.left=Math.max(8, Math.min(maxLeft, left))+'px';
+      pill.classList.add('show');
+    }
+    function setActive(el, key, kind){
+      document.querySelectorAll('[data-ck-editable].ck-active').forEach(x=>x.classList.remove('ck-active'));
+      // Force reflow so animation re-plays even on same element
+      activeEl=el; activeMeta={key, kind};
+      void el.offsetWidth;
+      el.classList.add('ck-active');
+      positionPill();
+    }
+    pill.addEventListener('click',ev=>{
+      ev.preventDefault(); ev.stopPropagation();
+      if(activeMeta){ try{ window.parent.postMessage({type:'ck-clicked', key:activeMeta.key, kind:activeMeta.kind},'*'); }catch(e){} }
+    });
+    window.addEventListener('scroll', positionPill, {passive:true});
+    window.addEventListener('resize', positionPill);
     function tag(el,key,kind){
       el.setAttribute('data-ck-editable','');
       el.dataset.ckKind=kind;
       el.dataset.ckKey=key;
       el.addEventListener('click',ev=>{
         ev.preventDefault(); ev.stopPropagation();
-        document.querySelectorAll('[data-ck-editable].ck-active').forEach(x=>x.classList.remove('ck-active'));
-        el.classList.add('ck-active');
+        setActive(el, key, kind);
         try{ window.parent.postMessage({type:'ck-clicked',key,kind},'*'); }catch(e){}
       },true);
     }
@@ -1687,14 +1944,25 @@ setTimeout(hideLoader,3000);
         const el=document.querySelector(`[data-ck-key="${(window.CSS&&CSS.escape)?CSS.escape(d.key):d.key}"]`);
         if(el){
           el.scrollIntoView({behavior:'smooth',block:'center'});
-          document.querySelectorAll('[data-ck-editable].ck-active').forEach(x=>x.classList.remove('ck-active'));
-          el.classList.add('ck-active');
+          setActive(el, el.dataset.ckKey, el.dataset.ckKind);
         }
       } else if(d.type==='ck-reload'){
-        // Re-fetch fresh content (después de guardar)
-        fetch('/api/content').then(r=>r.json()).then(C=>{ applyContent(C); }).catch(()=>{});
+        // Re-fetch fresh content (después de guardar) — bustear caché CDN
+        fetch('/api/content?_='+Date.now()).then(r=>r.json()).then(C=>{ applyContent(C); sendContentSnapshot(); }).catch(()=>{});
       }
     });
+    function sendContentSnapshot(){
+      // Enviar al panel admin el contenido real renderizado de cada elemento editable.
+      // Esto permite al panel usar el texto completo del HTML como fallback cuando no
+      // hay valor guardado en BD, en vez de un fallback corto hardcoded.
+      const snap = {};
+      document.querySelectorAll('[data-ck]').forEach(el=>{ snap[el.dataset.ck] = el.textContent; });
+      document.querySelectorAll('[data-ck-html]').forEach(el=>{ snap[el.dataset.ckHtml] = el.innerHTML; });
+      document.querySelectorAll('[data-ck-src]').forEach(el=>{ snap[el.dataset.ckSrc] = el.getAttribute('src') || ''; });
+      document.querySelectorAll('[data-ck-href]').forEach(el=>{ snap[el.dataset.ckHref] = el.getAttribute('href') || ''; });
+      try{ window.parent.postMessage({type:'ck-content-snapshot', content: snap},'*'); }catch(e){}
+    }
+    sendContentSnapshot();
     try{ window.parent.postMessage({type:'ck-iframe-ready'},'*'); }catch(e){}
   }
 })();
