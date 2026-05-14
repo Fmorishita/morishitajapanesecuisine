@@ -557,6 +557,8 @@ footer{padding:24px 28px;border-top:1px solid var(--line-soft);font-family:var(-
 .home-hero-card.img-contain{aspect-ratio:auto;overflow:visible;background:transparent;border:0;box-shadow:none;max-width:none!important;}
 .home-hero-card.img-contain>img{position:static!important;height:auto!important;width:100%!important;object-fit:contain!important;inset:auto!important;}
 [data-theme="dark"] .home-hero-card{background:#1a1814;border-color:#2e2a23;box-shadow:0 30px 90px rgba(0,0,0,.6);}
+img.ck-no-crop{position:static!important;inset:auto!important;width:100%!important;height:auto!important;object-fit:contain!important;max-height:none!important;}
+.ck-no-crop-wrap{aspect-ratio:auto!important;overflow:visible!important;height:auto!important;background:transparent!important;box-shadow:none!important;border:0!important;}
 .home-hero-card-inner{position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg,transparent 0 8px,rgba(0,0,0,.025) 8px 16px),linear-gradient(135deg,var(--paper-warm),var(--paper-deep));font-family:var(--display);font-size:240px;color:rgba(196,96,122,.12);line-height:1;}
 [data-theme="dark"] .home-hero-card-inner{background:repeating-linear-gradient(45deg,transparent 0 8px,rgba(255,255,255,.02) 8px 16px),linear-gradient(135deg,#1a1814,#13110e);color:rgba(212,175,106,.13);}
 .home-hero-card-tag{position:absolute;bottom:24px;left:24px;right:24px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--paper);background:rgba(13,13,11,.78);padding:14px 18px;backdrop-filter:blur(8px);}
@@ -1724,6 +1726,12 @@ setTimeout(hideLoader,3000);
         const v=C[el.dataset.ckHref+_ds]; if(v!==undefined) el.href=v;
       });
     }
+    // Per-image crop toggle (img.X.contain = 'true' → sin recorte)
+    document.querySelectorAll('[data-ck-src]').forEach(el=>{
+      const noC = C[el.dataset.ckSrc+'.contain']==='true';
+      el.classList.toggle('ck-no-crop', noC);
+      if(el.parentElement) el.parentElement.classList.toggle('ck-no-crop-wrap', noC);
+    });
     const heroCard = document.querySelector('.home-hero-card');
     if(heroCard) heroCard.classList.toggle('img-contain', C['hero.img_contain']==='true');
     placeHeroImage(C);
