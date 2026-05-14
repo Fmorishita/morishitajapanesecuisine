@@ -390,7 +390,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 .guests-box{background:rgba(255,255,255,.72);border:1px solid var(--line);padding:52px 40px;text-align:center;backdrop-filter:blur(8px);box-shadow:0 8px 40px rgba(13,13,11,.05);position:relative;overflow:hidden;}
 
 .g-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:40px;}
-.g-row{display:inline-flex;align-items:center;gap:40px;margin-bottom:28px;}
+.g-row{display:flex;justify-content:center;align-items:center;gap:40px;margin-bottom:28px;width:100%;}
 .g-btn{width:56px;height:56px;border:1.5px solid var(--ink);border-radius:50%;font-size:24px;color:var(--ink);display:grid;place-items:center;cursor:pointer;background:none;transition:all .25s;}
 .g-btn:hover:not(:disabled){background:var(--ink);color:var(--paper);}
 .g-btn:disabled{opacity:.2;cursor:not-allowed;}
@@ -1104,7 +1104,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <button class="sec-back" onclick="go('home')">← Inicio</button>
  <div class="crumb-bar"><span>Comensales</span></div>
  <div class="sec-eye">Paso 01 · Comensales</div>
- <h2 class="sec-title">¿Cuántos esta noche?</h2>
+ <h2 class="sec-title">¿Cuántos asientos este día?</h2>
  <p class="sec-sub">Máximo 4 personas por servicio.</p>
  <div class="guests-box">
  <div class="g-lbl">Número de comensales</div>
@@ -1480,7 +1480,7 @@ function refreshG(){
  const msg=S.guests===CFG.max
   ?'Mesa completa · toda la barra para tu grupo.'
   :S.guests===1?'Mesa para una persona.'
-  :`${S.guests} personas. Te mostramos las fechas con lugar.`;
+  :`${S.guests} personas. Te mostramos las fechas con lugar disponible.`;
  document.getElementById('gHint').textContent=msg;
  document.getElementById('gNext').disabled=false;
 }
