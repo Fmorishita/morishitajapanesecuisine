@@ -352,9 +352,9 @@ function livePreview(key, value, kind){
       if(img){ img.src = value; return; }
     }catch(e){}
   }
-  // Los crop_* se aplican vía applyAllCrops() invocado directamente desde los sliders.
+  // Los crop_top/crop_bottom se aplican vía applyTopBottomCrop() desde los sliders.
   // No es necesario hacer nada acá; el trackDirty solo registra el dirty state.
-  if(/\.crop_(top|bottom|left|right)$/.test(key)) return;
+  if(/\.crop_(top|bottom)$/.test(key)) return;
   // Resto (texto, html, href): postMessage
   try{ frame.contentWindow.postMessage({type:'ck-preview', key, value, kind}, '*'); }catch(e){}
 }
@@ -625,20 +625,6 @@ function imgField(key, label, defaultSrc, altText){
   const src = val(key, defaultSrc);
   const cropT = parseInt((val(key+'.crop_top','')||'0').replace(/%$/,''),10)||0;
   const cropB = parseInt((val(key+'.crop_bottom','')||'0').replace(/%$/,''),10)||0;
-  const cropL = parseInt((val(key+'.crop_left','')||'0').replace(/%$/,''),10)||0;
-  const cropR = parseInt((val(key+'.crop_right','')||'0').replace(/%$/,''),10)||0;
-  // Genera una fila de slider: side ∈ {top,bottom,left,right}, icono, label
-  const sliderRow = (side, icon, lbl, init) => {
-    const sid = side[0]+'_'+k;
-    return `
-      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;padding:7px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
-        <span style="font-size:11px;color:var(--muted);flex:0 0 90px;">${icon} ${lbl}:</span>
-        <input type="range" id="r_${sid}" min="0" max="45" step="1" value="${init}" style="flex:1;" oninput="applyAllCrops('${key}','${k}');document.getElementById('n_${sid}').value=this.value;trackDirty('${key}.crop_${side}',this.value+'%','text','s_${sid}')"/>
-        <input type="number" id="n_${sid}" min="0" max="45" step="1" value="${init}" style="width:46px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:4px 6px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('r_${sid}').value=this.value||0;applyAllCrops('${key}','${k}');trackDirty('${key}.crop_${side}',(this.value||0)+'%','text','s_${sid}')"/>
-        <span style="font-size:10px;color:var(--muted);">%</span>
-        <span class="save-status" id="s_${sid}"></span>
-      </div>`;
-  };
   return `
     <div class="field" data-field-key="${escAttr(key)}">
       <div class="field-label">${label}</div>
@@ -654,69 +640,66 @@ function imgField(key, label, defaultSrc, altText){
           </div>
         </div>
       </div>
-      <div style="margin-top:10px;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;">Recortar bordes (% de la imagen original)</div>
-      ${sliderRow('top','↑','Arriba',cropT)}
-      ${sliderRow('bottom','↓','Abajo',cropB)}
-      ${sliderRow('left','←','Izquierda',cropL)}
-      ${sliderRow('right','→','Derecha',cropR)}
+      <div style="margin-top:10px;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;">Recortar bordes (% de la imagen)</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;padding:7px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
+        <span style="font-size:11px;color:var(--muted);flex:0 0 70px;">↑ Arriba:</span>
+        <input type="range" id="r_t_${k}" min="0" max="70" step="1" value="${cropT}" style="flex:1;" oninput="applyTopBottomCrop('${key}','${k}');document.getElementById('n_t_${k}').value=this.value;trackDirty('${key}.crop_top',this.value+'%','text','s_t_${k}')"/>
+        <input type="number" id="n_t_${k}" min="0" max="70" step="1" value="${cropT}" style="width:46px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:4px 6px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('r_t_${k}').value=this.value||0;applyTopBottomCrop('${key}','${k}');trackDirty('${key}.crop_top',(this.value||0)+'%','text','s_t_${k}')"/>
+        <span style="font-size:10px;color:var(--muted);">%</span>
+        <span class="save-status" id="s_t_${k}"></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;padding:7px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
+        <span style="font-size:11px;color:var(--muted);flex:0 0 70px;">↓ Abajo:</span>
+        <input type="range" id="r_b_${k}" min="0" max="70" step="1" value="${cropB}" style="flex:1;" oninput="applyTopBottomCrop('${key}','${k}');document.getElementById('n_b_${k}').value=this.value;trackDirty('${key}.crop_bottom',this.value+'%','text','s_b_${k}')"/>
+        <input type="number" id="n_b_${k}" min="0" max="70" step="1" value="${cropB}" style="width:46px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:4px 6px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('r_b_${k}').value=this.value||0;applyTopBottomCrop('${key}','${k}');trackDirty('${key}.crop_bottom',(this.value||0)+'%','text','s_b_${k}')"/>
+        <span style="font-size:10px;color:var(--muted);">%</span>
+        <span class="save-status" id="s_b_${k}"></span>
+      </div>
     </div>`;
 }
 
-// Aplica los 4 recortes de bordes al iframe directamente.
-// Estrategia: cambia el aspect-ratio del contenedor para que se ajuste al área visible,
-// y aplica object-position para mostrar la parte correcta de la imagen.
-// El marco se hace más chico → los elementos abajo suben con él.
-function applyAllCrops(key, suffix){
+// Aplica recorte arriba/abajo a la imagen en el iframe.
+// Estrategia: encoge el alto del contenedor (% del alto natural) + object-position
+// para mostrar la parte correcta. Los elementos abajo suben con el contenedor.
+function applyTopBottomCrop(key, suffix){
   const frame = document.getElementById('previewFrame');
-  if(!frame) return;
-  const t = parseFloat((document.getElementById('r_t_'+suffix)||{}).value)||0;
-  const b = parseFloat((document.getElementById('r_b_'+suffix)||{}).value)||0;
-  const l = parseFloat((document.getElementById('r_l_'+suffix)||{}).value)||0;
-  const r = parseFloat((document.getElementById('r_r_'+suffix)||{}).value)||0;
+  if(!frame) { console.warn('[crop] no preview frame'); return; }
+  const tEl = document.getElementById('r_t_'+suffix);
+  const bEl = document.getElementById('r_b_'+suffix);
+  const t = parseFloat(tEl && tEl.value)||0;
+  const b = parseFloat(bEl && bEl.value)||0;
   try{
     const doc = frame.contentDocument || frame.contentWindow.document;
-    if(!doc) return;
+    if(!doc){ console.warn('[crop] no iframe doc'); return; }
     const img = doc.querySelector('[data-ck-src="'+key+'"]');
-    if(!img) return;
-    applyCropToImg(img, t, b, l, r);
-  }catch(e){ console.warn('applyAllCrops falló', e); }
+    if(!img){ console.warn('[crop] no image for', key); return; }
+    applyTopBottomCropToImg(img, t, b);
+  }catch(e){ console.warn('[crop] error', e); }
 }
 
-// Lógica compartida (sirve también para applyContent en index.html)
-function applyCropToImg(img, t, b, l, r){
+// Lógica pura sin DOM: usada por el live preview y por applyContent al cargar.
+function applyTopBottomCropToImg(img, t, b){
   const wrap = img.parentElement;
   if(!wrap) return;
-  t=parseFloat(t)||0; b=parseFloat(b)||0; l=parseFloat(l)||0; r=parseFloat(r)||0;
-  // Limita para que el total por eje no llegue a 100%
+  t = parseFloat(t)||0;
+  b = parseFloat(b)||0;
   if(t+b >= 95){ t = Math.min(t,47); b = Math.min(b,47); }
-  if(l+r >= 95){ l = Math.min(l,47); r = Math.min(r,47); }
-  // Sin recorte: limpiar todo
-  if(t+b+l+r === 0){
+  if(t+b === 0){
     wrap.style.aspectRatio = '';
+    wrap.style.height = '';
     img.style.objectPosition = '';
-    img.style.transform = '';
-    img.style.transformOrigin = '';
     return;
   }
-  const hKeep = (100-l-r)/100;
   const vKeep = (100-t-b)/100;
   const nW = img.naturalWidth || 4;
   const nH = img.naturalHeight || 5;
-  // 1) Ajustar aspect-ratio del contenedor (los elementos abajo suben con él)
-  wrap.style.aspectRatio = (nW * hKeep) + ' / ' + (nH * vKeep);
-  // 2) Object-position: fórmula correcta para mostrar la parte no recortada con object-fit:cover
-  const xPos = (l+r > 0) ? (l/(l+r)*100) : 50;
-  const yPos = (t+b > 0) ? (t/(t+b)*100) : 50;
-  img.style.objectPosition = xPos + '% ' + yPos + '%';
-  // 3) Si el recorte es proporcional (mismo % en ambos ejes), object-fit:cover no produce
-  //    overflow porque el aspect-ratio queda igual. Compensamos con transform:scale.
-  if(Math.abs(hKeep - vKeep) < 0.005 && hKeep < 1){
-    img.style.transformOrigin = xPos + '% ' + yPos + '%';
-    img.style.transform = 'scale(' + (1/hKeep) + ')';
-  } else {
-    img.style.transform = '';
-    img.style.transformOrigin = '';
-  }
+  // Aspect-ratio: ancho original / (alto original * proporción que queda)
+  // Esto reduce el alto del contenedor proporcionalmente al recorte
+  wrap.style.aspectRatio = nW + ' / ' + (nH * vKeep);
+  // object-position-y: 0% si solo recorta el bottom, 100% si solo recorta el top,
+  // intermedio si recorta ambos. Fórmula: t/(t+b)*100
+  const yPos = t/(t+b)*100;
+  img.style.objectPosition = '50% ' + yPos + '%';
 }
 
 // Select a previously-uploaded image (no upload, just save the URL)
