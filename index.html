@@ -345,8 +345,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 .stat dd{font-family:var(--display);font-size:21px;color:var(--ink);}
 .sakura-div{display:block;text-align:center;font-size:18px;letter-spacing:14px;color:var(--sakura);margin-bottom:36px;}
 
-.cal-section-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-soft);text-align:center;margin-bottom:24px;display:flex;align-items:center;gap:14px;justify-content:center;}
+.cal-section-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-soft);text-align:center;margin-bottom:12px;display:flex;align-items:center;gap:14px;justify-content:center;}
 .cal-section-lbl::before,.cal-section-lbl::after{content:'';flex:0 0 48px;height:1px;background:var(--line);}
+.cal-next-hint{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--sakura-d,#c8a97e);text-align:center;margin-bottom:20px;padding:6px 16px;background:rgba(200,169,126,.08);border-radius:20px;width:fit-content;margin-inline:auto;}
+[data-theme="dark"] .cal-next-hint{background:rgba(200,169,126,.12);color:#c8a97e;}
 
 /*── CALENDAR CARD ──*/
 .cal-card{background:rgba(255,255,255,.72);border:1px solid var(--line);backdrop-filter:blur(10px);box-shadow:0 8px 48px rgba(13,13,11,.07);}
@@ -780,12 +782,12 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
 <!-- PROGRESS -->
 <div class="prog-wrap" id="progWrap">
  <div class="prog-inner">
- <div class="pstep" data-s="date">
- <div class="pstep-top"><div class="pstep-num">1</div><div class="pstep-name">Fecha</div></div>
+ <div class="pstep" data-s="guests">
+ <div class="pstep-top"><div class="pstep-num">1</div><div class="pstep-name">Comensales</div></div>
  <div class="pstep-pct">0%</div>
  </div>
- <div class="pstep" data-s="guests">
- <div class="pstep-top"><div class="pstep-num">2</div><div class="pstep-name">Comensales</div></div>
+ <div class="pstep" data-s="landing">
+ <div class="pstep-top"><div class="pstep-num">2</div><div class="pstep-name">Fecha</div></div>
  <div class="pstep-pct">0%</div>
  </div>
  <div class="pstep" data-s="time">
@@ -1004,7 +1006,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
 <section class="screen" id="screen-landing">
  <div class="hero-wrap">
  <div class="hero-top">
- <button class="back-home" onclick="go('home')">← Inicio</button>
+ <button class="back-home" onclick="go('guests')">← Comensales</button>
  <span class="floatA">❀</span>
  <span class="floatB">✿</span>
  <div class="hero-tag-pill">Menú de 14 tiempos</div>
@@ -1018,7 +1020,8 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <span class="sakura-div">❀ ❀ ❀</span>
  </div>
 
- <div class="cal-section-lbl">Elige una fecha disponible para comenzar</div>
+ <div class="cal-section-lbl">Fechas disponibles para <span id="calGuestLabel">tu grupo</span></div>
+ <div class="cal-next-hint" id="calNextAvail" style="display:none"></div>
  <div class="cal-card">
  <div class="cal-top">
  <button class="cal-btn" id="prevMo">←</button>
@@ -1041,9 +1044,9 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
 <!-- ═══ GUESTS ═══ -->
 <section class="screen" id="screen-guests">
  <div class="container">
- <button class="sec-back" onclick="go('landing')">← Cambiar fecha</button>
- <div class="crumb-bar"><span id="cb1date">—</span><span class="crumb-sep">❀</span><span>Comensales</span></div>
- <div class="sec-eye">Paso 02 · Comensales</div>
+ <button class="sec-back" onclick="go('home')">← Inicio</button>
+ <div class="crumb-bar"><span>Comensales</span></div>
+ <div class="sec-eye">Paso 01 · Comensales</div>
  <h2 class="sec-title">¿Cuántos esta noche?</h2>
  <p class="sec-sub">Máximo 4 personas por servicio.</p>
  <div class="guests-box">
@@ -1056,8 +1059,8 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <div class="g-hint" id="gHint">—</div>
  </div>
  <div class="act-bar">
- <button class="btn-ghost" onclick="go('landing')">← Volver</button>
- <button class="btn-pri" id="gNext" onclick="go('time')">Ver horarios <span class="ba">→</span></button>
+ <button class="btn-ghost" onclick="go('home')">← Volver</button>
+ <button class="btn-pri" id="gNext" onclick="go('landing')">Ver fechas disponibles <span class="ba">→</span></button>
  </div>
  </div>
 </section>
@@ -1065,7 +1068,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
 <!-- ═══ TIME ═══ -->
 <section class="screen" id="screen-time">
  <div class="container">
- <button class="sec-back" onclick="go('guests')">← Cambiar comensales</button>
+ <button class="sec-back" onclick="go('landing')">← Cambiar fecha</button>
  <div class="crumb-bar"><span id="cb2date">—</span><span class="crumb-sep">❀</span><span id="cb2guests">—</span><span class="crumb-sep">❀</span><span>Horario</span></div>
  <div class="sec-eye">Paso 03 · Horario</div>
  <h2 class="sec-title">Elige tu servicio.</h2>
@@ -1185,13 +1188,13 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
 <script>
 /* ═══════════════════════════════════════
  MORISHITA v2 · Reservation Engine
- Flujo: Fecha → Personas → Horario → Checkout
+ Flujo: Personas → Fecha → Horario → Checkout
  ═══════════════════════════════════════ */
 const CFG={price:1850,openDays:[0,6],slots:['13:00','15:30','18:00'],max:4,dep:.5};
 const S={screen:'home',date:null,guests:2,time:null,nombre:'',wa:'',email:'',motivo:'',alergias:'',avail:{},mo:0,loading:{}};
 
-const STEPS=[{id:'date'},{id:'guests'},{id:'time'},{id:'checkout'}];
-const PCTS={date:25,guests:50,time:75,checkout:100};
+const STEPS=[{id:'guests'},{id:'landing'},{id:'time'},{id:'checkout'}];
+const PCTS={guests:25,landing:50,time:75,checkout:100};
 
 /* Mapeo entre slots de UI (hora) y enum de BD (categoría) */
 const SLOT_TO_HORARIO={'13:00':'COMIDA','15:30':'TARDE','18:00':'CENA'};
@@ -1276,8 +1279,43 @@ function fmtDate(iso){
 function fmt12(t){const[h,m]=t.split(':').map(Number);const p=h>=12?'pm':'am';const h2=h>12?h-12:(h===0?12:h);return h2+':'+String(m).padStart(2,'0')+' '+p;}
 function fmx(n){return'$'+n.toLocaleString('es-MX',{minimumFractionDigits:0});}
 function rem(date,time){return S.avail[date+'__'+time]??0;}
-function dayHas(iso){return CFG.slots.some(t=>rem(iso,t)>0);}
+function dayHas(iso){return CFG.slots.some(t=>rem(iso,t)>=S.guests);}
 function dayOpen(iso){return CFG.openDays.includes(fromISO(iso).getDay());}
+
+/* Devuelve el ISO de la primera fecha con al menos `n` lugares disponibles */
+function findNextAvailDateForGuests(n){
+ const today=new Date();today.setHours(0,0,0,0);
+ for(let mo=0;mo<12;mo++){
+  const base=new Date(today.getFullYear(),today.getMonth()+mo,1);
+  const yr=base.getFullYear(),m=base.getMonth();
+  const dim=new Date(yr,m+1,0).getDate();
+  for(let d=1;d<=dim;d++){
+   const dt=new Date(yr,m,d);
+   if(dt<today)continue;
+   if(!CFG.openDays.includes(dt.getDay()))continue;
+   const iso=toISO(dt);
+   if(CFG.slots.some(t=>rem(iso,t)>=n))return iso;
+  }
+ }
+ return null;
+}
+
+/* Renderiza el calendario filtrando por S.guests y navega al mes correcto */
+function renderLanding(){
+ // Calcular el mes de la próxima fecha disponible para S.guests personas
+ const next=findNextAvailDateForGuests(S.guests);
+ if(next){
+  const today=new Date();
+  const d=fromISO(next);
+  const mo=(d.getFullYear()-today.getFullYear())*12+(d.getMonth()-today.getMonth());
+  if(mo>S.mo)S.mo=mo;
+ }
+ // Actualizar etiqueta del calendario con número de personas
+ const lbl=document.getElementById('calGuestLabel');
+ if(lbl)lbl.textContent=S.guests===1?'1 persona':`${S.guests} personas`;
+ renderCal();
+ loadMonthAvail(S.mo);
+}
 
 /* ── navigation ── */
 function go(screen){
@@ -1289,14 +1327,14 @@ function go(screen){
  if(navEl)navEl.classList.remove('mobile-open');
  window.scrollTo({top:0,behavior:'smooth'});
  updateProgress();
- if(screen==='landing') renderCal();
+ if(screen==='landing') renderLanding();
  if(screen==='guests') refreshG();
  if(screen==='time') renderSlots();
  if(screen==='checkout') renderCO();
 }
 
-/* CTA "Reservar": va al calendario (screen-landing) */
-function goToBooking(){go('landing');}
+/* CTA "Reservar": va primero a elegir número de personas */
+function goToBooking(){go('guests');}
 
 /* Navegación a secciones del home: si no estoy en home, vuelvo primero y luego scroll */
 function navTo(sectionId){
@@ -1362,9 +1400,16 @@ function renderCal(){
  else{
  el.classList.add('avail');if(S.date===iso)el.classList.add('sel');
  el.innerHTML=`<span>${d}</span><i class="cdot"></i>`;
- el.onclick=()=>{S.date=iso;S.time=null;renderCal();setTimeout(()=>go('guests'),260);};
+ el.onclick=()=>{S.date=iso;S.time=null;renderCal();setTimeout(()=>go('time'),260);};
  }
  grid.appendChild(el);
+ }
+ // Actualizar hint de próxima fecha disponible para el grupo actual
+ const next=findNextAvailDateForGuests(S.guests);
+ const hint=document.getElementById('calNextAvail');
+ if(hint){
+  if(next){hint.textContent='Próxima fecha disponible: '+fmtDate(next);hint.style.display='';}
+  else{hint.style.display='none';}
  }
 }
 document.getElementById('prevMo').onclick=()=>{const minMo=findFirstAvailableMonth();if(S.mo>minMo){S.mo--;renderCal();loadMonthAvail(S.mo);}};
@@ -1372,15 +1417,15 @@ document.getElementById('nextMo').onclick=()=>{if(S.mo<11){S.mo++;renderCal();lo
 
 /* ── guests ── */
 function refreshG(){
- document.getElementById('cb1date').textContent=fmtDate(S.date);
  document.getElementById('gNum').textContent=S.guests;
  document.getElementById('gMin').disabled=S.guests<=1;
  document.getElementById('gPls').disabled=S.guests>=CFG.max;
- const fit=CFG.slots.filter(t=>rem(S.date,t)>=S.guests).length;
- document.getElementById('gHint').textContent=fit===0
- ?`No hay horarios con ${S.guests} lugares. Prueba con menos personas.`
- :`${fit} horario${fit>1?'s':''} disponible${fit>1?'s':''} para ${S.guests} persona${S.guests>1?'s':''}.`;
- document.getElementById('gNext').disabled=fit===0;
+ const msg=S.guests===CFG.max
+  ?'Mesa completa · toda la barra para tu grupo.'
+  :S.guests===1?'Mesa para una persona.'
+  :`${S.guests} personas. Te mostramos las fechas con lugar.`;
+ document.getElementById('gHint').textContent=msg;
+ document.getElementById('gNext').disabled=false;
 }
 function bumpG(d){const n=S.guests+d;if(n<1||n>4)return;S.guests=n;const el=document.getElementById('gNum');el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');refreshG();}
 document.getElementById('gPls').onclick=()=>bumpG(1);
@@ -1469,7 +1514,7 @@ function renderConfirm(){
 
 function resetAll(){
  S.date=null;S.time=null;S.guests=2;S.nombre=S.wa=S.email=S.motivo=S.alergias='';
- document.getElementById('resForm').reset();S.mo=0;go('landing');
+ document.getElementById('resForm').reset();S.mo=findFirstAvailableMonth();go('guests');
 }
 
 /* ── init ── */
