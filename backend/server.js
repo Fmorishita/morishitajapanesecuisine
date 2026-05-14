@@ -491,6 +491,9 @@ app.get('/api/content/history', requireAdmin, async (req, res) => {
   }
 });
 
+// GET /api/auth/check — valida el token de admin sin leer datos
+app.get('/api/auth/check', requireAdmin, (req, res) => res.json({ ok: true }));
+
 // ----------------------------------------------------------------
 // HEALTH CHECK (útil para verificar que todo está bien configurado)
 // ----------------------------------------------------------------

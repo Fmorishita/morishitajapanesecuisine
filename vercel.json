@@ -15,6 +15,7 @@
     { "src": "/stripe-webhook-client", "dest": "backend/server.js" },
     { "src": "/disponibilidad", "dest": "backend/server.js" },
     { "src": "/disponibilidad\\?(.*)", "dest": "backend/server.js" },
+    { "src": "/api/auth/check", "dest": "backend/server.js" },
     { "src": "/api/content/upload-image", "dest": "backend/server.js" },
     { "src": "/api/content/images", "dest": "backend/server.js" },
     { "src": "/api/content/update", "dest": "backend/server.js" },

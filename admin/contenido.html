@@ -306,6 +306,10 @@ function checkPin(){
 
 async function loadContent(){
   try{
+    // Validar el PIN antes de continuar — evita entrar con un PIN que no puede guardar
+    const auth = await fetch('/api/auth/check',{headers:{'x-admin-token':ADMIN_TOKEN}});
+    if(auth.status===401) throw new Error('PIN incorrecto.');
+    if(!auth.ok) throw new Error('Error de servidor ('+auth.status+')');
     const r = await fetch('/api/content');
     if(!r.ok) throw new Error('HTTP '+r.status);
     CONTENT = await r.json();
@@ -314,8 +318,8 @@ async function loadContent(){
     document.getElementById('previewFrame').src = '/?edit=1';
     showSection('hero');
   }catch(e){
-    showToast('Error cargando contenido: '+e.message, true);
-    alert('PIN incorrecto o error de conexión.');
+    showToast(e.message, true);
+    alert(e.message);
   }
 }
 
@@ -374,9 +378,11 @@ async function saveField(key, value, statusEl){
     CONTENT[key] = value;
     if(statusEl){ statusEl.textContent='✓ Guardado'; statusEl.className='save-status ok'; setTimeout(()=>{ if(statusEl)statusEl.textContent=''; },2500); }
     showToast('Guardado: '+key);
+    return true;
   }catch(e){
     if(statusEl){ statusEl.textContent='✗ '+e.message; statusEl.className='save-status err'; }
     showToast('Error: '+e.message, true);
+    return false;
   }
 }
 
@@ -699,8 +705,8 @@ function toggleField(key, label, defaultOn=true){
 
 function onToggleChange(key, checked, statusId){
   pushUndo(key);
-  saveField(key, checked?'true':'false', document.getElementById(statusId)).then(()=>{
-    setTimeout(reloadPreview, 300);
+  saveField(key, checked?'true':'false', document.getElementById(statusId)).then(ok=>{
+    if(ok) setTimeout(reloadPreview, 300);
   });
 }
 
@@ -962,6 +968,8 @@ const SECTIONS = {
       ${field('hero.eyebrow','Eyebrow',{multiline:false,fallback:'Omakase · Baja California'})}
       ${field('hero.h1','Título principal (H1)',{html:true,fallback:'El producto<em>al frente.</em>'})}
       ${field('hero.sub','Descripción principal',{html:true,fallback:'Una barra de cuatro asientos. Catorce tiempos.'})}
+      ${toggleField('hero.img_first', 'Imagen arriba de los botones (en móvil / tablet)', false)}
+      <hr class="divider"/>
       ${toggleField('hero.card_tag.show', 'Mostrar overlay sobre la imagen', true)}
       ${field('hero.card_tag','Texto del overlay',{multiline:false,fallback:'La barra · 4 asientos · Sáb & Dom'})}
       <hr class="divider"/>

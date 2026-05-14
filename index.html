@@ -735,6 +735,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  .home-hero-grid{grid-template-columns:1fr;gap:56px;}
  .home-hero{min-height:auto;padding:60px 22px 80px;}
  .home-hero-card{max-width:480px;margin:0 auto;width:100%;}
+ .home-hero-grid.img-first .home-hero-card{order:-1;}
  .pillars-grid{grid-template-columns:1fr;}
  .product-hero{grid-template-columns:1fr;gap:48px;}
  .product-hero-text .section-title{font-size:38px;}
@@ -1703,6 +1704,8 @@ setTimeout(hideLoader,3000);
     document.querySelectorAll('[data-ck-show]').forEach(el=>{
       el.style.display = (C[el.dataset.ckShow]==='false') ? 'none' : '';
     });
+    const heroGrid = document.querySelector('.home-hero-grid');
+    if(heroGrid) heroGrid.classList.toggle('img-first', C['hero.img_first']==='true');
     const secOrder=C['sections.order'];
     if(secOrder){
       const secIds=secOrder.split(',').map(s=>s.trim()).filter(Boolean);
