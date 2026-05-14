@@ -342,6 +342,24 @@ function val(key, fallback=''){
 function livePreview(key, value, kind){
   const frame = document.getElementById('previewFrame');
   if(!frame || !frame.contentWindow) return;
+  // Encuadre de imagen: acceso directo al DOM del iframe (mismo origen, más fiable que postMessage)
+  if(key.endsWith('.position')){
+    const baseKey = key.slice(0, -9);
+    try{
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      const img = doc && doc.querySelector('[data-ck-src="'+baseKey+'"]');
+      if(img){ img.style.objectPosition = (value && value !== '') ? ('center '+value) : ''; return; }
+    }catch(e){}
+  }
+  // Fuente de imagen: acceso directo
+  if(kind === 'src'){
+    try{
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      const img = doc && doc.querySelector('[data-ck-src="'+key+'"]');
+      if(img){ img.src = value; return; }
+    }catch(e){}
+  }
+  // Resto: postMessage
   try{ frame.contentWindow.postMessage({type:'ck-preview', key, value, kind}, '*'); }catch(e){}
 }
 
