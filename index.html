@@ -1736,18 +1736,11 @@ setTimeout(hideLoader,3000);
         const v=C[el.dataset.ckHref+_ds]; if(v!==undefined) el.href=v;
       });
     }
-    // Per-image height override (img.X.height = '300px' etc, vacío = automático)
+    // Encuadre vertical por imagen (img.X.position = '50%' etc, vacío = centro)
+    // Mueve la imagen dentro de su contenedor sin cambiar el tamaño ni el layout
     document.querySelectorAll('[data-ck-src]').forEach(el=>{
-      const h = C[el.dataset.ckSrc+'.height'];
-      const wrap = el.parentElement;
-      if(!wrap) return;
-      if(h && h !== ''){
-        wrap.style.aspectRatio = 'auto';
-        wrap.style.height = h;
-      } else {
-        wrap.style.aspectRatio = '';
-        wrap.style.height = '';
-      }
+      const pos = C[el.dataset.ckSrc+'.position'];
+      el.style.objectPosition = (pos && pos !== '') ? ('center ' + pos) : '';
     });
     const heroCard = document.querySelector('.home-hero-card');
     if(heroCard) heroCard.classList.toggle('img-contain', C['hero.img_contain']==='true');
@@ -1863,20 +1856,12 @@ setTimeout(hideLoader,3000);
     window.addEventListener('message',ev=>{
       const d=ev.data; if(!d||typeof d!=='object') return;
       if(d.type==='ck-preview'){
-        // Caso especial: clave de altura de imagen (ej. img.hero.height)
-        if(d.key.endsWith('.height')){
-          const baseKey = d.key.slice(0, -7);
+        // Caso especial: encuadre vertical de imagen (ej. img.hero.position = '30%')
+        // Solo mueve la imagen dentro de su contenedor, sin alterar layout ni tamaño
+        if(d.key.endsWith('.position')){
+          const baseKey = d.key.slice(0, -9);
           const imgEl = document.querySelector('[data-ck-src="'+baseKey+'"]') || document.querySelector('[data-ck-key="'+baseKey+'"]');
-          if(imgEl && imgEl.parentElement){
-            const wrap = imgEl.parentElement;
-            if(d.value && d.value !== '' && d.value !== '0px'){
-              wrap.style.aspectRatio = 'auto';
-              wrap.style.height = d.value;
-            } else {
-              wrap.style.aspectRatio = '';
-              wrap.style.height = '';
-            }
-          }
+          if(imgEl) imgEl.style.objectPosition = (d.value && d.value !== '') ? ('center ' + d.value) : '';
         } else {
         const sel=k=>`[data-ck-key="${(window.CSS&&CSS.escape)?CSS.escape(d.key):d.key}"]`;
         document.querySelectorAll(sel(d.key)).forEach(el=>{
