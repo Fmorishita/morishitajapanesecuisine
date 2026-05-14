@@ -615,6 +615,7 @@ img.ck-no-crop{position:static!important;inset:auto!important;width:100%!importa
 
 /* CHEF */
 .chef-section{display:grid;grid-template-columns:1fr 1.25fr;gap:80px;align-items:center;max-width:1240px;margin:0 auto;padding:100px 28px;}
+@media(min-width:981px){.chef-section > .chef-card{order:0!important;}.chef-section > .chef-text > [data-card-id]{order:0!important;}}
 .chef-card{aspect-ratio:4/5;background:var(--paper-deep);border:1px solid var(--line);position:relative;overflow:hidden;}
 [data-theme="dark"] .chef-card{background:#1a1814;border-color:#2e2a23;}
 .chef-card-inner{position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg,transparent 0 6px,rgba(0,0,0,.028) 6px 12px),linear-gradient(135deg,var(--paper-warm),var(--paper-deep));font-family:var(--display);font-size:220px;color:rgba(196,96,122,.13);line-height:1;}
@@ -740,11 +741,13 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  .home-hero{min-height:auto;padding:60px 22px 80px;}
  .home-hero-card{max-width:480px;margin:0 auto;width:100%;}
  .home-hero-card.img-contain{max-width:680px;}
+ .home-hero-text > .home-hero-card{margin:28px auto 36px;}
  .pillars-grid{grid-template-columns:1fr;}
  .product-hero{grid-template-columns:1fr;gap:48px;}
  .product-hero-text .section-title{font-size:38px;}
  .product-grid{grid-template-columns:1fr;}
- .chef-section{grid-template-columns:1fr;gap:48px;padding:60px 22px;}
+ .chef-section{display:flex;flex-direction:column;gap:24px;padding:60px 22px;}
+ .chef-section > .chef-text{display:contents;}
  .chef-card{max-width:420px;margin:0 auto;width:100%;}
  .testimonials{grid-template-columns:1fr;}
  .faq-grid{grid-template-columns:1fr;}
@@ -953,17 +956,17 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  </div>
 
  <!-- CHEF -->
- <div class="chef-section" id="chef" data-section-id="chef">
-  <div class="chef-card">
+ <div class="chef-section" id="chef" data-section-id="chef" data-list-id="chef.blocks" data-list-mode="order">
+  <div class="chef-card" data-card-id="image">
    <img src="/img/chef-morishita.jpg" alt="Chef Morishita en la barra · Omakase Baja California" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;object-position:center top;" data-ck-src="img.chef">
   </div>
   <div class="chef-text">
-   <div class="section-eyebrow" data-ck="chef.eyebrow">El chef</div>
-   <h2 data-ck-html="chef.h2">Chef Morishita.<em>Una vida en la barra.</em></h2>
-   <p data-ck="chef.p1">Formado en la disciplina clásica japonesa, el chef Morishita lleva años perfeccionando el oficio del Omakase: la lectura del producto, la temperatura exacta, el corte preciso, el silencio entre tiempos.</p>
-   <p data-ck="chef.p2">En cada servicio, cada plato se construye delante del comensal. No hay carta porque no hay receta fija — hay una conversación entre el chef, el producto del día y los cuatro invitados que se sientan a la barra.</p>
-   <div class="chef-quote" data-ck="chef.quote">"El producto manda. Nuestra técnica solo lo acompaña."</div>
-   <div class="chef-sign" data-ck="chef.sign" data-ck-show="chef.sign.show">— Chef Morishita · 森下</div>
+   <div class="section-eyebrow" data-ck="chef.eyebrow" data-card-id="eyebrow">El chef</div>
+   <h2 data-ck-html="chef.h2" data-card-id="title">Chef Morishita.<em>Una vida en la barra.</em></h2>
+   <p data-ck="chef.p1" data-card-id="p1">Formado en la disciplina clásica japonesa, el chef Morishita lleva años perfeccionando el oficio del Omakase: la lectura del producto, la temperatura exacta, el corte preciso, el silencio entre tiempos.</p>
+   <p data-ck="chef.p2" data-card-id="p2">En cada servicio, cada plato se construye delante del comensal. No hay carta porque no hay receta fija — hay una conversación entre el chef, el producto del día y los cuatro invitados que se sientan a la barra.</p>
+   <div class="chef-quote" data-ck="chef.quote" data-card-id="quote">"El producto manda. Nuestra técnica solo lo acompaña."</div>
+   <div class="chef-sign" data-ck="chef.sign" data-ck-show="chef.sign.show" data-card-id="sign">— Chef Morishita · 森下</div>
   </div>
  </div>
 
@@ -1701,9 +1704,16 @@ setTimeout(hideLoader,3000);
       const orderVal=C[list.dataset.listId+'.order'];
       if(!orderVal)return;
       const ids=orderVal.split(',').map(s=>s.trim()).filter(Boolean);
-      const byId={};
-      list.querySelectorAll('[data-card-id]').forEach(el=>{byId[el.dataset.cardId]=el;});
-      ids.forEach(id=>{if(byId[id])list.appendChild(byId[id]);});
+      if(list.dataset.listMode === 'order'){
+        ids.forEach((id, idx)=>{
+          const el = list.querySelector('[data-card-id="'+id+'"]');
+          if(el) el.style.order = idx;
+        });
+      } else {
+        const byId={};
+        list.querySelectorAll('[data-card-id]').forEach(el=>{byId[el.dataset.cardId]=el;});
+        ids.forEach(id=>{if(byId[id])list.appendChild(byId[id]);});
+      }
     });
     document.querySelectorAll('[data-ck-show]').forEach(el=>{
       el.style.display = (C[el.dataset.ckShow]==='false') ? 'none' : '';
@@ -1726,11 +1736,18 @@ setTimeout(hideLoader,3000);
         const v=C[el.dataset.ckHref+_ds]; if(v!==undefined) el.href=v;
       });
     }
-    // Per-image crop toggle (img.X.contain = 'true' → sin recorte)
+    // Per-image height override (img.X.height = '300px' etc, vacío = automático)
     document.querySelectorAll('[data-ck-src]').forEach(el=>{
-      const noC = C[el.dataset.ckSrc+'.contain']==='true';
-      el.classList.toggle('ck-no-crop', noC);
-      if(el.parentElement) el.parentElement.classList.toggle('ck-no-crop-wrap', noC);
+      const h = C[el.dataset.ckSrc+'.height'];
+      const wrap = el.parentElement;
+      if(!wrap) return;
+      if(h && h !== ''){
+        wrap.style.aspectRatio = 'auto';
+        wrap.style.height = h;
+      } else {
+        wrap.style.aspectRatio = '';
+        wrap.style.height = '';
+      }
     });
     const heroCard = document.querySelector('.home-hero-card');
     if(heroCard) heroCard.classList.toggle('img-contain', C['hero.img_contain']==='true');

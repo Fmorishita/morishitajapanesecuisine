@@ -607,7 +607,10 @@ function imgField(key, label, defaultSrc, altText){
   const id = 'img_'+key.replace(/\./g,'_');
   const fileId = 'file_'+key.replace(/\./g,'_');
   const statusId = 'imgs_'+key.replace(/\./g,'_');
+  const heightId = 'h_'+key.replace(/\./g,'_');
+  const heightStatusId = 'hs_'+key.replace(/\./g,'_');
   const src = val(key, defaultSrc);
+  const heightVal = (val(key+'.height','')||'').replace(/px$/,'');
   return `
     <div class="field" data-field-key="${escAttr(key)}">
       <div class="field-label">${label}</div>
@@ -623,8 +626,14 @@ function imgField(key, label, defaultSrc, altText){
           </div>
         </div>
       </div>
-    </div>
-    ${toggleField(key+'.contain', 'Sin recorte — mostrar imagen completa', false)}`;
+      <div style="display:flex;align-items:center;gap:10px;margin-top:8px;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
+        <span style="font-size:11px;color:var(--muted);letter-spacing:.05em;flex:0 0 auto;">Alto de la imagen:</span>
+        <input type="range" id="${heightId}_r" min="0" max="900" step="20" value="${heightVal||0}" style="flex:1;" oninput="document.getElementById('${heightId}').value=this.value;trackDirty('${key}.height', this.value==='0'?'':(this.value+'px'),'text','${heightStatusId}')"/>
+        <input type="number" id="${heightId}" min="0" max="1200" step="10" value="${heightVal||''}" placeholder="auto" style="width:74px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:5px 7px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('${heightId}_r').value=this.value||0;trackDirty('${key}.height', this.value?(this.value+'px'):'','text','${heightStatusId}')"/>
+        <span style="font-size:10px;color:var(--muted);">px</span>
+        <span class="save-status" id="${heightStatusId}"></span>
+      </div>
+    </div>`;
 }
 
 // Select a previously-uploaded image (no upload, just save the URL)
@@ -1358,6 +1367,16 @@ const SECTIONS = {
         p1:'Pilar 01 · El producto manda',
         p2:'Pilar 02 · Cuatro asientos',
         p3:'Pilar 03 · Catorce tiempos'
+      })}
+      <hr class="divider"/>
+      ${orderList('chef.blocks', 'Chef · elementos de la sección', ['image','eyebrow','title','p1','p2','quote','sign'], {
+        image:'Imagen del chef',
+        eyebrow:'Eyebrow (El chef)',
+        title:'Título (H2)',
+        p1:'Párrafo 1',
+        p2:'Párrafo 2',
+        quote:'Cita del chef',
+        sign:'Firma final'
       })}
       <hr class="divider"/>
       ${orderList('social', 'Testimonios', ['t1','t2','t3'], {
