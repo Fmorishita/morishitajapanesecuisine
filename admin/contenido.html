@@ -339,30 +339,11 @@ function val(key, fallback=''){
 }
 
 // ── LIVE PREVIEW (parent → iframe) ──
-// Para imágenes (zoom/position/src) hace DOM directo al iframe (mismo origen).
+// Para imágenes (crop_*/src) hace DOM directo al iframe (mismo origen).
 // Para texto/html/href usa postMessage normal.
 function livePreview(key, value, kind){
   const frame = document.getElementById('previewFrame');
   if(!frame || !frame.contentWindow) return;
-  // Recorte o encuadre de imagen
-  if(key.endsWith('.zoom') || key.endsWith('.position')){
-    const isZoom = key.endsWith('.zoom');
-    const baseKey = key.slice(0, isZoom ? -5 : -9);
-    try{
-      const doc = frame.contentDocument || frame.contentWindow.document;
-      const img = doc && doc.querySelector('[data-ck-src="'+baseKey+'"]');
-      if(img){
-        const v = parseFloat((value||'').replace(/%$/,''));
-        if(isZoom){
-          img.style.transformOrigin = 'center';
-          img.style.transform = (!isNaN(v) && v > 0) ? ('scale('+(1+v/100)+')') : '';
-        } else {
-          img.style.objectPosition = (!isNaN(v) && v !== 50) ? ('center '+v+'%') : '';
-        }
-        return;
-      }
-    }catch(e){ console.warn('livePreview DOM directo falló', e); }
-  }
   // Cambio de imagen (src)
   if(kind === 'src'){
     try{
@@ -371,6 +352,9 @@ function livePreview(key, value, kind){
       if(img){ img.src = value; return; }
     }catch(e){}
   }
+  // Los crop_* se aplican vía applyAllCrops() invocado directamente desde los sliders.
+  // No es necesario hacer nada acá; el trackDirty solo registra el dirty state.
+  if(/\.crop_(top|bottom|left|right)$/.test(key)) return;
   // Resto (texto, html, href): postMessage
   try{ frame.contentWindow.postMessage({type:'ck-preview', key, value, kind}, '*'); }catch(e){}
 }
@@ -637,13 +621,24 @@ function imgField(key, label, defaultSrc, altText){
   const id = 'img_'+key.replace(/\./g,'_');
   const fileId = 'file_'+key.replace(/\./g,'_');
   const statusId = 'imgs_'+key.replace(/\./g,'_');
-  const zoomId = 'z_'+key.replace(/\./g,'_');
-  const zoomStatusId = 'zs_'+key.replace(/\./g,'_');
-  const posId = 'p_'+key.replace(/\./g,'_');
-  const posStatusId = 'ps_'+key.replace(/\./g,'_');
+  const k = key.replace(/\./g,'_');
   const src = val(key, defaultSrc);
-  const zoomVal = parseInt((val(key+'.zoom','')||'0').replace(/%$/,''),10)||0;
-  const posVal = parseInt((val(key+'.position','')||'50').replace(/%$/,''),10)||50;
+  const cropT = parseInt((val(key+'.crop_top','')||'0').replace(/%$/,''),10)||0;
+  const cropB = parseInt((val(key+'.crop_bottom','')||'0').replace(/%$/,''),10)||0;
+  const cropL = parseInt((val(key+'.crop_left','')||'0').replace(/%$/,''),10)||0;
+  const cropR = parseInt((val(key+'.crop_right','')||'0').replace(/%$/,''),10)||0;
+  // Genera una fila de slider: side ∈ {top,bottom,left,right}, icono, label
+  const sliderRow = (side, icon, lbl, init) => {
+    const sid = side[0]+'_'+k;
+    return `
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;padding:7px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
+        <span style="font-size:11px;color:var(--muted);flex:0 0 90px;">${icon} ${lbl}:</span>
+        <input type="range" id="r_${sid}" min="0" max="45" step="1" value="${init}" style="flex:1;" oninput="applyAllCrops('${key}','${k}');document.getElementById('n_${sid}').value=this.value;trackDirty('${key}.crop_${side}',this.value+'%','text','s_${sid}')"/>
+        <input type="number" id="n_${sid}" min="0" max="45" step="1" value="${init}" style="width:46px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:4px 6px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('r_${sid}').value=this.value||0;applyAllCrops('${key}','${k}');trackDirty('${key}.crop_${side}',(this.value||0)+'%','text','s_${sid}')"/>
+        <span style="font-size:10px;color:var(--muted);">%</span>
+        <span class="save-status" id="s_${sid}"></span>
+      </div>`;
+  };
   return `
     <div class="field" data-field-key="${escAttr(key)}">
       <div class="field-label">${label}</div>
@@ -659,42 +654,69 @@ function imgField(key, label, defaultSrc, altText){
           </div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
-        <span style="font-size:11px;color:var(--muted);letter-spacing:.05em;flex:0 0 60px;">Recortar:</span>
-        <input type="range" id="${zoomId}_r" min="0" max="100" step="5" value="${zoomVal}" style="flex:1;" oninput="applyCrop('${key}',this.value,document.getElementById('${posId}_r').value);document.getElementById('${zoomId}').value=this.value;trackDirty('${key}.zoom',this.value+'%','text','${zoomStatusId}')"/>
-        <input type="number" id="${zoomId}" min="0" max="100" step="5" value="${zoomVal}" placeholder="0" style="width:52px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:5px 7px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('${zoomId}_r').value=this.value||0;applyCrop('${key}',this.value||0,document.getElementById('${posId}_r').value);trackDirty('${key}.zoom',(this.value||0)+'%','text','${zoomStatusId}')"/>
-        <span style="font-size:10px;color:var(--muted);">%</span>
-        <span class="save-status" id="${zoomStatusId}"></span>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
-        <span style="font-size:11px;color:var(--muted);letter-spacing:.05em;flex:0 0 60px;">Encuadre:</span>
-        <span style="font-size:9px;color:var(--muted);flex:0 0 auto;">↑</span>
-        <input type="range" id="${posId}_r" min="0" max="100" step="5" value="${posVal}" style="flex:1;" oninput="applyCrop('${key}',document.getElementById('${zoomId}_r').value,this.value);document.getElementById('${posId}').value=this.value;trackDirty('${key}.position',this.value+'%','text','${posStatusId}')"/>
-        <span style="font-size:9px;color:var(--muted);flex:0 0 auto;">↓</span>
-        <input type="number" id="${posId}" min="0" max="100" step="5" value="${posVal}" placeholder="50" style="width:52px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:5px 7px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('${posId}_r').value=this.value||50;applyCrop('${key}',document.getElementById('${zoomId}_r').value,this.value||50);trackDirty('${key}.position',(this.value||50)+'%','text','${posStatusId}')"/>
-        <span style="font-size:10px;color:var(--muted);">%</span>
-        <span class="save-status" id="${posStatusId}"></span>
-      </div>
+      <div style="margin-top:10px;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;">Recortar bordes (% de la imagen original)</div>
+      ${sliderRow('top','↑','Arriba',cropT)}
+      ${sliderRow('bottom','↓','Abajo',cropB)}
+      ${sliderRow('left','←','Izquierda',cropL)}
+      ${sliderRow('right','→','Derecha',cropR)}
     </div>`;
 }
 
-// Aplica recorte (zoom via transform:scale) + encuadre (object-position) al iframe directamente.
-// Acceso DOM directo (mismo origen) — no depende del code del iframe.
-function applyCrop(key, zoomPct, posPct){
+// Aplica los 4 recortes de bordes al iframe directamente.
+// Estrategia: cambia el aspect-ratio del contenedor para que se ajuste al área visible,
+// y aplica object-position para mostrar la parte correcta de la imagen.
+// El marco se hace más chico → los elementos abajo suben con él.
+function applyAllCrops(key, suffix){
   const frame = document.getElementById('previewFrame');
   if(!frame) return;
+  const t = parseFloat((document.getElementById('r_t_'+suffix)||{}).value)||0;
+  const b = parseFloat((document.getElementById('r_b_'+suffix)||{}).value)||0;
+  const l = parseFloat((document.getElementById('r_l_'+suffix)||{}).value)||0;
+  const r = parseFloat((document.getElementById('r_r_'+suffix)||{}).value)||0;
   try{
     const doc = frame.contentDocument || frame.contentWindow.document;
     if(!doc) return;
     const img = doc.querySelector('[data-ck-src="'+key+'"]');
     if(!img) return;
-    const z = parseFloat(zoomPct) || 0;
-    const p = parseFloat(posPct);
-    const scale = 1 + z/100;
-    img.style.transform = z > 0 ? ('scale('+scale+')') : '';
-    img.style.transformOrigin = 'center';
-    img.style.objectPosition = (!isNaN(p) && p !== 50) ? ('center '+p+'%') : '';
-  }catch(e){ console.warn('applyCrop falló', e); }
+    applyCropToImg(img, t, b, l, r);
+  }catch(e){ console.warn('applyAllCrops falló', e); }
+}
+
+// Lógica compartida (sirve también para applyContent en index.html)
+function applyCropToImg(img, t, b, l, r){
+  const wrap = img.parentElement;
+  if(!wrap) return;
+  t=parseFloat(t)||0; b=parseFloat(b)||0; l=parseFloat(l)||0; r=parseFloat(r)||0;
+  // Limita para que el total por eje no llegue a 100%
+  if(t+b >= 95){ t = Math.min(t,47); b = Math.min(b,47); }
+  if(l+r >= 95){ l = Math.min(l,47); r = Math.min(r,47); }
+  // Sin recorte: limpiar todo
+  if(t+b+l+r === 0){
+    wrap.style.aspectRatio = '';
+    img.style.objectPosition = '';
+    img.style.transform = '';
+    img.style.transformOrigin = '';
+    return;
+  }
+  const hKeep = (100-l-r)/100;
+  const vKeep = (100-t-b)/100;
+  const nW = img.naturalWidth || 4;
+  const nH = img.naturalHeight || 5;
+  // 1) Ajustar aspect-ratio del contenedor (los elementos abajo suben con él)
+  wrap.style.aspectRatio = (nW * hKeep) + ' / ' + (nH * vKeep);
+  // 2) Object-position: fórmula correcta para mostrar la parte no recortada con object-fit:cover
+  const xPos = (l+r > 0) ? (l/(l+r)*100) : 50;
+  const yPos = (t+b > 0) ? (t/(t+b)*100) : 50;
+  img.style.objectPosition = xPos + '% ' + yPos + '%';
+  // 3) Si el recorte es proporcional (mismo % en ambos ejes), object-fit:cover no produce
+  //    overflow porque el aspect-ratio queda igual. Compensamos con transform:scale.
+  if(Math.abs(hKeep - vKeep) < 0.005 && hKeep < 1){
+    img.style.transformOrigin = xPos + '% ' + yPos + '%';
+    img.style.transform = 'scale(' + (1/hKeep) + ')';
+  } else {
+    img.style.transform = '';
+    img.style.transformOrigin = '';
+  }
 }
 
 // Select a previously-uploaded image (no upload, just save the URL)

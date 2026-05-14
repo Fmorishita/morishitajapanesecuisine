@@ -1686,6 +1686,33 @@ setTimeout(hideLoader,3000);
     return div;
   }
 
+  // Aplica recorte de bordes a una imagen ajustando aspect-ratio del contenedor + object-position.
+  // El contenedor se hace más chico → los elementos abajo suben con él.
+  function _applyCropToImg(img, t, b, l, r){
+    const wrap = img.parentElement;
+    if(!wrap) return;
+    t=parseFloat(t)||0; b=parseFloat(b)||0; l=parseFloat(l)||0; r=parseFloat(r)||0;
+    if(t+b >= 95){ t=Math.min(t,47); b=Math.min(b,47); }
+    if(l+r >= 95){ l=Math.min(l,47); r=Math.min(r,47); }
+    if(t+b+l+r === 0){
+      wrap.style.aspectRatio=''; img.style.objectPosition='';
+      img.style.transform=''; img.style.transformOrigin='';
+      return;
+    }
+    const hKeep=(100-l-r)/100, vKeep=(100-t-b)/100;
+    const nW=img.naturalWidth||4, nH=img.naturalHeight||5;
+    wrap.style.aspectRatio = (nW*hKeep)+' / '+(nH*vKeep);
+    const xPos = (l+r>0) ? (l/(l+r)*100) : 50;
+    const yPos = (t+b>0) ? (t/(t+b)*100) : 50;
+    img.style.objectPosition = xPos+'% '+yPos+'%';
+    if(Math.abs(hKeep-vKeep) < 0.005 && hKeep < 1){
+      img.style.transformOrigin = xPos+'% '+yPos+'%';
+      img.style.transform = 'scale('+(1/hKeep)+')';
+    } else {
+      img.style.transform=''; img.style.transformOrigin='';
+    }
+  }
+
   function applyContent(C){
     renderCustomSections(C);
     document.querySelectorAll('[data-ck]').forEach(el=>{
@@ -1736,14 +1763,18 @@ setTimeout(hideLoader,3000);
         const v=C[el.dataset.ckHref+_ds]; if(v!==undefined) el.href=v;
       });
     }
-    // Recorte (zoom) + encuadre (pan) por imagen — NO afecta el layout, solo el contenido visible.
-    // img.X.zoom = '50%' (transform:scale 1.5) · img.X.position = '30%' (object-position)
+    // Recorte de bordes por imagen — img.X.crop_top/bottom/left/right en %
+    // El contenedor se ajusta al área visible. Los elementos abajo suben con él.
     document.querySelectorAll('[data-ck-src]').forEach(el=>{
-      const zoomPct = parseFloat((C[el.dataset.ckSrc+'.zoom']||'').replace(/%$/,''))||0;
-      const posPct = parseFloat((C[el.dataset.ckSrc+'.position']||'').replace(/%$/,''));
-      el.style.transform = zoomPct > 0 ? ('scale(' + (1 + zoomPct/100) + ')') : '';
-      el.style.transformOrigin = 'center';
-      el.style.objectPosition = (!isNaN(posPct) && posPct !== 50) ? ('center ' + posPct + '%') : '';
+      const k = el.dataset.ckSrc;
+      const t = parseFloat((C[k+'.crop_top']||'').replace(/%$/,''))||0;
+      const b = parseFloat((C[k+'.crop_bottom']||'').replace(/%$/,''))||0;
+      const l = parseFloat((C[k+'.crop_left']||'').replace(/%$/,''))||0;
+      const r = parseFloat((C[k+'.crop_right']||'').replace(/%$/,''))||0;
+      const applyNow = ()=> _applyCropToImg(el, t, b, l, r);
+      // Esperar a que la imagen cargue para conocer naturalWidth/Height
+      if(el.complete && el.naturalWidth > 0) applyNow();
+      else el.addEventListener('load', applyNow, {once:true});
     });
     const heroCard = document.querySelector('.home-hero-card');
     if(heroCard) heroCard.classList.toggle('img-contain', C['hero.img_contain']==='true');
@@ -1859,21 +1890,6 @@ setTimeout(hideLoader,3000);
     window.addEventListener('message',ev=>{
       const d=ev.data; if(!d||typeof d!=='object') return;
       if(d.type==='ck-preview'){
-        // Casos especiales: recorte (.zoom) y encuadre (.position) — solo afectan el contenido visible
-        if(d.key.endsWith('.zoom') || d.key.endsWith('.position')){
-          const suffix = d.key.endsWith('.zoom') ? '.zoom' : '.position';
-          const baseKey = d.key.slice(0, -suffix.length);
-          const imgEl = document.querySelector('[data-ck-src="'+baseKey+'"]') || document.querySelector('[data-ck-key="'+baseKey+'"]');
-          if(imgEl){
-            const v = parseFloat((d.value||'').replace(/%$/,''));
-            if(suffix === '.zoom'){
-              imgEl.style.transformOrigin = 'center';
-              imgEl.style.transform = (!isNaN(v) && v > 0) ? ('scale(' + (1 + v/100) + ')') : '';
-            } else {
-              imgEl.style.objectPosition = (!isNaN(v) && v !== 50) ? ('center ' + v + '%') : '';
-            }
-          }
-        } else {
         const sel=k=>`[data-ck-key="${(window.CSS&&CSS.escape)?CSS.escape(d.key):d.key}"]`;
         document.querySelectorAll(sel(d.key)).forEach(el=>{
           if(d.kind==='text') el.textContent=d.value;
@@ -1881,7 +1897,6 @@ setTimeout(hideLoader,3000);
           else if(d.kind==='src') el.src=d.value;
           else if(d.kind==='href') el.href=d.value;
         });
-        }
       } else if(d.type==='ck-scroll'){
         const el=document.querySelector(`[data-ck-key="${(window.CSS&&CSS.escape)?CSS.escape(d.key):d.key}"]`);
         if(el){
