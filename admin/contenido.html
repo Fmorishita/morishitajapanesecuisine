@@ -643,15 +643,15 @@ function imgField(key, label, defaultSrc, altText){
       <div style="margin-top:10px;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;">Recortar bordes (% de la imagen)</div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:6px;padding:7px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
         <span style="font-size:11px;color:var(--muted);flex:0 0 70px;">↑ Arriba:</span>
-        <input type="range" id="r_t_${k}" min="0" max="70" step="1" value="${cropT}" style="flex:1;" oninput="applyTopBottomCrop('${key}','${k}');document.getElementById('n_t_${k}').value=this.value;trackDirty('${key}.crop_top',this.value+'%','text','s_t_${k}')"/>
-        <input type="number" id="n_t_${k}" min="0" max="70" step="1" value="${cropT}" style="width:46px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:4px 6px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('r_t_${k}').value=this.value||0;applyTopBottomCrop('${key}','${k}');trackDirty('${key}.crop_top',(this.value||0)+'%','text','s_t_${k}')"/>
+        <input type="range" id="r_t_${k}" min="0" max="70" step="1" value="${cropT}" style="flex:1;" oninput="applyTopBottomCrop('${key}','${k}');document.getElementById('n_t_${k}').value=this.value;trackDirtyCrop('${key}.crop_top',this.value+'%','s_t_${k}')"/>
+        <input type="number" id="n_t_${k}" min="0" max="70" step="1" value="${cropT}" style="width:46px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:4px 6px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('r_t_${k}').value=this.value||0;applyTopBottomCrop('${key}','${k}');trackDirtyCrop('${key}.crop_top',(this.value||0)+'%','s_t_${k}')"/>
         <span style="font-size:10px;color:var(--muted);">%</span>
         <span class="save-status" id="s_t_${k}"></span>
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:6px;padding:7px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
         <span style="font-size:11px;color:var(--muted);flex:0 0 70px;">↓ Abajo:</span>
-        <input type="range" id="r_b_${k}" min="0" max="70" step="1" value="${cropB}" style="flex:1;" oninput="applyTopBottomCrop('${key}','${k}');document.getElementById('n_b_${k}').value=this.value;trackDirty('${key}.crop_bottom',this.value+'%','text','s_b_${k}')"/>
-        <input type="number" id="n_b_${k}" min="0" max="70" step="1" value="${cropB}" style="width:46px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:4px 6px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('r_b_${k}').value=this.value||0;applyTopBottomCrop('${key}','${k}');trackDirty('${key}.crop_bottom',(this.value||0)+'%','text','s_b_${k}')"/>
+        <input type="range" id="r_b_${k}" min="0" max="70" step="1" value="${cropB}" style="flex:1;" oninput="applyTopBottomCrop('${key}','${k}');document.getElementById('n_b_${k}').value=this.value;trackDirtyCrop('${key}.crop_bottom',this.value+'%','s_b_${k}')"/>
+        <input type="number" id="n_b_${k}" min="0" max="70" step="1" value="${cropB}" style="width:46px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:4px 6px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('r_b_${k}').value=this.value||0;applyTopBottomCrop('${key}','${k}');trackDirtyCrop('${key}.crop_bottom',(this.value||0)+'%','s_b_${k}')"/>
         <span style="font-size:10px;color:var(--muted);">%</span>
         <span class="save-status" id="s_b_${k}"></span>
       </div>
@@ -689,23 +689,29 @@ function applyTopBottomCropToImg(img, t, b){
     wrap.style.height = '';
     wrap.style.overflow = '';
     img.style.objectPosition = '';
+    // Quitar !important de object-fit/height para que CSS/inline original tome control
     img.style.objectFit = 'cover';
-    img.style.position = 'absolute';
     img.style.height = '100%';
-    img.style.inset = '0';
     return;
   }
-  // img-contain CSS usa !important — sobreescribir con inline !important para que el recorte funcione
+  // Usar !important para superar reglas CSS de img-contain que bloquean object-fit:cover
+  // No se tocan position/inset — las imágenes custom dependen de su CSS original para eso
   img.style.setProperty('object-fit', 'cover', 'important');
-  img.style.setProperty('position', 'absolute', 'important');
   img.style.setProperty('height', '100%', 'important');
-  img.style.setProperty('inset', '0', 'important');
   img.style.setProperty('object-position', '50% ' + (t/(t+b)*100) + '%', 'important');
   wrap.style.overflow = 'hidden';
   const vKeep = (100-t-b)/100;
   const nW = img.naturalWidth || 4;
   const nH = img.naturalHeight || 5;
   wrap.style.aspectRatio = nW + ' / ' + (nH * vKeep);
+}
+
+// trackDirty para crop: siempre usa la key base (sin sufijo .mobile/.tablet)
+// El crop es device-independiente — la misma imagen se recorta igual en todos los dispositivos
+function trackDirtyCrop(key, value, statusId){
+  DIRTY_FIELDS.set(key, {value, kind:'text', statusId});
+  markDirty(statusId);
+  updateSaveBtn();
 }
 
 // Select a previously-uploaded image (no upload, just save the URL)
