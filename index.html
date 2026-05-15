@@ -1647,6 +1647,8 @@ S.mo=findFirstAvailableMonth();
 renderCal();updateProgress();
 // Cargar disponibilidad real del mes visible (asíncrono, refresca calendario al terminar)
 loadMonthAvail(S.mo);
+// Si la URL tiene ?reservar, ir directo al paso de comensales
+if(new URLSearchParams(location.search).get('reservar')!==null) go('guests');
 
 /* ── burger menu mobile ── */
 (function(){
