@@ -391,7 +391,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 
 .g-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:40px;}
 .g-row{display:flex;justify-content:center;align-items:center;gap:40px;margin-bottom:28px;width:100%;}
-.g-btn{width:56px;height:56px;border:1.5px solid var(--ink);border-radius:50%;font-size:24px;color:var(--ink);display:grid;place-items:center;cursor:pointer;background:none;transition:all .25s;}
+.g-btn{width:56px;height:56px;min-width:56px;min-height:56px;border:1.5px solid var(--ink);border-radius:50%;font-size:24px;color:var(--ink);display:grid;place-items:center;cursor:pointer;background:none;transition:all .25s;flex-shrink:0;box-sizing:border-box;aspect-ratio:1/1;}
 .g-btn:hover:not(:disabled){background:var(--ink);color:var(--paper);}
 .g-btn:disabled{opacity:.2;cursor:not-allowed;}
 .g-num{font-family:var(--display);font-size:96px;line-height:1;color:var(--ink);min-width:108px;text-align:center;}
@@ -695,6 +695,17 @@ img.ck-no-crop{position:static!important;inset:auto!important;width:100%!importa
 .custom-gallery-item-img{aspect-ratio:1/1;overflow:hidden;background:var(--paper-warm);}
 .custom-gallery-item-img img{width:100%;height:100%;object-fit:cover;display:block;}
 .custom-gallery-item-caption{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);text-align:center;}
+
+/* TIMER CHECKOUT */
+.checkout-timer{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);background:var(--paper-warm);border:1px solid var(--line);padding:14px 20px;margin-bottom:28px;}
+.checkout-timer .ct-time{font-size:22px;font-weight:700;color:var(--ink);letter-spacing:.04em;min-width:54px;}
+.checkout-timer .ct-txt{line-height:1.3;}
+.checkout-timer.timer-warn{border-color:var(--sakura-d);background:rgba(196,96,122,.07);}
+.checkout-timer.timer-warn .ct-time{color:var(--sakura-d);animation:timerPulse .9s ease-in-out infinite;}
+[data-theme="dark"] .checkout-timer{background:#1a1814;border-color:#2e2a23;}
+[data-theme="dark"] .checkout-timer.timer-warn{border-color:var(--gold);background:rgba(212,175,106,.07);}
+[data-theme="dark"] .checkout-timer.timer-warn .ct-time{color:var(--gold);}
+@keyframes timerPulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 /* RESERVE CTA */
 .reserve-cta-section{text-align:center;padding:120px 28px 80px;background:var(--paper);position:relative;}
@@ -1061,24 +1072,10 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
 
 <!-- ═══ LANDING ═══ -->
 <section class="screen" id="screen-landing">
- <div class="hero-wrap">
- <div class="hero-top">
- <button class="back-home" onclick="go('guests')">← Comensales</button>
- <span class="floatA">❀</span>
- <span class="floatB">✿</span>
- <div class="hero-tag-pill">Menú de 14 tiempos</div>
- <h1 class="hero-h1">森下<em>Confía en el chef.</em></h1>
- <p class="hero-desc">Una experiencia omakase íntima en cuatro asientos. El producto manda; el chef solo lo acompaña.</p>
- <div class="hero-stats">
- <dl class="stat"><dt>Abrimos</dt><dd>Sáb · Dom</dd></dl>
- <dl class="stat"><dt>Capacidad</dt><dd>4 asientos</dd></dl>
- <dl class="stat"><dt>14 tiempos</dt><dd>$1,850 MXN</dd></dl>
- </div>
- <span class="sakura-div">❀ ❀ ❀</span>
- </div>
-
- <div class="cal-section-lbl">Fechas disponibles para <span id="calGuestLabel">tu grupo</span></div>
- <div class="cal-next-hint" id="calNextAvail" style="display:none"></div>
+ <div class="container">
+ <button class="sec-back" onclick="go('guests')">← Comensales</button>
+ <div class="crumb-bar"><span>Fecha</span></div>
+ <div class="sec-eye">Paso 02 · Elige una fecha</div>
  <div class="cal-card">
  <div class="cal-top">
  <button class="cal-btn" id="prevMo">←</button>
@@ -1141,6 +1138,11 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <div class="crumb-bar"><span id="cb3date">—</span><span class="crumb-sep">❀</span><span id="cb3g">—</span><span class="crumb-sep">❀</span><span id="cb3t">—</span></div>
  <div class="sec-eye">Paso 04 · Reservar</div>
  <h2 class="sec-title">Completa tu reserva.</h2>
+
+ <div class="checkout-timer" id="checkoutTimer" style="display:none">
+  <span class="ct-time" id="timerDisplay">10:00</span>
+  <span class="ct-txt">para completar · si expira<br/>se libera tu lugar</span>
+ </div>
 
  <div class="co-grid">
  <div class="panel">
@@ -1359,7 +1361,7 @@ function findNextAvailDateForGuests(n){
 
 /* Renderiza el calendario filtrando por S.guests y navega al mes correcto */
 function renderLanding(){
- // Calcular el mes de la próxima fecha disponible para S.guests personas
+ // Navegar al mes con la próxima fecha disponible
  const next=findNextAvailDateForGuests(S.guests);
  if(next){
   const today=new Date();
@@ -1367,11 +1369,37 @@ function renderLanding(){
   const mo=(d.getFullYear()-today.getFullYear())*12+(d.getMonth()-today.getMonth());
   if(mo>S.mo)S.mo=mo;
  }
- // Actualizar etiqueta del calendario con número de personas
- const lbl=document.getElementById('calGuestLabel');
- if(lbl)lbl.textContent=S.guests===1?'1 persona':`${S.guests} personas`;
  renderCal();
  loadMonthAvail(S.mo);
+}
+
+/* ── timer de checkout (10 min) ── */
+let _coTimer=null;
+function startCheckoutTimer(){
+ clearCheckoutTimer();
+ let secs=600;
+ const wrap=document.getElementById('checkoutTimer');
+ const disp=document.getElementById('timerDisplay');
+ if(wrap) wrap.style.display='flex';
+ function tick(){
+  const m=Math.floor(secs/60),s=secs%60;
+  if(disp) disp.textContent=m+':'+(s<10?'0'+s:s);
+  if(secs<=120&&wrap) wrap.classList.add('timer-warn');
+  if(secs<=0){
+   clearCheckoutTimer();
+   alert('El tiempo para completar tu reservación expiró. Tu lugar ha sido liberado.');
+   resetAll();
+   return;
+  }
+  secs--;
+ }
+ tick();
+ _coTimer=setInterval(tick,1000);
+}
+function clearCheckoutTimer(){
+ if(_coTimer){clearInterval(_coTimer);_coTimer=null;}
+ const wrap=document.getElementById('checkoutTimer');
+ if(wrap){wrap.style.display='none';wrap.classList.remove('timer-warn');}
 }
 
 /* ── navigation ── */
@@ -1387,7 +1415,8 @@ function go(screen){
  if(screen==='landing') renderLanding();
  if(screen==='guests') refreshG();
  if(screen==='time') renderSlots();
- if(screen==='checkout') renderCO();
+ if(screen==='checkout'){renderCO();startCheckoutTimer();}
+ else clearCheckoutTimer();
 }
 
 /* CTA "Reservar": va primero a elegir número de personas */
@@ -1409,7 +1438,7 @@ function updateProgress(){
  document.querySelectorAll('.pstep').forEach((el,i)=>{
  el.classList.remove('done','active');
  const elPct=el.querySelector('.pstep-pct');
- if(i<idx){el.classList.add('done');elPct.textContent='100%';el.style.setProperty('--bar','100%');}
+ if(i<idx){el.classList.add('done');elPct.textContent=PCTS[STEPS[i].id]+'%';el.style.setProperty('--bar','100%');}
  else if(i===idx){el.classList.add('active');elPct.textContent=PCTS[S.screen]+'%';el.style.setProperty('--bar','60%');}
  else{elPct.textContent='0%';el.style.setProperty('--bar','0%');}
  });
@@ -1546,6 +1575,7 @@ document.getElementById('payBtn').onclick = async () => {
    });
    const data = await res.json();
    if(data.url){
+     clearCheckoutTimer();
      window.location.href = data.url;
    } else {
      alert('Error: ' + data.error);
