@@ -793,6 +793,11 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  .reserve-detail-item{flex-direction:row;justify-content:space-between;width:100%;align-items:baseline;gap:18px;}
 }
 </style>
+<!-- PostHog analytics -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_COLOCA_TU_API_KEY_AQUI',{api_host:'https://us.i.posthog.com',capture_pageview:false});
+</script>
 </head>
 <body>
 <!-- TEMA: aplicar antes de renderizar para evitar flash -->
@@ -850,7 +855,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
   <a onclick="navTo('producto')" data-ck="nav.link2">El producto</a>
   <a onclick="navTo('chef')" data-ck="nav.link3">El chef</a>
   <a onclick="navTo('faq')" data-ck="nav.link4">FAQ</a>
-  <button class="topbar-cta" onclick="goToBooking()" data-ck="cta.topbar.label">Reservar</button>
+  <a href="/?reservar=1" class="topbar-cta" onclick="event.preventDefault();goToBooking()" data-ck="cta.topbar.label">Reservar</a>
  </nav>
 </header>
 
@@ -894,7 +899,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
     <h1 class="home-hero-h1" data-ck-html="hero.h1">El producto<em>al frente.</em></h1>
     <p class="home-hero-sub" data-ck-html="hero.sub">Una barra de cuatro asientos. Catorce tiempos curados con Wagyu A5, Kobe importado de Japón y el mejor pescado de la temporada.</p>
     <div class="home-hero-actions">
-     <button class="btn-pri-lg" onclick="goToBooking()"><span data-ck="cta.hero_primary.label">Reservar mesa</span> <span class="ba">→</span></button>
+     <a href="/?reservar=1" class="btn-pri-lg" onclick="event.preventDefault();goToBooking()"><span data-ck="cta.hero_primary.label">Reservar mesa</span> <span class="ba">→</span></a>
      <button class="btn-sec-lg" onclick="navTo('experiencia')" data-ck-show="cta.hero_secondary.show"><span data-ck="cta.hero_secondary.label">Conocer la experiencia</span> ↓</button>
     </div>
     <div class="home-hero-meta" data-ck-show="hero.meta.show">
@@ -1035,7 +1040,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
    <h2 class="section-title" data-ck-html="reservar.h2">Cuatro asientos.<em>Dos noches por semana.</em></h2>
    <p class="section-lead" data-ck="reservar.lead">El menú se construye pieza por pieza el día del servicio. Por eso pedimos un anticipo del 50% al reservar — se aplica directamente a tu cuenta final, no es un cargo adicional.</p>
    <div class="reserve-cta-actions">
-    <button class="btn-pri-lg" onclick="goToBooking()" data-ck-show="cta.reservar_section.show"><span data-ck="cta.reservar_section.label">Ver fechas disponibles</span> <span class="ba">→</span></button>
+    <a href="/?reservar=1" class="btn-pri-lg" onclick="event.preventDefault();goToBooking()" data-ck-show="cta.reservar_section.show"><span data-ck="cta.reservar_section.label">Ver fechas disponibles</span> <span class="ba">→</span></a>
    </div>
    <dl class="reserve-detail" data-ck-show="reserve.detail.show">
     <div class="reserve-detail-item" data-ck-show="reserve.row.servicio.show"><dt data-ck="reserve.row.servicio.label">Servicio</dt><dd data-ck="reserve.row.servicio.value">Sáb · Dom</dd></div>
@@ -1234,7 +1239,7 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
   </div>
   <div class="footer-col" data-ck-show="footer.col4.show">
    <h4 data-ck="footer.col4.title">Reservar</h4>
-   <a onclick="goToBooking()" data-ck-show="footer.link.booking.show"><span data-ck="footer.link.booking.label">Ver disponibilidad</span></a>
+   <a href="/?reservar=1" onclick="event.preventDefault();goToBooking()" data-ck-show="footer.link.booking.show"><span data-ck="footer.link.booking.label">Ver disponibilidad</span></a>
    <a onclick="navTo('experiencia')" data-ck-show="footer.link.experiencia.show"><span data-ck="footer.link.experiencia.label">La experiencia</span></a>
    <a onclick="navTo('producto')" data-ck-show="footer.link.producto.show"><span data-ck="footer.link.producto.label">El producto</span></a>
    <a onclick="navTo('faq')" data-ck-show="footer.link.faq.show"><span data-ck="footer.link.faq.label">Preguntas frecuentes</span></a>
@@ -1443,6 +1448,15 @@ function go(screen){
  if(screen==='checkout') renderCO();
  if(screen==='guests') startCheckoutTimer();
  if(screen==='home'||screen==='confirm') clearCheckoutTimer();
+ // Sincronizar URL con paso (sin recargar)
+ const STEP_PARAMS={guests:'?reservar=1',landing:'?paso=fecha',time:'?paso=horario',checkout:'?paso=checkout',confirm:'?paso=confirmacion',home:'/'};
+ const _p=STEP_PARAMS[screen];
+ if(_p!==undefined){
+  const _newUrl=_p==='/'?location.pathname:location.pathname+_p;
+  if(location.pathname+location.search!==_newUrl)history.replaceState({screen},'',(screen==='home'?location.pathname:location.pathname+_p));
+ }
+ // Tracking PostHog
+ if(window.posthog)posthog.capture('funnel_'+screen+'_viewed',{guests:S.guests,date:S.date,time:S.time});
 }
 
 /* CTA "Reservar": va primero a elegir número de personas */
@@ -1600,6 +1614,7 @@ document.getElementById('payBtn').onclick = async () => {
  S.nombre=comensales[0].nombre; S.wa=wa; S.email=em;
  S.motivo=form.motivo.value.trim();
  if(rem(S.date,S.time)<S.guests){alert('Lo sentimos, ese horario ya no tiene lugares suficientes.');go('time');return;}
+ if(window.posthog)posthog.capture('funnel_payment_initiated',{guests:S.guests,date:S.date,time:S.time,total:S.guests*CFG.price,anticipo:S.guests*CFG.price*CFG.dep});
  const btn = document.getElementById('payBtn');
  btn.disabled = true;
  btn.innerHTML = '<span class="spinner"></span>&nbsp;Procesando…';
@@ -1647,8 +1662,18 @@ S.mo=findFirstAvailableMonth();
 renderCal();updateProgress();
 // Cargar disponibilidad real del mes visible (asíncrono, refresca calendario al terminar)
 loadMonthAvail(S.mo);
-// Si la URL tiene ?reservar, ir directo al paso de comensales
-if(new URLSearchParams(location.search).get('reservar')!==null) go('guests');
+// Si la URL tiene ?reservar o ?paso=X, ir directo a ese paso
+const _q=new URLSearchParams(location.search);
+const _pasoMap={fecha:'landing',horario:'time',checkout:'checkout',confirmacion:'confirm'};
+if(_q.get('reservar')!==null)go('guests');
+else if(_pasoMap[_q.get('paso')])go(_pasoMap[_q.get('paso')]);
+// Botón atrás del navegador
+window.addEventListener('popstate',()=>{
+ const _pq=new URLSearchParams(location.search);
+ if(_pq.get('reservar')!==null)go('guests');
+ else if(_pasoMap[_pq.get('paso')])go(_pasoMap[_pq.get('paso')]);
+ else go('home');
+});
 
 /* ── burger menu mobile ── */
 (function(){
@@ -1703,6 +1728,7 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('cTime').textContent = slotHora ? fmt12(slotHora) : '—';
         document.getElementById('cGuests').textContent = (data.comensales || '—') + ' personas';
         document.getElementById('cDue').textContent = '$' + ((data.comensales || 0) * 1850 * 0.5).toLocaleString() + ' MXN';
+        if(window.posthog)posthog.capture('funnel_purchase_completed',{guests:data.comensales,date:data.fecha,time:slotHora,total:(data.comensales||0)*1850,anticipo_pagado:(data.comensales||0)*1850*0.5,session_id:sid});
       }).catch(e => console.error(e));
 
     document.getElementById('cRef').textContent = 'MSH-' + (sid || '').slice(-6).toUpperCase();
