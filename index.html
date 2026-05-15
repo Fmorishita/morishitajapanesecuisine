@@ -305,8 +305,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 .topbar-tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);}
 
 /*── PROGRESS ──*/
-.prog-wrap{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1);background:var(--paper-warm);border-bottom:1px solid var(--line);}
+.prog-wrap{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1);background:var(--paper-warm);border-bottom:1px solid var(--line);display:flex;align-items:stretch;}
 .prog-wrap.visible{max-height:110px;}
+.prog-inner{flex:1;}
 .prog-inner{display:flex;align-items:stretch;padding:0 28px;}
 .pstep{flex:1;display:flex;flex-direction:column;padding:14px 12px 0 0;position:relative;cursor:default;}
 .pstep:not(:last-child)::after{content:'';position:absolute;bottom:0;left:0;right:12px;height:2px;background:var(--line);transition:background .4s;}
@@ -649,6 +650,65 @@ footer{padding:24px 28px;border-top:1px solid var(--line-soft);font-family:var(-
 [data-theme="dark"] .testimonial-author{color:rgba(245,240,232,.7);}
 .testimonial-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:rgba(250,248,244,.35);margin-top:4px;letter-spacing:.04em;}
 .testimonial-badge::before{content:'';display:inline-block;width:13px;height:13px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234285F4' d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z'/%3E%3Cpath fill='%2334A853' d='M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z'/%3E%3Cpath fill='%23FBBC05' d='M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z'/%3E%3Cpath fill='%23EA4335' d='M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z'/%3E%3C/svg%3E") no-repeat center/contain;}
+[data-theme="dark"] .testimonial-badge{color:rgba(245,240,232,.45);}
+
+/* CUSTOM SECTIONS (admin-managed, dynamic templates) */
+.custom-section{padding:120px 28px;background:var(--paper);position:relative;}
+[data-theme="dark"] .custom-section{background:var(--paper);}
+.custom-section.alt-bg{background:var(--paper-warm);}
+[data-theme="dark"] .custom-section.alt-bg{background:#0d0b09;}
+.custom-inner{max-width:1240px;margin:0 auto;}
+.custom-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--sakura-d);margin-bottom:18px;}
+[data-theme="dark"] .custom-eyebrow{color:var(--gold);}
+.custom-title{font-family:var(--display);font-size:44px;line-height:1.08;letter-spacing:-.015em;color:var(--ink);margin-bottom:24px;font-weight:400;}
+.custom-title em{font-style:italic;color:var(--sakura-d);font-weight:400;}
+[data-theme="dark"] .custom-title em{color:var(--gold);}
+.custom-paragraph{font-family:var(--serif);font-size:18px;line-height:1.65;color:var(--ink-soft);margin-bottom:18px;}
+.custom-paragraph:last-of-type{margin-bottom:0;}
+.custom-cta{display:inline-block;margin-top:28px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:18px 32px;text-decoration:none;border:1px solid var(--ink);transition:.25s;cursor:pointer;}
+.custom-cta:hover{background:transparent;color:var(--ink);}
+[data-theme="dark"] .custom-cta{background:var(--gold);color:var(--ink);border-color:var(--gold);}
+[data-theme="dark"] .custom-cta:hover{background:transparent;color:var(--gold);}
+
+/* Template: text-image */
+.custom-text-image .custom-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.custom-text-image.image-right .custom-inner{direction:ltr;}
+.custom-text-image.image-left .custom-image-wrap{order:-1;}
+.custom-image-wrap{position:relative;overflow:hidden;background:var(--paper-warm);}
+.custom-image-wrap img{width:100%;height:100%;object-fit:cover;display:block;aspect-ratio:4/5;}
+
+/* Template: text-centered */
+.custom-text-centered{text-align:center;}
+.custom-text-centered .custom-inner{max-width:780px;}
+.custom-text-centered .custom-paragraph{font-size:19px;}
+
+/* Template: gallery */
+.custom-gallery-header{text-align:center;margin-bottom:56px;}
+.custom-gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.custom-gallery-item{display:flex;flex-direction:column;gap:14px;}
+.custom-gallery-item-img{aspect-ratio:1/1;overflow:hidden;background:var(--paper-warm);}
+.custom-gallery-item-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.custom-gallery-item-caption{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);text-align:center;}
+
+/* TIMER en prog-wrap */
+.prog-timer{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;padding:0 16px 0 8px;min-width:72px;flex-shrink:0;}
+.pt-time{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--ink);line-height:1;transition:color .3s;}
+.pt-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);}
+.prog-wrap.timer-warn .pt-time{color:var(--sakura-d);animation:timerPulse .9s ease-in-out infinite;}
+[data-theme="dark"] .prog-wrap.timer-warn .pt-time{color:var(--gold);}
+@keyframes timerPulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* DARK MODE: price-card */
+[data-theme="dark"] .price-card{background:#f5f0e8;color:#0d0d0b;}
+[data-theme="dark"] .p-row{color:rgba(13,13,11,.55);}
+[data-theme="dark"] .p-row .v{color:#0d0d0b;}
+[data-theme="dark"] .pc-hd .lbl{color:var(--sakura-d);}
+[data-theme="dark"] .pc-note{color:rgba(13,13,11,.5);}
+[data-theme="dark"] .pc-note strong{color:rgba(13,13,11,.7);}
+/* CAMPOS POR COMENSAL */
+.guest-section{border:1px solid var(--line);padding:20px 20px 4px;margin-bottom:16px;}
+.guest-section-hd{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--sakura-d);margin-bottom:16px;}
+[data-theme="dark"] .guest-section{border-color:#2e2a23;}
+[data-theme="dark"] .guest-section-hd{color:var(--gold);}
 
 /* RESERVE CTA */
 .reserve-cta-section{text-align:center;padding:120px 28px 80px;background:var(--paper);position:relative;}
@@ -796,6 +856,10 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <div class="pstep-top"><div class="pstep-num">4</div><div class="pstep-name">Reservar</div></div>
  <div class="pstep-pct">0%</div>
  </div>
+ </div>
+ <div class="prog-timer" id="progTimer" style="display:none">
+  <span class="pt-time" id="timerDisplay">8:00</span>
+  <span class="pt-lbl">restantes</span>
  </div>
 </div>
 
@@ -1087,18 +1151,13 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <div class="panel-hd">Tus datos</div>
  <div class="panel-bd">
  <form id="resForm" novalidate>
- <div class="frow full">
- <div class="fld" id="fn"><label>Nombre completo <span class="req">*</span></label><input type="text" name="nombre"/><span class="em">Ingresa tu nombre.</span></div>
- </div>
+ <div id="guestFields"><!-- generado por renderCO --></div>
  <div class="frow">
  <div class="fld" id="fw"><label>WhatsApp <span class="req">*</span></label><input type="tel" name="whatsapp" placeholder="+52 …"/><span class="em">Número inválido.</span></div>
  <div class="fld" id="fe"><label>Email <span class="req">*</span></label><input type="email" name="email"/><span class="em">Email inválido.</span></div>
  </div>
  <div class="frow full">
  <div class="fld"><label>Motivo <span style="color:var(--ink-soft)">(opcional)</span></label><input type="text" name="motivo" placeholder="Aniversario, cumpleaños…"/></div>
- </div>
- <div class="frow full">
- <div class="fld"><label>Alergias / restricciones <span style="color:var(--ink-soft)">(opcional)</span></label><textarea name="alergias" rows="2" placeholder="Mariscos, gluten…"></textarea></div>
  </div>
  </form>
  </div>
@@ -1279,6 +1338,88 @@ function rem(date,time){return S.avail[date+'__'+time]??0;}
 function dayHas(iso){return CFG.slots.some(t=>rem(iso,t)>0);}
 function dayOpen(iso){return CFG.openDays.includes(fromISO(iso).getDay());}
 
+/* Devuelve el ISO de la primera fecha con al menos `n` lugares disponibles */
+function findNextAvailDateForGuests(n){
+ const today=new Date();today.setHours(0,0,0,0);
+ for(let mo=0;mo<12;mo++){
+  const base=new Date(today.getFullYear(),today.getMonth()+mo,1);
+  const yr=base.getFullYear(),m=base.getMonth();
+  const dim=new Date(yr,m+1,0).getDate();
+  for(let d=1;d<=dim;d++){
+   const dt=new Date(yr,m,d);
+   if(dt<today)continue;
+   if(!CFG.openDays.includes(dt.getDay()))continue;
+   const iso=toISO(dt);
+   if(CFG.slots.some(t=>rem(iso,t)>=n))return iso;
+  }
+ }
+ return null;
+}
+
+/* Renderiza el calendario filtrando por S.guests y navega al mes correcto */
+function renderLanding(){
+ // Navegar al mes con la próxima fecha disponible
+ const next=findNextAvailDateForGuests(S.guests);
+ if(next){
+  const today=new Date();
+  const d=fromISO(next);
+  const mo=(d.getFullYear()-today.getFullYear())*12+(d.getMonth()-today.getMonth());
+  if(mo>S.mo)S.mo=mo;
+ }
+ renderCal();
+ loadMonthAvail(S.mo);
+}
+
+/* ── timer de sesión (8 min desde comensales) ── */
+let _coTimer=null;
+function startCheckoutTimer(){
+ if(_coTimer) return; // no reiniciar si ya corre
+ let secs=480; // 8 minutos
+ const disp=document.getElementById('timerDisplay');
+ const progWrap=document.getElementById('progWrap');
+ const timerEl=document.getElementById('progTimer');
+ if(timerEl) timerEl.style.display='flex';
+ function tick(){
+  const m=Math.floor(secs/60),s=secs%60;
+  if(disp) disp.textContent=m+':'+(s<10?'0'+s:s);
+  if(secs<=120&&progWrap) progWrap.classList.add('timer-warn');
+  if(secs<=0){
+   clearCheckoutTimer();
+   alert('El tiempo para completar tu reservación expiró. Tu lugar ha sido liberado.');
+   resetAll();
+   return;
+  }
+  secs--;
+ }
+ tick();
+ _coTimer=setInterval(tick,1000);
+}
+function clearCheckoutTimer(){
+ if(_coTimer){clearInterval(_coTimer);_coTimer=null;}
+ const timerEl=document.getElementById('progTimer');
+ if(timerEl) timerEl.style.display='none';
+ const progWrap=document.getElementById('progWrap');
+ if(progWrap) progWrap.classList.remove('timer-warn');
+}
+/* ── campos dinámicos por comensal ── */
+function buildGuestFields(n){
+ const c=document.getElementById('guestFields');
+ if(!c) return;
+ c.innerHTML='';
+ for(let i=1;i<=n;i++){
+  c.insertAdjacentHTML('beforeend',`
+   <div class="guest-section">
+    <div class="guest-section-hd">Comensal ${i}</div>
+    <div class="frow full">
+     <div class="fld" id="fn${i}"><label>Nombre completo <span class="req">*</span></label><input type="text" name="nombre${i}"/><span class="em">Ingresa el nombre.</span></div>
+    </div>
+    <div class="frow full">
+     <div class="fld"><label>Alergias / restricciones <span style="color:var(--ink-soft)">(opcional)</span></label><input type="text" name="alergias${i}" placeholder="Mariscos, gluten, lactosa…"/></div>
+    </div>
+   </div>`);
+ }
+}
+
 /* ── navigation ── */
 function go(screen){
  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -1289,10 +1430,12 @@ function go(screen){
  if(navEl)navEl.classList.remove('mobile-open');
  window.scrollTo({top:0,behavior:'smooth'});
  updateProgress();
- if(screen==='landing') renderCal();
+ if(screen==='landing') renderLanding();
  if(screen==='guests') refreshG();
  if(screen==='time') renderSlots();
  if(screen==='checkout') renderCO();
+ if(screen==='guests') startCheckoutTimer();
+ if(screen==='home'||screen==='confirm') clearCheckoutTimer();
 }
 
 /* CTA "Reservar": va al calendario (screen-landing) */
@@ -1409,6 +1552,7 @@ function renderSlots(){
 
 /* ── checkout ── */
 function renderCO(){
+ buildGuestFields(S.guests);
  const tot=S.guests*CFG.price,ant=tot*CFG.dep,sal=tot-ant;
  document.getElementById('cb3date').textContent=fmtDate(S.date);
  document.getElementById('cb3g').textContent=S.guests+'p';
@@ -1424,14 +1568,23 @@ function renderCO(){
 /* ── pay btn: directo a Stripe Checkout ── */
 document.getElementById('payBtn').onclick = async () => {
  const form = document.getElementById('resForm');
- ['fn','fw','fe'].forEach(id=>document.getElementById(id).classList.remove('err'));
+ // Limpiar errores previos
+ document.querySelectorAll('#guestFields .fld').forEach(el=>el.classList.remove('err'));
+ ['fw','fe'].forEach(id=>document.getElementById(id).classList.remove('err'));
  let ok = true;
- const nb=form.nombre.value.trim(), wa=form.whatsapp.value.trim(), em=form.email.value.trim();
- if(nb.length<2){document.getElementById('fn').classList.add('err');ok=false;}
+ // Validar nombre de cada comensal
+ const comensales=[];
+ for(let i=1;i<=S.guests;i++){
+  const ni=(form['nombre'+i]?.value||'').trim();
+  if(ni.length<2){const fld=document.getElementById('fn'+i);if(fld)fld.classList.add('err');ok=false;}
+  comensales.push({nombre:ni,alergias:(form['alergias'+i]?.value||'').trim()});
+ }
+ const wa=form.whatsapp.value.trim(), em=form.email.value.trim();
  if(!/^[+\d\s\-()\\.]{8,}$/.test(wa)){document.getElementById('fw').classList.add('err');ok=false;}
  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){document.getElementById('fe').classList.add('err');ok=false;}
  if(!ok){document.querySelector('#resForm .err input')?.scrollIntoView({behavior:'smooth',block:'center'});return;}
- S.nombre=nb; S.wa=wa; S.email=em; S.motivo=form.motivo.value.trim(); S.alergias=form.alergias.value.trim();
+ S.nombre=comensales[0].nombre; S.wa=wa; S.email=em;
+ S.motivo=form.motivo.value.trim();
  if(rem(S.date,S.time)<S.guests){alert('Lo sentimos, ese horario ya no tiene lugares suficientes.');go('time');return;}
  const btn = document.getElementById('payBtn');
  btn.disabled = true;
@@ -1440,7 +1593,7 @@ document.getElementById('payBtn').onclick = async () => {
    const res = await fetch('/create-checkout-session', {
      method: 'POST',
      headers: {'Content-Type':'application/json','Bypass-Tunnel-Reminder':'true'},
-     body: JSON.stringify({date:S.date, time:S.time, guests:S.guests, nombre:S.nombre, email:S.email, whatsapp:S.wa, motivo:S.motivo, alergias:S.alergias})
+     body: JSON.stringify({date:S.date, time:S.time, guests:S.guests, nombre:S.nombre, email:S.email, whatsapp:S.wa, motivo:S.motivo, comensales})
    });
    const data = await res.json();
    if(data.url){
