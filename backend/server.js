@@ -371,7 +371,7 @@ app.get('/api/content', async (req, res) => {
     if (error) throw error;
     const obj = {};
     (data || []).forEach(r => { obj[r.key] = r.value; });
-    res.setHeader('Cache-Control', 'public, s-maxage=30');
+    res.setHeader('Cache-Control', 'no-store');
     res.json(obj);
   } catch (err) {
     res.status(500).json({ error: err.message });
