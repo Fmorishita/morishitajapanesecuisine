@@ -114,6 +114,73 @@
 
   .html-hint{font-size:10px;color:var(--muted);margin-top:4px;}
 
+  /* CUSTOM SECTIONS */
+  .cs-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+  .cs-card{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:14px;}
+  .cs-card-head{display:flex;align-items:center;gap:10px;margin-bottom:0;}
+  .cs-card-icon{width:34px;height:34px;border-radius:4px;background:rgba(200,169,126,.1);border:1px solid rgba(200,169,126,.25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:15px;}
+  .cs-card-info{flex:1;min-width:0;}
+  .cs-card-title{font-size:12px;color:var(--fg);font-weight:500;margin-bottom:2px;}
+  .cs-card-meta{font-size:10px;color:var(--muted);letter-spacing:.05em;}
+  .cs-card-actions{display:flex;gap:6px;}
+  .cs-btn{background:transparent;border:1px solid var(--border);color:var(--fg);padding:6px 10px;border-radius:3px;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.2s;}
+  .cs-btn:hover{border-color:var(--gold);color:var(--gold);}
+  .cs-btn.danger:hover{border-color:var(--red);color:var(--red);}
+  .cs-card-body{padding-top:14px;margin-top:14px;border-top:1px dashed var(--border);display:none;}
+  .cs-card.open .cs-card-body{display:block;}
+  .cs-card.open .cs-toggle-icon{transform:rotate(180deg);}
+  .cs-toggle-icon{transition:transform .2s;display:inline-block;}
+  .cs-empty{padding:28px 16px;text-align:center;color:var(--muted);font-size:12px;background:var(--surface2);border:1px dashed var(--border);border-radius:4px;}
+
+  .cs-tpl-picker{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px;}
+  .cs-tpl-card{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:14px;cursor:pointer;transition:.2s;display:flex;align-items:flex-start;gap:12px;}
+  .cs-tpl-card:hover{border-color:var(--gold);}
+  .cs-tpl-thumb{width:54px;height:42px;border-radius:3px;background:#1a1a17;border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .cs-tpl-info{flex:1;min-width:0;}
+  .cs-tpl-name{font-size:12px;color:var(--fg);margin-bottom:3px;font-weight:500;}
+  .cs-tpl-desc{font-size:10px;color:var(--muted);line-height:1.5;}
+
+  .cs-add-btn{width:100%;background:transparent;border:1px dashed var(--border);color:var(--gold);padding:14px;border-radius:4px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:.2s;}
+  .cs-add-btn:hover{border-color:var(--gold);background:rgba(200,169,126,.04);}
+
+  .cs-radio-row{display:flex;gap:10px;margin-top:6px;}
+  .cs-radio{flex:1;background:var(--surface2);border:1px solid var(--border);padding:9px 11px;border-radius:3px;font-size:11px;color:var(--fg);cursor:pointer;text-align:center;transition:.2s;}
+  .cs-radio:hover{border-color:var(--gold);}
+  .cs-radio.active{border-color:var(--gold);background:rgba(200,169,126,.08);color:var(--gold);}
+
+  /* RESERVE-DETAIL ROW EDITOR (compact 3-col table) */
+  .rd-table{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:10px;margin-bottom:20px;}
+  .rd-row{display:grid;grid-template-columns:30px 1fr 1.2fr;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--border);}
+  .rd-row:last-child{border-bottom:0;}
+  .rd-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer;justify-self:center;}
+  .rd-row input[type=text]{background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:7px 9px;border-radius:3px;font-size:12px;outline:none;transition:border-color .2s;}
+  .rd-row input[type=text]:focus{border-color:var(--gold);}
+  .rd-row .rd-status{grid-column:1/-1;font-size:10px;color:var(--muted);min-height:0;}
+
+  /* "EDITANDO X" BANNER */
+  .ck-now-editing{position:sticky;top:0;background:linear-gradient(90deg,rgba(200,169,126,.18),rgba(200,169,126,.05));border-left:3px solid var(--gold);padding:9px 14px;font-size:11px;letter-spacing:.05em;color:var(--gold);z-index:10;margin:-24px -24px 18px;}
+  .ck-now-editing strong{color:var(--fg);font-weight:600;}
+  .ck-now-editing .ck-close{float:right;cursor:pointer;color:var(--muted);font-size:14px;line-height:1;margin-left:10px;}
+  .ck-now-editing .ck-close:hover{color:var(--fg);}
+
+  /* PULSE animation for the highlighted field in panel */
+  @keyframes ck-panel-pulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(200,169,126,.0);}
+    25%{box-shadow:0 0 0 6px rgba(200,169,126,.45);}
+    50%{box-shadow:0 0 0 12px rgba(200,169,126,.0);}
+  }
+  .field.ck-pulse textarea, .field.ck-pulse input{animation:ck-panel-pulse 1.4s ease-out 3;border-color:var(--gold);}
+
+  /* VISIBILIDAD panel */
+  .vis-group{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:14px;margin-bottom:14px;}
+  .vis-group-title{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;font-weight:600;}
+  .vis-row{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:12px;color:var(--fg);border-bottom:1px dashed rgba(255,255,255,.04);}
+  .vis-row:last-child{border-bottom:0;}
+  .vis-row input[type=checkbox]{width:14px;height:14px;accent-color:var(--gold);cursor:pointer;}
+  .vis-row label{flex:1;cursor:pointer;}
+  .vis-row .vis-key{font-family:'DM Mono','Courier New',monospace;font-size:9px;color:var(--muted);letter-spacing:.04em;}
+  .vis-empty{padding:18px;text-align:center;color:var(--muted);font-size:12px;background:var(--surface2);border:1px dashed var(--border);border-radius:4px;}
+
   /* DEVICE TOGGLE */
   .device-toggle{display:flex;gap:0;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
   .device-btn{background:transparent;border:0;color:var(--muted);padding:6px 11px;cursor:pointer;font-size:11px;transition:.2s;}
@@ -135,6 +202,20 @@
     .nav-item{white-space:nowrap;border-left:0;border-bottom:2px solid transparent;padding:8px 12px;flex-shrink:0;}
     .nav-item.active{border-left:0;border-bottom-color:var(--gold);}
   }
+
+  /* GALLERY MODAL */
+  .gallery-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;}
+  .gallery-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.78);}
+  .gallery-panel{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:6px;width:720px;max-width:96vw;max-height:82vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.6);}
+  .gallery-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-shrink:0;}
+  .gallery-title{font-size:13px;font-weight:600;letter-spacing:.05em;}
+  .gallery-close{background:transparent;border:0;color:var(--muted);font-size:18px;cursor:pointer;padding:2px 6px;line-height:1;}
+  .gallery-close:hover{color:var(--fg);}
+  .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;padding:14px;overflow-y:auto;flex:1;}
+  .gallery-item{cursor:pointer;border-radius:4px;overflow:hidden;border:2px solid transparent;transition:.2s;aspect-ratio:4/3;background:var(--surface2);}
+  .gallery-item:hover{border-color:var(--gold);}
+  .gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
+  .gallery-loading,.gallery-empty{grid-column:1/-1;text-align:center;color:var(--muted);font-size:12px;padding:28px;letter-spacing:.05em;}
 </style>
 </head>
 <body>
@@ -158,7 +239,9 @@
         <button class="device-btn" data-device="mobile" onclick="setDevice('mobile')">Móvil</button>
       </div>
       <button class="reload-btn" id="undoBtn" onclick="undoLast()" title="Deshacer último cambio guardado" disabled>↶ Deshacer</button>
+      <button class="reload-btn" id="redoBtn" onclick="redoLast()" title="Rehacer cambio deshecho" disabled>↷ Rehacer</button>
       <button class="reload-btn" onclick="reloadPreview()" title="Recargar previsualización">↻</button>
+      <button class="preview-btn primary" id="globalSaveBtn" onclick="saveAllDirty()" disabled style="position:relative;padding-right:22px;"><span id="globalSaveLabel">Guardar cambios</span><span id="globalSaveBadge" style="display:none;position:absolute;top:-7px;right:-7px;background:#e66;color:#fff;border-radius:50%;width:19px;height:19px;font-size:10px;font-weight:700;align-items:center;justify-content:center;line-height:19px;text-align:center;"></span></button>
       <a href="/" target="_blank" class="preview-btn">Ver sitio ↗</a>
       <a href="/admin" class="admin-link">← Reservas</a>
     </div>
@@ -168,18 +251,21 @@
     <div class="editor-pane">
       <nav class="sidebar">
         <div class="sidebar-label">Secciones</div>
-        <div class="nav-item active" data-sec="hero" onclick="showSection('hero')">Hero principal</div>
         <div class="nav-item" data-sec="topbar" onclick="showSection('topbar')">Topbar / Logo</div>
+        <div class="nav-item active" data-sec="hero" onclick="showSection('hero')">Hero principal</div>
         <div class="nav-item" data-sec="pilares" onclick="showSection('pilares')">Pilares</div>
         <div class="nav-item" data-sec="producto" onclick="showSection('producto')">El producto</div>
         <div class="nav-item" data-sec="chef" onclick="showSection('chef')">El chef</div>
         <div class="nav-item" data-sec="testimonios" onclick="showSection('testimonios')">Testimonios</div>
-        <div class="nav-item" data-sec="faq" onclick="showSection('faq')">FAQ</div>
+        <div class="nav-item" data-sec="custom" onclick="showSection('custom')">+ Secciones personalizadas</div>
         <div class="nav-item" data-sec="reservar" onclick="showSection('reservar')">Reservar (CTA)</div>
+        <div class="nav-item" data-sec="faq" onclick="showSection('faq')">FAQ</div>
         <div class="nav-item" data-sec="footer" onclick="showSection('footer')">Footer</div>
+        <div class="sidebar-label" style="margin-top:18px;">Configuración</div>
         <div class="nav-item" data-sec="imagenes" onclick="showSection('imagenes')">Imágenes</div>
-        <div class="nav-item" data-sec="orden" onclick="showSection('orden')">Orden de bloques</div>
         <div class="nav-item" data-sec="botones" onclick="showSection('botones')">Botones</div>
+        <div class="nav-item" data-sec="visibilidad" onclick="showSection('visibilidad')">Visibilidad</div>
+        <div class="nav-item" data-sec="orden" onclick="showSection('orden')">Orden de bloques</div>
       </nav>
       <main class="content" id="mainContent"></main>
     </div>
@@ -193,10 +279,25 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- GALLERY MODAL -->
+<div class="gallery-modal" id="galleryModal" style="display:none">
+  <div class="gallery-backdrop" onclick="closeGallery()"></div>
+  <div class="gallery-panel">
+    <div class="gallery-header">
+      <span class="gallery-title">GALERÍA DE IMÁGENES</span>
+      <button class="gallery-close" onclick="closeGallery()">✕</button>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</div>
+
 <script>
 let ADMIN_TOKEN = '';
 let CONTENT = {};
+let IFRAME_CONTENT = {};
 let IFRAME_READY = false;
+let currentDevice = 'desktop';
+const DIRTY_FIELDS = new Map(); // effectiveKey → {value, kind, statusId}
 
 // ── AUTH ──
 function checkPin(){
@@ -208,6 +309,10 @@ function checkPin(){
 
 async function loadContent(){
   try{
+    // Validar el PIN antes de continuar — evita entrar con un PIN que no puede guardar
+    const auth = await fetch('/api/auth/check',{headers:{'x-admin-token':ADMIN_TOKEN}});
+    if(auth.status===401) throw new Error('PIN incorrecto.');
+    if(!auth.ok) throw new Error('Error de servidor ('+auth.status+')');
     const r = await fetch('/api/content');
     if(!r.ok) throw new Error('HTTP '+r.status);
     CONTENT = await r.json();
@@ -216,19 +321,41 @@ async function loadContent(){
     document.getElementById('previewFrame').src = '/?edit=1';
     showSection('hero');
   }catch(e){
-    showToast('Error cargando contenido: '+e.message, true);
-    alert('PIN incorrecto o error de conexión.');
+    showToast(e.message, true);
+    alert(e.message);
   }
 }
 
 function val(key, fallback=''){
-  return CONTENT[key] !== undefined ? CONTENT[key] : fallback;
+  // Prioridad: override de dispositivo > valor base guardado > snapshot iframe > fallback
+  if(currentDevice !== 'desktop'){
+    const dk = key + '.' + currentDevice;
+    if(CONTENT[dk] !== undefined && CONTENT[dk] !== '') return CONTENT[dk];
+    if(IFRAME_CONTENT[dk] !== undefined && IFRAME_CONTENT[dk] !== '') return IFRAME_CONTENT[dk];
+  }
+  if(CONTENT[key] !== undefined && CONTENT[key] !== '') return CONTENT[key];
+  if(IFRAME_CONTENT[key] !== undefined && IFRAME_CONTENT[key] !== '') return IFRAME_CONTENT[key];
+  return fallback;
 }
 
 // ── LIVE PREVIEW (parent → iframe) ──
+// Para imágenes (crop_*/src) hace DOM directo al iframe (mismo origen).
+// Para texto/html/href usa postMessage normal.
 function livePreview(key, value, kind){
   const frame = document.getElementById('previewFrame');
   if(!frame || !frame.contentWindow) return;
+  // Cambio de imagen (src)
+  if(kind === 'src'){
+    try{
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      const img = doc && doc.querySelector('[data-ck-src="'+key+'"]');
+      if(img){ img.src = value; return; }
+    }catch(e){}
+  }
+  // Los crop_top/crop_bottom se aplican vía applyTopBottomCrop() desde los sliders.
+  // No es necesario hacer nada acá; el trackDirty solo registra el dirty state.
+  if(/\.crop_(top|bottom)$/.test(key)) return;
+  // Resto (texto, html, href): postMessage
   try{ frame.contentWindow.postMessage({type:'ck-preview', key, value, kind}, '*'); }catch(e){}
 }
 
@@ -247,15 +374,19 @@ function setDevice(d){
   if(d==='mobile') pane.classList.add('mobile');
   if(d==='tablet') pane.classList.add('tablet');
   document.querySelectorAll('.device-btn').forEach(b=>b.classList.toggle('active', b.dataset.device===d));
+  currentDevice = d;
+  if(currentSection) showSection(currentSection);
 }
 
 // ── SAVE ──
 const undoStack = [];
+const redoStack = [];
 
 function pushUndo(key){
-  // Snapshot del valor actual ANTES de sobrescribirlo
   undoStack.push({ key, value: CONTENT[key] ?? null });
+  redoStack.length = 0; // nueva acción borra el historial de redo
   document.getElementById('undoBtn').disabled = false;
+  document.getElementById('redoBtn').disabled = true;
 }
 
 async function saveField(key, value, statusEl){
@@ -271,9 +402,11 @@ async function saveField(key, value, statusEl){
     CONTENT[key] = value;
     if(statusEl){ statusEl.textContent='✓ Guardado'; statusEl.className='save-status ok'; setTimeout(()=>{ if(statusEl)statusEl.textContent=''; },2500); }
     showToast('Guardado: '+key);
+    return true;
   }catch(e){
     if(statusEl){ statusEl.textContent='✗ '+e.message; statusEl.className='save-status err'; }
     showToast('Error: '+e.message, true);
+    return false;
   }
 }
 
@@ -283,7 +416,8 @@ async function undoLast(){
   btn.disabled = true; btn.textContent = '↶ Deshaciendo…';
   try{
     const { key, value } = undoStack.pop();
-    // Guardar el valor revertido (sin apilar de nuevo)
+    redoStack.push({ key, value: CONTENT[key] ?? null }); // guardar estado actual para redo
+    document.getElementById('redoBtn').disabled = false;
     const r = await fetch('/api/content/update',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-admin-token':ADMIN_TOKEN},
@@ -297,10 +431,42 @@ async function undoLast(){
     reloadPreview();
     showToast('Restaurado: '+key);
   }catch(e){
+    redoStack.pop(); // revertir si el servidor falló
+    document.getElementById('redoBtn').disabled = redoStack.length === 0;
     showToast('No se pudo deshacer: '+e.message, true);
   }finally{
     btn.textContent = '↶ Deshacer';
     btn.disabled = undoStack.length === 0;
+  }
+}
+
+async function redoLast(){
+  if(!redoStack.length){ showToast('No hay cambios para rehacer', true); return; }
+  const btn = document.getElementById('redoBtn');
+  btn.disabled = true; btn.textContent = '↷ Rehaciendo…';
+  try{
+    const { key, value } = redoStack.pop();
+    undoStack.push({ key, value: CONTENT[key] ?? null }); // guardar estado actual para undo
+    document.getElementById('undoBtn').disabled = false;
+    const r = await fetch('/api/content/update',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-admin-token':ADMIN_TOKEN},
+      body: JSON.stringify({key, value: value ?? ''})
+    });
+    const j = await r.json();
+    if(!r.ok) throw new Error(j.error||'Error desconocido');
+    CONTENT[key] = value ?? '';
+    livePreview(key, value ?? '', 'text');
+    if(currentSection) showSection(currentSection);
+    reloadPreview();
+    showToast('Rehecho: '+key);
+  }catch(e){
+    undoStack.pop();
+    document.getElementById('undoBtn').disabled = undoStack.length === 0;
+    showToast('No se pudo rehacer: '+e.message, true);
+  }finally{
+    btn.textContent = '↷ Rehacer';
+    btn.disabled = redoStack.length === 0;
   }
 }
 
@@ -379,7 +545,7 @@ function field(key, label, opts={}){
   const statusId = 's_'+key.replace(/\./g,'_');
   const inputType = url ? 'url' : 'text';
   const kind = html ? 'html' : (url ? 'href' : 'text');
-  const onInput = `markDirty('${statusId}');livePreview('${key}',this.value,'${kind}')`;
+  const onInput = `trackDirty('${key}',this.value,'${kind}','${statusId}')`;
   const inputEl = multiline && !url
     ? `<textarea id="${id}" data-ck-key="${key}" data-ck-kind="${kind}" oninput="${onInput}">${escHtml(val(key, fallback))}</textarea>`
     : `<input type="${inputType}" id="${id}" data-ck-key="${key}" data-ck-kind="${kind}" oninput="${onInput}" value="${escAttr(val(key, fallback))}"/>`;
@@ -390,7 +556,6 @@ function field(key, label, opts={}){
       ${inputEl}
       ${htmlHint}
       <div class="field-actions">
-        <button class="btn-save" onclick="pushUndo('${key}');saveField('${key}',document.getElementById('${id}').value,document.getElementById('${statusId}'))">Guardar</button>
         <span class="save-status" id="${statusId}"></span>
       </div>
     </div>`;
@@ -399,8 +564,56 @@ function field(key, label, opts={}){
 function markDirty(statusId){
   const el = document.getElementById(statusId);
   if(el && el.textContent !== '✓ Guardado'){
-    el.textContent = '● cambios sin guardar';
+    el.textContent = '● no guardado';
     el.className = 'save-status dirty';
+  }
+}
+
+function effectiveKey(key){
+  if(currentDevice === 'mobile') return key + '.mobile';
+  if(currentDevice === 'tablet') return key + '.tablet';
+  return key;
+}
+
+function trackDirty(key, value, kind, statusId){
+  DIRTY_FIELDS.set(effectiveKey(key), {value, kind, statusId});
+  markDirty(statusId);
+  updateSaveBtn();
+  livePreview(key, value, kind); // usa la key base para que el iframe encuentre el elemento
+}
+
+function updateSaveBtn(){
+  const btn = document.getElementById('globalSaveBtn');
+  const badge = document.getElementById('globalSaveBadge');
+  const n = DIRTY_FIELDS.size;
+  if(btn) btn.disabled = n === 0;
+  if(badge){
+    badge.textContent = n;
+    badge.style.display = n > 0 ? 'inline-flex' : 'none';
+  }
+}
+
+async function saveAllDirty(){
+  if(!DIRTY_FIELDS.size){ showToast('No hay cambios pendientes'); return; }
+  const btn = document.getElementById('globalSaveBtn');
+  const lbl = document.getElementById('globalSaveLabel');
+  if(btn) btn.disabled = true;
+  if(lbl) lbl.textContent = 'Guardando…';
+  const entries = Array.from(DIRTY_FIELDS.entries());
+  let errCount = 0;
+  for(const [ek, {value, statusId}] of entries){
+    pushUndo(ek);
+    const ok = await saveField(ek, value, document.getElementById(statusId));
+    if(ok) DIRTY_FIELDS.delete(ek);
+    else errCount++;
+  }
+  if(lbl) lbl.textContent = 'Guardar cambios';
+  updateSaveBtn();
+  if(!errCount){
+    showToast('✓ Todos los cambios guardados');
+    setTimeout(reloadPreview, 300);
+  } else {
+    showToast('Se guardaron '+(entries.length-errCount)+'/'+entries.length+' campos', true);
   }
 }
 
@@ -408,7 +621,10 @@ function imgField(key, label, defaultSrc, altText){
   const id = 'img_'+key.replace(/\./g,'_');
   const fileId = 'file_'+key.replace(/\./g,'_');
   const statusId = 'imgs_'+key.replace(/\./g,'_');
+  const k = key.replace(/\./g,'_');
   const src = val(key, defaultSrc);
+  const cropT = parseInt((val(key+'.crop_top','')||'0').replace(/%$/,''),10)||0;
+  const cropB = parseInt((val(key+'.crop_bottom','')||'0').replace(/%$/,''),10)||0;
   return `
     <div class="field" data-field-key="${escAttr(key)}">
       <div class="field-label">${label}</div>
@@ -419,12 +635,149 @@ function imgField(key, label, defaultSrc, altText){
           <div class="img-upload-row">
             <input type="file" id="${fileId}" accept="image/*" onchange="uploadImage('${key}',this.files[0],document.getElementById('${id}'),document.getElementById('${statusId}'))"/>
             <button class="btn-upload" onclick="document.getElementById('${fileId}').click()">Cambiar imagen</button>
+            <button class="btn-upload" onclick="showImageGallery(url=>selectImage('${key}',url,document.getElementById('${id}'),document.getElementById('${statusId}')))">Galería</button>
             <span class="save-status" id="${statusId}"></span>
           </div>
         </div>
       </div>
+      <div style="margin-top:10px;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;">Recortar bordes (% de la imagen)</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;padding:7px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
+        <span style="font-size:11px;color:var(--muted);flex:0 0 70px;">↑ Arriba:</span>
+        <input type="range" id="r_t_${k}" min="0" max="70" step="1" value="${cropT}" style="flex:1;" oninput="applyTopBottomCrop('${key}','${k}');document.getElementById('n_t_${k}').value=this.value;trackDirtyCrop('${key}.crop_top',this.value+'%','s_t_${k}')"/>
+        <input type="number" id="n_t_${k}" min="0" max="70" step="1" value="${cropT}" style="width:46px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:4px 6px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('r_t_${k}').value=this.value||0;applyTopBottomCrop('${key}','${k}');trackDirtyCrop('${key}.crop_top',(this.value||0)+'%','s_t_${k}')"/>
+        <span style="font-size:10px;color:var(--muted);">%</span>
+        <span class="save-status" id="s_t_${k}"></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;padding:7px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;">
+        <span style="font-size:11px;color:var(--muted);flex:0 0 70px;">↓ Abajo:</span>
+        <input type="range" id="r_b_${k}" min="0" max="70" step="1" value="${cropB}" style="flex:1;" oninput="applyTopBottomCrop('${key}','${k}');document.getElementById('n_b_${k}').value=this.value;trackDirtyCrop('${key}.crop_bottom',this.value+'%','s_b_${k}')"/>
+        <input type="number" id="n_b_${k}" min="0" max="70" step="1" value="${cropB}" style="width:46px;background:var(--surface);border:1px solid var(--border);color:var(--fg);padding:4px 6px;border-radius:3px;font-size:11px;outline:none;" oninput="document.getElementById('r_b_${k}').value=this.value||0;applyTopBottomCrop('${key}','${k}');trackDirtyCrop('${key}.crop_bottom',(this.value||0)+'%','s_b_${k}')"/>
+        <span style="font-size:10px;color:var(--muted);">%</span>
+        <span class="save-status" id="s_b_${k}"></span>
+      </div>
     </div>`;
 }
+
+// Aplica recorte arriba/abajo a la imagen en el iframe.
+// Estrategia: encoge el alto del contenedor (% del alto natural) + object-position
+// para mostrar la parte correcta. Los elementos abajo suben con el contenedor.
+function applyTopBottomCrop(key, suffix){
+  const frame = document.getElementById('previewFrame');
+  if(!frame) { console.warn('[crop] no preview frame'); return; }
+  const tEl = document.getElementById('r_t_'+suffix);
+  const bEl = document.getElementById('r_b_'+suffix);
+  const t = parseFloat(tEl && tEl.value)||0;
+  const b = parseFloat(bEl && bEl.value)||0;
+  try{
+    const doc = frame.contentDocument || frame.contentWindow.document;
+    if(!doc){ console.warn('[crop] no iframe doc'); return; }
+    const img = doc.querySelector('[data-ck-src="'+key+'"]');
+    if(!img){ console.warn('[crop] no image for', key); return; }
+    applyTopBottomCropToImg(img, t, b);
+  }catch(e){ console.warn('[crop] error', e); }
+}
+
+// Lógica pura sin DOM: usada por el live preview y por applyContent al cargar.
+function applyTopBottomCropToImg(img, t, b){
+  const wrap = img.parentElement;
+  if(!wrap) return;
+  t = parseFloat(t)||0;
+  b = parseFloat(b)||0;
+  if(t+b >= 95){ t = Math.min(t,47); b = Math.min(b,47); }
+  if(t+b === 0){
+    wrap.style.aspectRatio = '';
+    wrap.style.height = '';
+    wrap.style.overflow = '';
+    img.style.objectPosition = '';
+    // Quitar !important de object-fit/height para que CSS/inline original tome control
+    img.style.objectFit = 'cover';
+    img.style.height = '100%';
+    return;
+  }
+  // Usar !important para superar reglas CSS de img-contain que bloquean object-fit:cover
+  // No se tocan position/inset — las imágenes custom dependen de su CSS original para eso
+  img.style.setProperty('object-fit', 'cover', 'important');
+  img.style.setProperty('height', '100%', 'important');
+  img.style.setProperty('object-position', '50% ' + (t/(t+b)*100) + '%', 'important');
+  wrap.style.overflow = 'hidden';
+  const vKeep = (100-t-b)/100;
+  const nW = img.naturalWidth || 4;
+  const nH = img.naturalHeight || 5;
+  wrap.style.aspectRatio = nW + ' / ' + (nH * vKeep);
+}
+
+// trackDirty para crop: siempre usa la key base (sin sufijo .mobile/.tablet)
+// El crop es device-independiente — la misma imagen se recorta igual en todos los dispositivos
+function trackDirtyCrop(key, value, statusId){
+  DIRTY_FIELDS.set(key, {value, kind:'text', statusId});
+  markDirty(statusId);
+  updateSaveBtn();
+}
+
+// Select a previously-uploaded image (no upload, just save the URL)
+async function selectImage(key, url, previewEl, statusEl){
+  pushUndo(key);
+  if(statusEl){ statusEl.textContent='Guardando...'; statusEl.className='save-status'; }
+  try{
+    const r = await fetch('/api/content/update',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-admin-token':ADMIN_TOKEN},
+      body: JSON.stringify({key, value: url})
+    });
+    const j = await r.json();
+    if(!r.ok) throw new Error(j.error||'Error desconocido');
+    CONTENT[key] = url;
+    if(previewEl) previewEl.src = url;
+    livePreview(key, url, 'src');
+    if(statusEl){ statusEl.textContent='✓ Imagen seleccionada'; statusEl.className='save-status ok'; setTimeout(()=>{ if(statusEl)statusEl.textContent=''; },2500); }
+    showToast('Imagen actualizada');
+  }catch(e){
+    if(statusEl){ statusEl.textContent='✗ '+e.message; statusEl.className='save-status err'; }
+    showToast('Error: '+e.message, true);
+  }
+}
+
+// Image gallery
+let _galleryCallback = null;
+
+async function showImageGallery(callback){
+  _galleryCallback = callback;
+  const modal = document.getElementById('galleryModal');
+  const grid = document.getElementById('galleryGrid');
+  modal.style.display = 'flex';
+  grid.innerHTML = '<div class="gallery-loading">CARGANDO…</div>';
+  try{
+    const r = await fetch('/api/content/images',{headers:{'x-admin-token':ADMIN_TOKEN}});
+    const j = await r.json();
+    if(!r.ok) throw new Error(j.error||'Error');
+    if(!j.images || !j.images.length){
+      grid.innerHTML = '<div class="gallery-empty">No hay imágenes subidas todavía. Sube una imagen primero.</div>';
+      return;
+    }
+    grid.innerHTML = j.images.map(img=>`
+      <div class="gallery-item" onclick="selectGalleryImage('${escAttr(img.url)}')" title="${escAttr(img.name)}">
+        <img src="${escAttr(img.url)}" loading="lazy" alt="${escAttr(img.name)}"/>
+      </div>`).join('');
+  }catch(e){
+    grid.innerHTML = `<div class="gallery-empty">Error al cargar galería: ${escHtml(e.message)}</div>`;
+  }
+}
+
+function selectGalleryImage(url){
+  if(_galleryCallback) _galleryCallback(url);
+  closeGallery();
+}
+
+function closeGallery(){
+  document.getElementById('galleryModal').style.display = 'none';
+  _galleryCallback = null;
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && document.getElementById('galleryModal').style.display === 'flex'){
+    closeGallery();
+  }
+});
 
 // ORDER LIST
 const ORDER_STATE = {};
@@ -497,9 +850,191 @@ function toggleField(key, label, defaultOn=true){
 
 function onToggleChange(key, checked, statusId){
   pushUndo(key);
-  saveField(key, checked?'true':'false', document.getElementById(statusId)).then(()=>{
-    setTimeout(reloadPreview, 300);
+  saveField(key, checked?'true':'false', document.getElementById(statusId)).then(ok=>{
+    if(ok) setTimeout(reloadPreview, 300);
   });
+}
+
+// ── RESERVE-DETAIL ROW (compact 3-col label/value editor with show toggle) ──
+function rdRow(slug, defaultLabel, defaultValue){
+  const showKey='reserve.row.'+slug+'.show';
+  const labelKey='reserve.row.'+slug+'.label';
+  const valueKey='reserve.row.'+slug+'.value';
+  const showId='rds_'+slug;
+  const labelId='rdl_'+slug;
+  const valueId='rdv_'+slug;
+  const statusId='rdst_'+slug;
+  const showStored=val(showKey,'');
+  const isOn=showStored===''?true:(showStored!=='false');
+  return `
+    <div class="rd-row" data-field-key="${escAttr(labelKey)}">
+      <input type="checkbox" ${isOn?'checked':''} title="Mostrar fila"
+        onchange="onToggleChange('${showKey}', this.checked, '${statusId}')"/>
+      <input type="text" id="${labelId}" data-ck-key="${labelKey}" data-ck-kind="text" placeholder="Etiqueta"
+        value="${escAttr(val(labelKey, defaultLabel))}"
+        oninput="markDirty('${statusId}');livePreview('${labelKey}',this.value,'text')"
+        onblur="pushUndo('${labelKey}');saveField('${labelKey}', this.value, document.getElementById('${statusId}'))"/>
+      <input type="text" id="${valueId}" data-ck-key="${valueKey}" data-ck-kind="text" placeholder="Valor"
+        value="${escAttr(val(valueKey, defaultValue))}"
+        oninput="markDirty('${statusId}');livePreview('${valueKey}',this.value,'text')"
+        onblur="pushUndo('${valueKey}');saveField('${valueKey}', this.value, document.getElementById('${statusId}'))"/>
+      <span class="rd-status save-status" id="${statusId}"></span>
+    </div>`;
+}
+
+// ── CUSTOM SECTIONS ──
+const CUSTOM_TEMPLATES = {
+  'text-image': {
+    name: 'Texto + Imagen',
+    desc: 'Bloque con título, párrafo e imagen al lado. Ideal para presentar un servicio, plato o concepto.',
+    icon: '▦',
+    fields: [
+      {key:'eyebrow', label:'Eyebrow (texto pequeño)', type:'text', fallback:'Etiqueta'},
+      {key:'title', label:'Título (acepta <em>)', type:'html', fallback:'Título <em>en cursiva.</em>'},
+      {key:'paragraph', label:'Párrafo', type:'textarea', fallback:'Escribe aquí la descripción del bloque…'},
+      {key:'image', label:'Imagen', type:'image', fallback:''},
+      {key:'image_position', label:'Posición de la imagen', type:'radio', options:[['right','Derecha'],['left','Izquierda']], fallback:'right'},
+      {key:'button_show', label:'Mostrar botón', type:'toggle', fallback:'false'},
+      {key:'button_label', label:'Texto del botón', type:'text', fallback:'Saber más'},
+      {key:'button_url', label:'URL del botón', type:'url', fallback:'#'},
+      {key:'alt_bg', label:'Fondo alternativo (color cálido)', type:'toggle', fallback:'false'}
+    ]
+  },
+  'text-centered': {
+    name: 'Texto centrado',
+    desc: 'Bloque centrado con título, párrafo y botón opcional. Ideal para anuncios o secciones de contenido puro.',
+    icon: '▤',
+    fields: [
+      {key:'eyebrow', label:'Eyebrow', type:'text', fallback:'Etiqueta'},
+      {key:'title', label:'Título (acepta <em>)', type:'html', fallback:'Título <em>centrado.</em>'},
+      {key:'paragraph', label:'Párrafo', type:'textarea', fallback:'Escribe aquí la descripción…'},
+      {key:'button_show', label:'Mostrar botón', type:'toggle', fallback:'false'},
+      {key:'button_label', label:'Texto del botón', type:'text', fallback:'Saber más'},
+      {key:'button_url', label:'URL del botón', type:'url', fallback:'#'},
+      {key:'alt_bg', label:'Fondo alternativo (color cálido)', type:'toggle', fallback:'false'}
+    ]
+  },
+  'gallery': {
+    name: 'Galería (3 imágenes)',
+    desc: 'Bloque con título y grid de 3 imágenes con caption. Ideal para mostrar productos, ambientes o platos.',
+    icon: '◰',
+    fields: [
+      {key:'eyebrow', label:'Eyebrow', type:'text', fallback:'Galería'},
+      {key:'title', label:'Título (acepta <em>)', type:'html', fallback:'Una <em>selección.</em>'},
+      {key:'paragraph', label:'Párrafo introductorio', type:'textarea', fallback:''},
+      {key:'item1.image', label:'Imagen 1', type:'image', fallback:''},
+      {key:'item1.caption', label:'Caption 1', type:'text', fallback:'Imagen 1'},
+      {key:'item2.image', label:'Imagen 2', type:'image', fallback:''},
+      {key:'item2.caption', label:'Caption 2', type:'text', fallback:'Imagen 2'},
+      {key:'item3.image', label:'Imagen 3', type:'image', fallback:''},
+      {key:'item3.caption', label:'Caption 3', type:'text', fallback:'Imagen 3'},
+      {key:'alt_bg', label:'Fondo alternativo (color cálido)', type:'toggle', fallback:'false'}
+    ]
+  }
+};
+
+function customSectionList(){
+  return (val('custom.sections','')||'').split(',').map(s=>s.trim()).filter(Boolean);
+}
+
+function genCustomId(){
+  return 'cs'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+}
+
+async function addCustomSection(template){
+  const id=genCustomId();
+  const list=customSectionList();
+  list.push(id);
+  // Save in order: template first, then add to list, then to sections.order
+  pushUndo('custom.'+id+'.template');
+  await saveField('custom.'+id+'.template', template, null);
+  pushUndo('custom.sections');
+  await saveField('custom.sections', list.join(','), null);
+  // Add to sections.order
+  const order=val('sections.order','pilares,producto,chef,social,reservar,faq').split(',').map(s=>s.trim()).filter(Boolean);
+  // Insert custom id before 'social' if present, else at end
+  const insertIdx=order.indexOf('social');
+  const customId='custom-'+id;
+  if(!order.includes(customId)){
+    if(insertIdx>=0) order.splice(insertIdx, 0, customId);
+    else order.push(customId);
+    pushUndo('sections.order');
+    await saveField('sections.order', order.join(','), null);
+  }
+  // Pre-fill fallbacks for the chosen template
+  const tpl=CUSTOM_TEMPLATES[template];
+  for(const f of tpl.fields){
+    if(f.fallback!=='' && f.fallback!==undefined){
+      await saveField('custom.'+id+'.'+f.key, f.fallback, null);
+    }
+  }
+  showToast('Sección agregada');
+  reloadPreview();
+  showSection('custom');
+  // Auto-open the new card
+  setTimeout(()=>{
+    const card=document.querySelector('[data-cs-id="'+id+'"]');
+    if(card) card.classList.add('open');
+  }, 100);
+}
+
+async function deleteCustomSection(id){
+  if(!confirm('¿Eliminar esta sección personalizada? Esta acción se puede deshacer con el botón ↶.')) return;
+  const list=customSectionList().filter(x=>x!==id);
+  pushUndo('custom.sections');
+  await saveField('custom.sections', list.join(','), null);
+  // Remove from sections.order too
+  const order=val('sections.order','').split(',').map(s=>s.trim()).filter(Boolean);
+  const customId='custom-'+id;
+  if(order.includes(customId)){
+    const newOrder=order.filter(x=>x!==customId);
+    pushUndo('sections.order');
+    await saveField('sections.order', newOrder.join(','), null);
+  }
+  showToast('Sección eliminada');
+  reloadPreview();
+  showSection('custom');
+}
+
+function toggleCustomCard(id){
+  const card=document.querySelector('[data-cs-id="'+id+'"]');
+  if(card) card.classList.toggle('open');
+}
+
+function setCustomRadio(key, value, group){
+  pushUndo(key);
+  saveField(key, value, null).then(()=>{
+    document.querySelectorAll('[data-radio-group="'+group+'"]').forEach(el=>{
+      el.classList.toggle('active', el.dataset.radioValue===value);
+    });
+    setTimeout(reloadPreview, 200);
+  });
+}
+
+function renderCustomFields(id, template){
+  const tpl=CUSTOM_TEMPLATES[template];
+  if(!tpl) return '<p style="color:var(--red);font-size:12px;">Template desconocido: '+escHtml(template)+'</p>';
+  return tpl.fields.map(f=>{
+    const fkey='custom.'+id+'.'+f.key;
+    if(f.type==='text') return field(fkey, f.label, {multiline:false, fallback:f.fallback});
+    if(f.type==='textarea') return field(fkey, f.label, {multiline:true, fallback:f.fallback});
+    if(f.type==='html') return field(fkey, f.label, {html:true, fallback:f.fallback});
+    if(f.type==='url') return field(fkey, f.label, {multiline:false, url:true, fallback:f.fallback});
+    if(f.type==='image') return imgField(fkey, f.label, '', f.label);
+    if(f.type==='toggle') return toggleField(fkey, f.label, f.fallback==='true');
+    if(f.type==='radio'){
+      const current=val(fkey, f.fallback);
+      const groupId=fkey.replace(/\./g,'_');
+      return `
+        <div class="field">
+          <div class="field-label">${escHtml(f.label)}</div>
+          <div class="cs-radio-row">
+            ${f.options.map(([v,lbl])=>`<div class="cs-radio ${current===v?'active':''}" data-radio-group="${groupId}" data-radio-value="${escAttr(v)}" onclick="setCustomRadio('${fkey}','${escAttr(v)}','${groupId}')">${escHtml(lbl)}</div>`).join('')}
+          </div>
+        </div>`;
+    }
+    return '';
+  }).join('');
 }
 
 // ── KEY → SECTION MAP (para click-to-edit) ──
@@ -513,9 +1048,11 @@ function keyToSection(key){
   if(key.startsWith('social.')) return 'testimonios';
   if(key.startsWith('faq.')) return 'faq';
   if(key.startsWith('reservar.')) return 'reservar';
-  if(key.startsWith('footer.')) return 'footer';
+  if(key.startsWith('reserve.')) return 'reservar';     // reserve.row.*, reserve.detail.*
+  if(key.startsWith('footer.')) return 'footer';        // includes footer.link.*, footer.col*, etc.
   if(key.startsWith('img.')) return 'imagenes';
   if(key.startsWith('cta.')) return 'botones';
+  if(key.startsWith('custom.')) return 'custom';
   if(/\.order$/.test(key)) return 'orden';
   return null;
 }
@@ -524,11 +1061,46 @@ function keyToSection(key){
 function focusFieldInSection(key){
   const field = document.querySelector(`[data-field-key="${(window.CSS&&CSS.escape)?CSS.escape(key):key}"]`);
   if(!field) return;
-  field.scrollIntoView({behavior:'smooth', block:'center'});
-  field.classList.add('ck-highlighted');
-  setTimeout(()=>field.classList.remove('ck-highlighted'), 1800);
-  const input = field.querySelector('input,textarea');
-  if(input) setTimeout(()=>input.focus(), 350);
+  // Show "Editando: X" banner at top of mainContent
+  showEditingBanner(key, field);
+  // Scroll panel content area to ensure banner is visible, then bring field into view
+  const main = document.getElementById('mainContent');
+  if(main && main.scrollTo) main.scrollTo({top:0, behavior:'instant'});
+  setTimeout(()=>{
+    field.scrollIntoView({behavior:'smooth', block:'center'});
+    field.classList.add('ck-highlighted','ck-pulse');
+    setTimeout(()=>field.classList.remove('ck-highlighted'), 1800);
+    setTimeout(()=>field.classList.remove('ck-pulse'), 4500);
+    const input = field.querySelector('input,textarea');
+    if(input) setTimeout(()=>{
+      try{ input.focus(); input.select && input.select(); }catch(e){}
+    }, 380);
+  }, 60);
+}
+
+function showEditingBanner(key, fieldEl){
+  const main = document.getElementById('mainContent');
+  if(!main) return;
+  const labelEl = fieldEl.querySelector('.field-label, .toggle-label');
+  let label = labelEl ? labelEl.childNodes[0].textContent.trim() : key;
+  // Strip the "·" suffix tip if present
+  label = label.replace(/\s*·.*$/,'').trim() || key;
+  let banner = document.getElementById('ck-now-editing');
+  if(!banner){
+    banner = document.createElement('div');
+    banner.id = 'ck-now-editing';
+    banner.className = 'ck-now-editing';
+    main.insertBefore(banner, main.firstChild);
+  }
+  banner.innerHTML = `<span class="ck-close" onclick="hideEditingBanner()">×</span>Editando: <strong>${escHtml(label)}</strong> <span style="opacity:.55;font-family:'DM Mono',monospace;font-size:9px;margin-left:6px;">${escHtml(key)}</span>`;
+  // Auto-hide on first input change anywhere
+  const dismiss = ()=>{ hideEditingBanner(); document.removeEventListener('input', dismiss, true); };
+  setTimeout(()=>document.addEventListener('input', dismiss, true), 500);
+}
+
+function hideEditingBanner(){
+  const b = document.getElementById('ck-now-editing');
+  if(b) b.remove();
 }
 
 // ── SECTIONS ──
@@ -541,6 +1113,9 @@ const SECTIONS = {
       ${field('hero.eyebrow','Eyebrow',{multiline:false,fallback:'Omakase · Baja California'})}
       ${field('hero.h1','Título principal (H1)',{html:true,fallback:'El producto<em>al frente.</em>'})}
       ${field('hero.sub','Descripción principal',{html:true,fallback:'Una barra de cuatro asientos. Catorce tiempos.'})}
+      ${toggleField('hero.img_first', 'Imagen arriba de los botones (en móvil / tablet)', false)}
+      ${toggleField('hero.img_contain', 'Mostrar imagen completa (sin recorte)', false)}
+      <hr class="divider"/>
       ${toggleField('hero.card_tag.show', 'Mostrar overlay sobre la imagen', true)}
       ${field('hero.card_tag','Texto del overlay',{multiline:false,fallback:'La barra · 4 asientos · Sáb & Dom'})}
       <hr class="divider"/>
@@ -579,6 +1154,19 @@ const SECTIONS = {
       ${field('reservar.eyebrow','Eyebrow',{multiline:false,fallback:'Reserva tu lugar'})}
       ${field('reservar.h2','Título (H2)',{html:true,fallback:'Cuatro asientos.<em>Dos noches por semana.</em>'})}
       ${field('reservar.lead','Párrafo introductorio',{fallback:'El menú se construye pieza por pieza el día del servicio.'})}
+      <hr class="divider"/>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Caja de detalles (debajo del CTA)</div>
+      ${toggleField('reserve.detail.show','Mostrar caja de detalles entera',true)}
+      <div class="rd-table" style="margin-top:10px;">
+        <div style="display:grid;grid-template-columns:30px 1fr 1.2fr;gap:8px;font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:6px;">
+          <span style="text-align:center;">Ver</span><span>Etiqueta</span><span>Valor</span>
+        </div>
+        ${rdRow('servicio','Servicio','Sáb · Dom')}
+        ${rdRow('capacidad','Capacidad','4 asientos')}
+        ${rdRow('tiempos','Tiempos','14')}
+        ${rdRow('precio','Precio','$1,850 MXN p/p')}
+        ${rdRow('anticipo','Anticipo','50% Stripe')}
+      </div>
     `
   },
 
@@ -586,17 +1174,21 @@ const SECTIONS = {
     title: 'Pilares',
     desc: 'Los tres principios de la experiencia.',
     render: ()=>`
+      ${field('pilares.eyebrow','Eyebrow (sobre el título)',{multiline:false,fallback:'La filosofía'})}
       ${field('pilares.title','Título de sección',{html:true,fallback:'Tres reglas. <em>Sin excepción.</em>'})}
       ${field('pilares.lead','Párrafo introductorio',{fallback:'Un Omakase no se mide por la receta.'})}
       <hr class="divider"/>
+      ${toggleField('pilares.p1.show','Mostrar Pilar 1',true)}
       ${field('pilares.p1.num','Pilar 1 · Etiqueta',{multiline:false,fallback:'01 · El producto manda'})}
       ${field('pilares.p1.title','Pilar 1 · Título',{multiline:false,fallback:'Cada pieza, seleccionada a mano.'})}
       ${field('pilares.p1.body','Pilar 1 · Texto',{fallback:'Wagyu A5 y Kobe importados de Japón.'})}
       <hr class="divider"/>
+      ${toggleField('pilares.p2.show','Mostrar Pilar 2',true)}
       ${field('pilares.p2.num','Pilar 2 · Etiqueta',{multiline:false,fallback:'02 · Cuatro asientos'})}
       ${field('pilares.p2.title','Pilar 2 · Título',{multiline:false,fallback:'Una barra. Dos noches por semana.'})}
       ${field('pilares.p2.body','Pilar 2 · Texto',{fallback:'Solo abrimos sábado y domingo.'})}
       <hr class="divider"/>
+      ${toggleField('pilares.p3.show','Mostrar Pilar 3',true)}
       ${field('pilares.p3.num','Pilar 3 · Etiqueta',{multiline:false,fallback:'03 · Catorce tiempos'})}
       ${field('pilares.p3.title','Pilar 3 · Título',{multiline:false,fallback:'El menú lo dicta el día.'})}
       ${field('pilares.p3.body','Pilar 3 · Texto',{fallback:'No hay carta.'})}
@@ -607,6 +1199,7 @@ const SECTIONS = {
     title: 'El producto',
     desc: 'Sección de Wagyu A5, Kobe y pescado.',
     render: ()=>`
+      ${field('producto.eyebrow','Eyebrow (sobre el título)',{multiline:false,fallback:'El insumo'})}
       ${field('producto.h2','Título de sección',{html:true,fallback:'Wagyu A5. Kobe.<em>Importados directo de Japón.</em>'})}
       ${field('producto.p1','Párrafo 1',{fallback:'El corazón de un Omakase serio no es la técnica.'})}
       ${field('producto.p2','Párrafo 2',{fallback:'Carnes Wagyu A5 y Kobe certificadas.'})}
@@ -630,10 +1223,14 @@ const SECTIONS = {
     title: 'El chef',
     desc: 'Sección de presentación del chef.',
     render: ()=>`
+      ${field('chef.eyebrow','Eyebrow (sobre el título)',{multiline:false,fallback:'El chef'})}
       ${field('chef.h2','Título',{html:true,fallback:'Chef Morishita.<em>Una vida en la barra.</em>'})}
       ${field('chef.p1','Párrafo 1',{fallback:'Formado en la disciplina clásica japonesa.'})}
       ${field('chef.p2','Párrafo 2',{fallback:'En cada servicio, cada plato se construye delante del comensal.'})}
       ${field('chef.quote','Cita del chef',{fallback:'"El producto manda."'})}
+      <hr class="divider"/>
+      ${toggleField('chef.sign.show','Mostrar firma final',true)}
+      ${field('chef.sign','Firma final',{multiline:false,fallback:'— Chef Morishita · 森下'})}
     `
   },
 
@@ -641,12 +1238,20 @@ const SECTIONS = {
     title: 'Testimonios',
     desc: 'Reseñas de clientes.',
     render: ()=>`
+      ${toggleField('social.section.show','Mostrar la sección entera',true)}
+      ${field('social.eyebrow','Eyebrow (sobre el título)',{multiline:false,fallback:'Lo que dicen quienes ya estuvieron'})}
+      ${field('social.title','Título de sección',{html:true,fallback:'La barra <em>habla por sí sola.</em>'})}
+      ${field('social.badge','Texto del badge (igual en las 3 reseñas)',{multiline:false,fallback:'Reseña verificada · Google'})}
+      <hr class="divider"/>
+      ${toggleField('social.t1.show','Mostrar Reseña 1',true)}
       ${field('social.t1.quote','Reseña 1 · Texto',{fallback:'"La mejor experiencia gastronómica que he tenido en Baja."'})}
       ${field('social.t1.author','Reseña 1 · Autor',{multiline:false,fallback:'— Ana R. · Tijuana'})}
       <hr class="divider"/>
+      ${toggleField('social.t2.show','Mostrar Reseña 2',true)}
       ${field('social.t2.quote','Reseña 2 · Texto',{fallback:'"Pagué los $1,850 con dudas. Salí convencido."'})}
       ${field('social.t2.author','Reseña 2 · Autor',{multiline:false,fallback:'— Luis M. · San Diego'})}
       <hr class="divider"/>
+      ${toggleField('social.t3.show','Mostrar Reseña 3',true)}
       ${field('social.t3.quote','Reseña 3 · Texto',{fallback:'"Cuatro asientos, dos horas, una experiencia que no se repite."'})}
       ${field('social.t3.author','Reseña 3 · Autor',{multiline:false,fallback:'— María C. · Mexicali'})}
     `
@@ -656,21 +1261,32 @@ const SECTIONS = {
     title: 'FAQ',
     desc: 'Preguntas frecuentes.',
     render: ()=>`
+      ${toggleField('faq.section.show','Mostrar la sección entera',true)}
+      ${field('faq.eyebrow','Eyebrow (sobre el título)',{multiline:false,fallback:'Antes de reservar'})}
+      ${field('faq.title','Título de sección',{html:true,fallback:'Lo que <em>conviene saber.</em>'})}
+      ${field('faq.lead','Párrafo introductorio',{fallback:'Si tu pregunta no está aquí, escríbenos por WhatsApp. Respondemos personalmente.'})}
+      <hr class="divider"/>
+      ${toggleField('faq.q1.show','Mostrar Pregunta 1',true)}
       ${field('faq.q1','Pregunta 1',{multiline:false,fallback:'¿Por qué solo abren sábado y domingo?'})}
       ${field('faq.a1','Respuesta 1',{fallback:'Trabajamos con producto fresco.'})}
       <hr class="divider"/>
+      ${toggleField('faq.q2.show','Mostrar Pregunta 2',true)}
       ${field('faq.q2','Pregunta 2',{multiline:false,fallback:'¿El anticipo es reembolsable?'})}
       ${field('faq.a2','Respuesta 2',{fallback:'Reembolsable hasta 72 horas antes.'})}
       <hr class="divider"/>
+      ${toggleField('faq.q3.show','Mostrar Pregunta 3',true)}
       ${field('faq.q3','Pregunta 3',{multiline:false,fallback:'¿Puedo elegir lo que voy a comer?'})}
       ${field('faq.a3','Respuesta 3',{fallback:'No hay carta.'})}
       <hr class="divider"/>
+      ${toggleField('faq.q4.show','Mostrar Pregunta 4',true)}
       ${field('faq.q4','Pregunta 4',{multiline:false,fallback:'¿Cuánto dura la cena?'})}
       ${field('faq.a4','Respuesta 4',{fallback:'Aproximadamente dos horas.'})}
       <hr class="divider"/>
+      ${toggleField('faq.q5.show','Mostrar Pregunta 5',true)}
       ${field('faq.q5','Pregunta 5',{multiline:false,fallback:'¿Hay código de vestimenta?'})}
       ${field('faq.a5','Respuesta 5',{fallback:'No hay código formal.'})}
       <hr class="divider"/>
+      ${toggleField('faq.q6.show','Mostrar Pregunta 6',true)}
       ${field('faq.q6','Pregunta 6',{multiline:false,fallback:'¿Incluye bebidas?'})}
       ${field('faq.a6','Respuesta 6',{fallback:'Bebidas se cobran aparte.'})}
     `
@@ -678,15 +1294,50 @@ const SECTIONS = {
 
   footer: {
     title: 'Footer',
-    desc: 'Información de contacto y descripción del pie.',
+    desc: 'Información de contacto, marca y enlaces del pie de página.',
     render: ()=>`
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Marca</div>
+      ${field('footer.brand_name','Nombre de marca (col 1)',{multiline:false,fallback:'森下 Morishita'})}
+      ${field('footer.brand_tagline','Tagline corto (col 1)',{multiline:false,fallback:'Authentic Japanese Cuisine'})}
       ${field('footer.desc','Descripción de la marca',{fallback:'Una barra de cuatro asientos.'})}
+      <hr class="divider"/>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Columna 2 · Visítanos</div>
+      ${toggleField('footer.col2.show','Mostrar columna entera',true)}
+      ${field('footer.col2.title','Título de columna',{multiline:false,fallback:'Visítanos'})}
       ${field('footer.location','Ubicación',{multiline:false,fallback:'Baja California, México'})}
       ${field('footer.hours','Horario',{multiline:false,fallback:'Sáb · Dom'})}
+      ${toggleField('footer.service_note.show','Mostrar nota de servicio',true)}
+      ${field('footer.service_note','Nota de servicio',{multiline:false,fallback:'Servicio por reservación'})}
       <hr class="divider"/>
-      ${field('footer.whatsapp_url','WhatsApp URL',{multiline:false,url:true,fallback:'https://wa.me/'})}
-      ${field('footer.instagram_url','Instagram URL',{multiline:false,url:true,fallback:'https://instagram.com/morishitajapanesecuisine'})}
-      ${field('footer.email_href','Email',{multiline:false,url:true,fallback:'mailto:reservas@morishitajapanesecuisine.com'})}
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Columna 3 · Contacto</div>
+      ${toggleField('footer.col3.show','Mostrar columna entera',true)}
+      ${field('footer.col3.title','Título de columna',{multiline:false,fallback:'Contacto'})}
+      ${toggleField('footer.link.whatsapp.show','Mostrar enlace WhatsApp',true)}
+      ${field('footer.link.whatsapp.label','WhatsApp · Texto',{multiline:false,fallback:'WhatsApp'})}
+      ${field('footer.whatsapp_url','WhatsApp · URL',{multiline:false,url:true,fallback:'https://wa.me/'})}
+      ${toggleField('footer.link.instagram.show','Mostrar enlace Instagram',true)}
+      ${field('footer.link.instagram.label','Instagram · Texto',{multiline:false,fallback:'Instagram'})}
+      ${field('footer.instagram_url','Instagram · URL',{multiline:false,url:true,fallback:'https://instagram.com/morishitajapanesecuisine'})}
+      ${toggleField('footer.link.email.show','Mostrar enlace Email',true)}
+      ${field('footer.link.email.label','Email · Texto',{multiline:false,fallback:'Email'})}
+      ${field('footer.email_href','Email · URL (mailto:)',{multiline:false,url:true,fallback:'mailto:reservas@morishitajapanesecuisine.com'})}
+      <hr class="divider"/>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Columna 4 · Reservar</div>
+      ${toggleField('footer.col4.show','Mostrar columna entera',true)}
+      ${field('footer.col4.title','Título de columna',{multiline:false,fallback:'Reservar'})}
+      ${toggleField('footer.link.booking.show','Mostrar "Ver disponibilidad"',true)}
+      ${field('footer.link.booking.label','Texto: Ver disponibilidad',{multiline:false,fallback:'Ver disponibilidad'})}
+      ${toggleField('footer.link.experiencia.show','Mostrar "La experiencia"',true)}
+      ${field('footer.link.experiencia.label','Texto: La experiencia',{multiline:false,fallback:'La experiencia'})}
+      ${toggleField('footer.link.producto.show','Mostrar "El producto"',true)}
+      ${field('footer.link.producto.label','Texto: El producto',{multiline:false,fallback:'El producto'})}
+      ${toggleField('footer.link.faq.show','Mostrar "Preguntas frecuentes"',true)}
+      ${field('footer.link.faq.label','Texto: Preguntas frecuentes',{multiline:false,fallback:'Preguntas frecuentes'})}
+      <hr class="divider"/>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Pie inferior</div>
+      ${field('footer.copyright','Copyright',{multiline:false,fallback:'© 2026 森下 Morishita · Authentic Japanese Cuisine'})}
+      ${toggleField('footer.payment_note.show','Mostrar nota de pagos',true)}
+      ${field('footer.payment_note','Nota de pagos',{multiline:false,fallback:'Pagos seguros vía Stripe · SSL'})}
     `
   },
 
@@ -708,20 +1359,80 @@ const SECTIONS = {
     `
   },
 
+  custom: {
+    title: 'Secciones personalizadas',
+    desc: 'Agrega bloques nuevos al sitio usando uno de los 3 templates. Cada bloque aparece en el preview y se puede reordenar en "Orden de bloques".',
+    render: ()=>{
+      const ids=customSectionList();
+      const cards=ids.length===0
+        ? '<div class="cs-empty">No hay secciones personalizadas todavía.<br>Agrega una con el botón de abajo.</div>'
+        : '<div class="cs-list">'+ids.map(id=>{
+            const tpl=val('custom.'+id+'.template','text-centered');
+            const tplDef=CUSTOM_TEMPLATES[tpl]||{name:tpl,icon:'?'};
+            const titleField=val('custom.'+id+'.title', val('custom.'+id+'.eyebrow','Sección sin título'));
+            const cleanTitle=titleField.replace(/<[^>]+>/g,'').slice(0,60);
+            return `
+              <div class="cs-card" data-cs-id="${id}">
+                <div class="cs-card-head">
+                  <div class="cs-card-icon">${tplDef.icon}</div>
+                  <div class="cs-card-info">
+                    <div class="cs-card-title">${escHtml(cleanTitle||'Sin título')}</div>
+                    <div class="cs-card-meta">${escHtml(tplDef.name)} · id ${id}</div>
+                  </div>
+                  <div class="cs-card-actions">
+                    <button class="cs-btn" onclick="toggleCustomCard('${id}')">Editar <span class="cs-toggle-icon">▾</span></button>
+                    <button class="cs-btn danger" onclick="deleteCustomSection('${id}')">Eliminar</button>
+                  </div>
+                </div>
+                <div class="cs-card-body">${renderCustomFields(id, tpl)}</div>
+              </div>`;
+          }).join('')+'</div>';
+      const picker=`
+        <div style="margin-top:24px;">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Agregar nueva sección</div>
+          <div class="cs-tpl-picker">
+            ${Object.entries(CUSTOM_TEMPLATES).map(([key,t])=>`
+              <div class="cs-tpl-card" onclick="addCustomSection('${key}')">
+                <div class="cs-tpl-thumb"><span style="font-size:22px;color:var(--gold);">${t.icon}</span></div>
+                <div class="cs-tpl-info">
+                  <div class="cs-tpl-name">${escHtml(t.name)}</div>
+                  <div class="cs-tpl-desc">${escHtml(t.desc)}</div>
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>`;
+      return cards+picker;
+    }
+  },
+
   orden: {
     title: 'Orden de bloques',
     desc: 'Reorganiza el orden de las secciones de la página y los elementos dentro de cada sección.',
-    render: ()=>`
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Secciones de la página</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Hero y Footer siempre fijos. El resto es libre.</div>
-      ${orderList('sections', 'Secciones', ['pilares','producto','chef','social','reservar','faq'], {
+    render: ()=>{
+      // Build base order including custom sections
+      const baseIds=['pilares','producto','chef','social','reservar','faq'];
+      const baseLabels={
         pilares: 'Pilares / Filosofía',
         producto: 'El producto (Wagyu, Pescado, etc.)',
         chef: 'El chef',
         social: 'Testimonios',
         reservar: 'Reservar (CTA)',
         faq: 'FAQ / Preguntas frecuentes'
-      })}
+      };
+      const customIds=customSectionList();
+      customIds.forEach(id=>{
+        const customSecId='custom-'+id;
+        baseIds.push(customSecId);
+        const tpl=val('custom.'+id+'.template','text-centered');
+        const tplDef=CUSTOM_TEMPLATES[tpl]||{name:tpl,icon:'?'};
+        const titleRaw=val('custom.'+id+'.title', val('custom.'+id+'.eyebrow','Sección personalizada'));
+        const cleanTitle=titleRaw.replace(/<[^>]+>/g,'').slice(0,40);
+        baseLabels[customSecId]='✦ '+(cleanTitle||'Personalizada')+' · '+tplDef.name;
+      });
+      return `
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Secciones de la página</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Hero y Footer siempre fijos. El resto es libre. ✦ = personalizada.</div>
+      ${orderList('sections', 'Secciones', baseIds, baseLabels)}
       <hr class="divider"/>
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Elementos dentro de secciones</div>
       ${orderList('producto', 'Productos (Wagyu / Pescado / Base)', ['item1','item2','item3'], {
@@ -736,6 +1447,16 @@ const SECTIONS = {
         p3:'Pilar 03 · Catorce tiempos'
       })}
       <hr class="divider"/>
+      ${orderList('chef.blocks', 'Chef · elementos de la sección', ['image','eyebrow','title','p1','p2','quote','sign'], {
+        image:'Imagen del chef',
+        eyebrow:'Eyebrow (El chef)',
+        title:'Título (H2)',
+        p1:'Párrafo 1',
+        p2:'Párrafo 2',
+        quote:'Cita del chef',
+        sign:'Firma final'
+      })}
+      <hr class="divider"/>
       ${orderList('social', 'Testimonios', ['t1','t2','t3'], {
         t1:'Reseña #1', t2:'Reseña #2', t3:'Reseña #3'
       })}
@@ -748,25 +1469,146 @@ const SECTIONS = {
         q5:'P5 · ¿Código de vestimenta?',
         q6:'P6 · ¿Incluye bebidas?'
       })}
-    `
+    `;
+    }
   },
 
   botones: {
-    title: 'Botones (CTAs) y visibilidad',
-    desc: 'Edita el texto de los botones y activa/desactiva elementos opcionales.',
+    title: 'Botones (CTAs)',
+    desc: 'Edita el texto de los botones del sitio.',
     render: ()=>`
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Texto de los botones</div>
       ${field('cta.hero_primary.label','Botón principal del hero (Reservar mesa)',{multiline:false,fallback:'Reservar mesa'})}
       ${field('cta.hero_secondary.label','Botón secundario del hero (Conocer la experiencia)',{multiline:false,fallback:'Conocer la experiencia'})}
       ${field('cta.reservar_section.label','Botón de sección Reservar (Ver fechas)',{multiline:false,fallback:'Ver fechas disponibles'})}
       <hr class="divider"/>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Mostrar / ocultar</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Mostrar / ocultar botones</div>
       ${toggleField('cta.hero_secondary.show', 'Mostrar botón "Conocer la experiencia ↓" en hero', true)}
-      <hr class="divider"/>
       ${toggleField('cta.reservar_section.show', 'Mostrar botón "Ver fechas disponibles →" en sección Reservar', true)}
     `
+  },
+
+  visibilidad: {
+    title: 'Visibilidad',
+    desc: 'Vista consolidada de qué elementos están visibles u ocultos. Útil para auditoría rápida.',
+    render: ()=>renderVisibilidad()
   }
 };
+
+// ── VISIBILIDAD: panel auto-descubierto de todos los toggles *.show ──
+const VIS_GROUPS = [
+  {id:'hero', name:'Hero', prefixes:['hero.']},
+  {id:'pilares', name:'Pilares', prefixes:['pilares.']},
+  {id:'producto', name:'El producto', prefixes:['producto.']},
+  {id:'chef', name:'El chef', prefixes:['chef.']},
+  {id:'testimonios', name:'Testimonios', prefixes:['social.']},
+  {id:'reservar', name:'Reservar (CTA)', prefixes:['reservar.','reserve.']},
+  {id:'faq', name:'FAQ', prefixes:['faq.']},
+  {id:'footer', name:'Footer', prefixes:['footer.']},
+  {id:'cta', name:'Botones / CTAs', prefixes:['cta.']},
+  {id:'custom', name:'Secciones personalizadas', prefixes:['custom.']}
+];
+
+const VIS_LABELS = {
+  'hero.card_tag.show':'Overlay sobre la imagen del hero',
+  'hero.meta.show':'Bullets debajo de los botones del hero',
+  'pilares.p1.show':'Pilar 1', 'pilares.p2.show':'Pilar 2', 'pilares.p3.show':'Pilar 3',
+  'chef.sign.show':'Firma final del chef',
+  'social.section.show':'Sección entera de testimonios',
+  'social.t1.show':'Reseña 1','social.t2.show':'Reseña 2','social.t3.show':'Reseña 3',
+  'reserve.detail.show':'Caja de detalles de Reservar',
+  'reserve.row.servicio.show':'Fila: Servicio',
+  'reserve.row.capacidad.show':'Fila: Capacidad',
+  'reserve.row.tiempos.show':'Fila: Tiempos',
+  'reserve.row.precio.show':'Fila: Precio',
+  'reserve.row.anticipo.show':'Fila: Anticipo',
+  'faq.section.show':'Sección entera de FAQ',
+  'faq.q1.show':'Pregunta 1','faq.q2.show':'Pregunta 2','faq.q3.show':'Pregunta 3',
+  'faq.q4.show':'Pregunta 4','faq.q5.show':'Pregunta 5','faq.q6.show':'Pregunta 6',
+  'footer.col2.show':'Columna 2 · Visítanos',
+  'footer.col3.show':'Columna 3 · Contacto',
+  'footer.col4.show':'Columna 4 · Reservar',
+  'footer.service_note.show':'Nota "Servicio por reservación"',
+  'footer.payment_note.show':'Nota "Pagos seguros vía Stripe"',
+  'footer.link.whatsapp.show':'Enlace WhatsApp',
+  'footer.link.instagram.show':'Enlace Instagram',
+  'footer.link.email.show':'Enlace Email',
+  'footer.link.booking.show':'Enlace "Ver disponibilidad"',
+  'footer.link.experiencia.show':'Enlace "La experiencia"',
+  'footer.link.producto.show':'Enlace "El producto"',
+  'footer.link.faq.show':'Enlace "Preguntas frecuentes"',
+  'cta.hero_secondary.show':'Botón "Conocer la experiencia"',
+  'cta.reservar_section.show':'Botón "Ver fechas disponibles"'
+};
+
+// All known toggle keys (for default-on behaviour even if not yet in CONTENT)
+const KNOWN_TOGGLE_KEYS = Object.keys(VIS_LABELS);
+
+function visLabel(key){
+  if(VIS_LABELS[key]) return VIS_LABELS[key];
+  // Custom section button toggles like custom.<id>.button_show / alt_bg
+  const m = key.match(/^custom\.([^.]+)\.(.+)\.show$/);
+  if(m){
+    const sub = m[2].replace(/_/g,' ');
+    return 'Custom '+m[1]+' · '+sub;
+  }
+  return key.replace(/\.show$/,'').replace(/\./g,' › ');
+}
+
+function renderVisibilidad(){
+  // Discover all *.show keys present in CONTENT, plus all KNOWN_TOGGLE_KEYS
+  const allKeys = new Set(KNOWN_TOGGLE_KEYS);
+  Object.keys(CONTENT||{}).forEach(k=>{ if(k.endsWith('.show')) allKeys.add(k); });
+  // Group keys by VIS_GROUPS prefix order
+  const grouped = {};
+  VIS_GROUPS.forEach(g=>{ grouped[g.id] = []; });
+  Array.from(allKeys).forEach(k=>{
+    const grp = VIS_GROUPS.find(g=>g.prefixes.some(p=>k.startsWith(p)));
+    if(grp) grouped[grp.id].push(k);
+    else { if(!grouped['_other']) grouped['_other']=[]; grouped['_other'].push(k); }
+  });
+  const groupHtml = VIS_GROUPS.map(g=>{
+    const keys = grouped[g.id]||[];
+    if(keys.length===0) return '';
+    keys.sort();
+    return `
+      <div class="vis-group">
+        <div class="vis-group-title">${escHtml(g.name)}</div>
+        ${keys.map(k=>{
+          const id='vis_'+k.replace(/[.\[\]]/g,'_');
+          const stored=val(k,'');
+          const isOn=stored===''?true:(stored!=='false');
+          return `
+            <div class="vis-row" data-field-key="${escAttr(k)}">
+              <input type="checkbox" id="${id}" ${isOn?'checked':''} onchange="onToggleChange('${k}', this.checked, 'vs_${id}')"/>
+              <label for="${id}">${escHtml(visLabel(k))}</label>
+              <span class="vis-key">${escHtml(k)}</span>
+              <span class="save-status" id="vs_${id}"></span>
+            </div>`;
+        }).join('')}
+      </div>`;
+  }).join('');
+  const empty = !VIS_GROUPS.some(g=>(grouped[g.id]||[]).length>0);
+  if(empty) return '<div class="vis-empty">Aún no hay toggles de visibilidad guardados.<br>Activa o desactiva un elemento desde su sección y aparecerá aquí.</div>';
+  return `
+    <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+      <button class="cs-btn" onclick="resetAllVisibility()">Restaurar todo a visible</button>
+    </div>
+    ${groupHtml}`;
+}
+
+async function resetAllVisibility(){
+  if(!confirm('¿Mostrar TODOS los elementos? Esto guarda "true" en cada toggle de visibilidad conocido.')) return;
+  const keys = new Set(KNOWN_TOGGLE_KEYS);
+  Object.keys(CONTENT||{}).forEach(k=>{ if(k.endsWith('.show')) keys.add(k); });
+  for(const k of keys){
+    pushUndo(k);
+    await saveField(k, 'true', null);
+  }
+  showToast('Visibilidad restaurada');
+  reloadPreview();
+  if(currentSection==='visibilidad') showSection('visibilidad');
+}
 
 // ── NAV ──
 let currentSection = 'hero';
@@ -776,14 +1618,28 @@ function showSection(key, opts={}){
     el.classList.toggle('active', el.dataset.sec === key);
   });
   const s = SECTIONS[key];
+  const devWarn = currentDevice !== 'desktop'
+    ? `<div style="background:rgba(200,169,126,.12);border:1px solid rgba(200,169,126,.35);border-radius:4px;padding:8px 14px;font-size:11px;color:var(--gold);margin-bottom:16px;text-align:center;letter-spacing:.04em;">
+        Vista ${currentDevice==='mobile'?'MÓVIL':'TABLET'} — Los cambios solo afectarán la vista ${currentDevice==='mobile'?'móvil':'tablet'}
+      </div>`
+    : '';
   document.getElementById('mainContent').innerHTML = `
     <div class="section-header">
       <h2>${s.title}</h2>
       <p>${s.desc}</p>
     </div>
+    ${devWarn}
     ${s.render()}
   `;
-  if(opts.focusKey) setTimeout(()=>focusFieldInSection(opts.focusKey), 60);
+  // If the focusKey targets a custom section, open its card first
+  if(opts.focusKey && opts.focusKey.startsWith('custom.')){
+    const m=opts.focusKey.match(/^custom\.([^.]+)\./);
+    if(m){
+      const card=document.querySelector('[data-cs-id="'+m[1]+'"]');
+      if(card) card.classList.add('open');
+    }
+  }
+  if(opts.focusKey) setTimeout(()=>focusFieldInSection(opts.focusKey), 80);
 }
 
 // ── IFRAME MESSAGING ──
@@ -793,6 +1649,12 @@ window.addEventListener('message', e=>{
   if(d.type === 'ck-iframe-ready'){
     IFRAME_READY = true;
     document.getElementById('previewLoading').classList.add('hide');
+  } else if(d.type === 'ck-content-snapshot'){
+    // El iframe nos manda el contenido real renderizado de cada elemento data-ck/html/src/href.
+    // Lo usamos como fallback en val() para que los textareas muestren el texto completo del HTML
+    // cuando todavía no hay un valor guardado en BD.
+    IFRAME_CONTENT = d.content || {};
+    if(currentSection) showSection(currentSection); // re-render para reflejar el snapshot
   } else if(d.type === 'ck-clicked'){
     // Click-to-edit: navega a la sección correspondiente y hace focus del campo
     const sec = keyToSection(d.key);
