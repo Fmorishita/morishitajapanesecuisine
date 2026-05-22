@@ -724,7 +724,6 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
 .kf-row .fld{flex:1;}
 #kfNum{letter-spacing:.06em;}
 </style>
-<script src="https://cdn.kushkipagos.com/kushki.js"></script>
 <!-- PostHog analytics -->
 <script>
 !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -1587,17 +1586,20 @@ async function doKushkiPayment(){
  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>&nbsp;Procesando…';
  try{
   const anticipo=S.guests*CFG.price*CFG.dep;
-  // Tokenizar tarjeta con Kushki.js
-  const token=await new Promise((resolve,reject)=>{
-   const k=new Kushki({merchantId:KUSHKI_PUBLIC_KEY_UAT,inTestEnvironment:true});
-   k.requestToken({
-    amount:anticipo,currency:'MXN',
-    card:{name:cardName,number:cardRaw,cvc:cardCVV,expiryMonth:expMonth,expiryYear:expYear}
-   },(resp)=>{
-    if(resp.code)reject(new Error(resp.message||'Error al tokenizar tarjeta ('+resp.code+')'));
-    else resolve(resp.token);
-   });
+  // Tokenizar tarjeta via API REST de Kushki (UAT)
+  const kTokenRes=await fetch('https://api-uat.kushkipagos.com/card/v1/tokens',{
+   method:'POST',
+   headers:{'Content-Type':'application/json','Public-Merchant-Id':KUSHKI_PUBLIC_KEY_UAT},
+   body:JSON.stringify({
+    card:{name:cardName,number:cardRaw,expiryMonth:expMonth,expiryYear:expYear,cvv:cardCVV},
+    totalAmount:anticipo,currency:'MXN',isDeferred:false
+   })
   });
+  const kTokenData=await kTokenRes.json();
+  if(!kTokenRes.ok||kTokenData.code||!kTokenData.token){
+   throw new Error(kTokenData.message||'Error al tokenizar tarjeta ('+( kTokenData.code||kTokenRes.status)+')');
+  }
+  const token=kTokenData.token;
   // Cobrar en backend
   const res=await fetch('/kushki-charge',{
    method:'POST',
