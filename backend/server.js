@@ -18,10 +18,15 @@ const SUPABASE_SERVICE_ROLE    = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const PRECIO_POR_PERSONA_MXN   = parseInt(process.env.PRECIO_POR_PERSONA_MXN || '1850', 10);
 const PORCENTAJE_ANTICIPO      = parseFloat(process.env.PORCENTAJE_ANTICIPO || '0.5');
 const CAPACIDAD_MAXIMA_SESION  = parseInt(process.env.CAPACIDAD_MAXIMA_SESION || '4', 10);
+const KUSHKI_PRIVATE_KEY       = process.env.KUSHKI_PRIVATE_KEY;
+const KUSHKI_API_URL           = process.env.KUSHKI_API_URL || 'https://api-uat.kushkipagos.com';
 
 // Validar config crítica al arranque
-if (!STRIPE_SECRET_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE) {
-  console.error('❌ Faltan variables de entorno críticas');
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE) {
+  console.error('❌ Faltan variables de entorno críticas (Supabase)');
+}
+if (!STRIPE_SECRET_KEY && !KUSHKI_PRIVATE_KEY) {
+  console.error('⚠️  Sin pasarela de pago configurada (STRIPE_SECRET_KEY o KUSHKI_PRIVATE_KEY)');
 }
 
 const stripe = Stripe(STRIPE_SECRET_KEY);
@@ -359,6 +364,116 @@ app.get('/stripe-webhook-client', async (req, res) => {
 });
 
 // ================================================================
+// ENDPOINT: Cobro directo con Kushki (token generado por Kushki.js)
+// POST /kushki-charge
+// Body: { token, date, time, guests, nombre, email, whatsapp, motivo?, comensales[] }
+// ================================================================
+app.post('/kushki-charge', async (req, res) => {
+  try {
+    const {
+      token, date, time, guests, nombre, email,
+      whatsapp = '', motivo = '', comensales = []
+    } = req.body;
+
+    if (!token || !date || !time || !guests || !nombre || !email) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    }
+
+    const numGuests = parseInt(guests, 10);
+    if (isNaN(numGuests) || numGuests < 1 || numGuests > CAPACIDAD_MAXIMA_SESION) {
+      return res.status(400).json({ error: `Número de personas debe ser entre 1 y ${CAPACIDAD_MAXIMA_SESION}` });
+    }
+
+    const horario = mapearHorario(time);
+    if (!horario) {
+      return res.status(400).json({ error: `Horario inválido: ${time}` });
+    }
+
+    if (await estaBloqueado(date, horario)) {
+      return res.status(409).json({ error: 'Esta sesión no está disponible.' });
+    }
+
+    const ocupados = await personasReservadas(date, horario);
+    const disponibles = CAPACIDAD_MAXIMA_SESION - ocupados;
+    if (numGuests > disponibles) {
+      return res.status(409).json({
+        error: `Solo quedan ${disponibles} asientos disponibles.`,
+        disponibles
+      });
+    }
+
+    // Anticipo: precio * porcentaje * personas (IVA incluido en precio)
+    const anticipo    = PRECIO_POR_PERSONA_MXN * PORCENTAJE_ANTICIPO * numGuests;
+    const subtotalIva = parseFloat((anticipo / 1.16).toFixed(2));
+    const iva         = parseFloat((anticipo - subtotalIva).toFixed(2));
+
+    // Cobrar con Kushki
+    const kushkiRes = await fetch(`${KUSHKI_API_URL}/card/v1/charges`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Private-Merchant-Id': KUSHKI_PRIVATE_KEY
+      },
+      body: JSON.stringify({
+        token,
+        amount: { subtotalIva, iva, subtotalIva0: 0, currency: 'MXN', ice: 0 },
+        months: 0,
+        metadata: { ksh_subscriptionValidation: 'False' }
+      })
+    });
+
+    const kushkiData = await kushkiRes.json();
+
+    if (!kushkiRes.ok || kushkiData.code) {
+      console.error('Kushki error:', kushkiData);
+      const msg = kushkiData.message || `Error Kushki (${kushkiData.code || kushkiRes.status})`;
+      return res.status(402).json({ error: msg });
+    }
+
+    const ticketNumber = kushkiData.ticketNumber || kushkiData.ticket || '';
+    console.log('✅ Pago Kushki aprobado:', ticketNumber);
+
+    // Guardar reserva en Supabase
+    const alergiasCombinadas = comensales
+      .filter(c => c.alergias)
+      .map(c => `${c.nombre}: ${c.alergias}`)
+      .join('; ');
+
+    const { error: dbError } = await supabase.from('reservations').insert([{
+      fecha:           date,
+      horario,
+      numero_personas: numGuests,
+      nombre_cliente:  nombre,
+      whatsapp:        whatsapp || null,
+      email:           email || null,
+      motivo_visita:   motivo || null,
+      alergias:        alergiasCombinadas || null,
+      tipo_menu:       'Omakase 14 tiempos',
+      estado:          'Confirmada',
+      origen:          'web',
+      metodo_pago:     'Kushki',
+      monto_pagado:    anticipo,
+      fecha_pago:      new Date().toISOString(),
+      stripe_session_id: ticketNumber,
+      notas_internas:  'Reserva automática desde web · Kushki'
+    }]);
+
+    if (dbError) {
+      console.error('❌ Error guardando reserva Kushki:', dbError);
+      // Pago ya se procesó — no devolver 500 para no confundir al cliente
+      return res.status(500).json({ error: 'Pago procesado pero error interno al guardar reserva. Contáctanos por WhatsApp.' });
+    }
+
+    console.log('✅ Reserva Kushki guardada en Supabase');
+    res.json({ success: true, ticketNumber, fecha: date, horario, comensales: numGuests, nombre, anticipo });
+
+  } catch (error) {
+    console.error('Error en /kushki-charge:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ================================================================
 // ENDPOINTS: Contenido editable del sitio (site_content)
 // ================================================================
 
@@ -477,11 +592,12 @@ app.get('/api/content/history', requireAdmin, async (req, res) => {
 app.get('/health', async (req, res) => {
   const checks = {
     stripe: !!STRIPE_SECRET_KEY,
+    kushki: !!KUSHKI_PRIVATE_KEY,
     supabase_url: !!SUPABASE_URL,
     supabase_key: !!SUPABASE_SERVICE_ROLE,
     webhook_secret: !!STRIPE_WEBHOOK_SECRET,
   };
-  const ok = Object.values(checks).every(Boolean);
+  const ok = !!SUPABASE_URL && !!SUPABASE_SERVICE_ROLE && (!!STRIPE_SECRET_KEY || !!KUSHKI_PRIVATE_KEY);
   res.status(ok ? 200 : 500).json({ ok, checks });
 });
 

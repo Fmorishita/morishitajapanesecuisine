@@ -717,7 +717,19 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  .reserve-detail{flex-direction:column;align-items:flex-start;gap:18px;padding:24px 28px;}
  .reserve-detail-item{flex-direction:row;justify-content:space-between;width:100%;align-items:baseline;gap:18px;}
 }
+/* ── Kushki card form ── */
+.kushki-cf{margin:14px 0 4px;border-top:1px solid var(--border,#e4e0d9);padding-top:14px;}
+.kf-hd{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft,#8a8075);margin-bottom:10px;font-weight:600;}
+.kf-row{display:flex;gap:10px;margin-bottom:0;}
+.kf-row .fld{flex:1;}
+#kfNum{letter-spacing:.06em;}
 </style>
+<script src="https://cdn.kushkipagos.com/kushki.js"></script>
+<!-- PostHog analytics -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_oC9sguZjQKyfvF4PxsreRNhDT9uLE7sPek6PhEGsCtHj',{api_host:'https://us.i.posthog.com',capture_pageview:true,capture_pageleave:true,autocapture:true,enable_heatmaps:true,session_recording:{maskAllInputs:true,maskInputOptions:{password:true,email:true,tel:true}},rageclick:true});
+</script>
 </head>
 <body>
 <!-- TEMA: aplicar antes de renderizar para evitar flash -->
@@ -1117,8 +1129,38 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  <div class="p-total-row"><span>Total experiencia</span><span class="v" id="pTotal">—</span></div>
  </div>
  <div class="anticipo-stripe">
- <div class="as-left"><div class="as-lbl">Anticipo hoy · 50%</div><div class="as-main">Vía Stripe</div></div>
+ <div class="as-left"><div class="as-lbl">Anticipo hoy · 50%</div><div class="as-main" id="asMain">Vía Stripe</div></div>
  <div class="as-num" id="pAnticipo">—</div>
+ </div>
+ <!-- Formulario de tarjeta Kushki (se muestra solo con ?kushki en la URL) -->
+ <div id="kushkiForm" class="kushki-cf" style="display:none">
+  <div class="kf-hd">Datos de tarjeta</div>
+  <div class="frow full">
+   <div class="fld" id="kfNumWrap">
+    <label>Número de tarjeta <span class="req">*</span></label>
+    <input type="tel" id="kfNum" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="cc-number" inputmode="numeric"/>
+    <span class="em">Número de tarjeta inválido.</span>
+   </div>
+  </div>
+  <div class="kf-row">
+   <div class="fld" id="kfExpWrap">
+    <label>Vencimiento <span class="req">*</span></label>
+    <input type="tel" id="kfExp" placeholder="MM/AA" maxlength="5" autocomplete="cc-exp" inputmode="numeric"/>
+    <span class="em">Fecha inválida.</span>
+   </div>
+   <div class="fld" id="kfCvvWrap">
+    <label>CVV <span class="req">*</span></label>
+    <input type="tel" id="kfCVV" placeholder="123" maxlength="4" autocomplete="cc-csc" inputmode="numeric"/>
+    <span class="em">CVV inválido.</span>
+   </div>
+  </div>
+  <div class="frow full">
+   <div class="fld" id="kfNameWrap">
+    <label>Nombre en la tarjeta <span class="req">*</span></label>
+    <input type="text" id="kfName" placeholder="Como aparece en la tarjeta" autocomplete="cc-name"/>
+    <span class="em">Ingresa el nombre.</span>
+   </div>
+  </div>
  </div>
  <div class="pc-note">El 50% restante <strong id="pSaldo">—</strong> se paga en el restaurante después del servicio.</div>
  <button class="pc-pay" id="payBtn">Pagar anticipo →</button>
@@ -1192,6 +1234,8 @@ footer.home-footer{padding:64px 28px 32px;border-top:1px solid var(--line);backg
  ═══════════════════════════════════════ */
 const CFG={price:1850,openDays:[0,6],slots:['13:00','15:30','18:00'],max:4,dep:.5};
 const S={screen:'home',date:null,guests:2,time:null,nombre:'',wa:'',email:'',motivo:'',alergias:'',avail:{},mo:0,loading:{}};
+const USE_KUSHKI = new URLSearchParams(location.search).has('kushki');
+const KUSHKI_PUBLIC_KEY_UAT = '7963ea4b40284bd88cd8a4917a8ad015';
 
 const STEPS=[{id:'guests'},{id:'landing'},{id:'time'},{id:'checkout'}];
 const PCTS={guests:25,landing:50,time:75,checkout:100};
@@ -1464,6 +1508,8 @@ function renderCO(){
  document.getElementById('pTotal').textContent=fmx(tot)+' MXN';
  document.getElementById('pAnticipo').textContent=fmx(ant);
  document.getElementById('pSaldo').textContent=fmx(sal)+' MXN';
+ document.getElementById('asMain').textContent=USE_KUSHKI?'Vía Kushki':'Vía Stripe';
+ document.getElementById('kushkiForm').style.display=USE_KUSHKI?'':'none';
 }
 
 /* ── pay btn: directo a Stripe Checkout ── */
@@ -1478,6 +1524,8 @@ document.getElementById('payBtn').onclick = async () => {
  if(!ok){document.querySelector('#resForm .err input')?.scrollIntoView({behavior:'smooth',block:'center'});return;}
  S.nombre=nb; S.wa=wa; S.email=em; S.motivo=form.motivo.value.trim(); S.alergias=form.alergias.value.trim();
  if(rem(S.date,S.time)<S.guests){alert('Lo sentimos, ese horario ya no tiene lugares suficientes.');go('time');return;}
+ if(window.posthog)posthog.capture('funnel_payment_initiated',{guests:S.guests,date:S.date,time:S.time,total:S.guests*CFG.price,anticipo:S.guests*CFG.price*CFG.dep,gateway:USE_KUSHKI?'kushki':'stripe'});
+ if(USE_KUSHKI){doKushkiPayment();return;}
  const btn = document.getElementById('payBtn');
  btn.disabled = true;
  btn.innerHTML = '<span class="spinner"></span>&nbsp;Procesando…';
@@ -1516,6 +1564,83 @@ function resetAll(){
  S.date=null;S.time=null;S.guests=2;S.nombre=S.wa=S.email=S.motivo=S.alergias='';
  document.getElementById('resForm').reset();S.mo=findFirstAvailableMonth();go('guests');
 }
+
+/* ── Kushki payment ── */
+async function doKushkiPayment(){
+ const comensales=[{nombre:S.nombre,alergias:S.alergias||''}];
+ // Validar campos de tarjeta
+ ['kfNumWrap','kfExpWrap','kfCvvWrap','kfNameWrap'].forEach(id=>document.getElementById(id)?.classList.remove('err'));
+ const cardRaw=document.getElementById('kfNum').value.replace(/\s+/g,'');
+ const cardExp=document.getElementById('kfExp').value.trim();
+ const cardCVV=document.getElementById('kfCVV').value.trim();
+ const cardName=document.getElementById('kfName').value.trim();
+ const expParts=cardExp.split('/');
+ const expMonth=expParts[0]||'';
+ const expYear=expParts[1]||'';
+ let ok=true;
+ if(!/^\d{15,16}$/.test(cardRaw)){document.getElementById('kfNumWrap').classList.add('err');ok=false;}
+ if(expMonth.length!==2||expYear.length!==2||isNaN(+expMonth)||isNaN(+expYear)){document.getElementById('kfExpWrap').classList.add('err');ok=false;}
+ if(!/^\d{3,4}$/.test(cardCVV)){document.getElementById('kfCvvWrap').classList.add('err');ok=false;}
+ if(cardName.length<2){document.getElementById('kfNameWrap').classList.add('err');ok=false;}
+ if(!ok){document.getElementById('kfNum').scrollIntoView({behavior:'smooth',block:'center'});return;}
+ const btn=document.getElementById('payBtn');
+ btn.disabled=true;btn.innerHTML='<span class="spinner"></span>&nbsp;Procesando…';
+ try{
+  const anticipo=S.guests*CFG.price*CFG.dep;
+  // Tokenizar tarjeta con Kushki.js
+  const token=await new Promise((resolve,reject)=>{
+   const k=new Kushki({merchantId:KUSHKI_PUBLIC_KEY_UAT,inTestEnvironment:true});
+   k.requestToken({
+    amount:anticipo,currency:'MXN',
+    card:{name:cardName,number:cardRaw,cvc:cardCVV,expiryMonth:expMonth,expiryYear:expYear}
+   },(resp)=>{
+    if(resp.code)reject(new Error(resp.message||'Error al tokenizar tarjeta ('+resp.code+')'));
+    else resolve(resp.token);
+   });
+  });
+  // Cobrar en backend
+  const res=await fetch('/kushki-charge',{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({token,date:S.date,time:S.time,guests:S.guests,nombre:S.nombre,email:S.email,whatsapp:S.wa,motivo:S.motivo,comensales})
+  });
+  const data=await res.json();
+  if(!data.success)throw new Error(data.error||'Error al procesar el pago');
+  // Éxito: llenar pantalla de confirmación
+  clearCheckoutTimer();
+  const tot=S.guests*CFG.price,ant=tot*CFG.dep,sal=tot-ant;
+  document.getElementById('cDate').textContent=fmtDate(S.date);
+  document.getElementById('cTime').textContent=fmt12(S.time);
+  document.getElementById('cGuests').textContent=S.guests+' persona'+(S.guests>1?'s':'');
+  document.getElementById('cPaid').textContent=fmx(ant)+' MXN';
+  document.getElementById('cDue').textContent=fmx(sal)+' MXN';
+  document.getElementById('cRef').textContent=data.ticketNumber||'KSH-'+Date.now().toString(36).toUpperCase().slice(-8);
+  if(window.posthog)posthog.capture('funnel_payment_completed',{guests:S.guests,date:S.date,time:S.time,anticipo:ant,gateway:'kushki'});
+  go('confirm');
+ }catch(err){
+  alert('Error: '+err.message);
+  btn.disabled=false;btn.innerHTML='Pagar anticipo <span class="ba">→</span>';
+ }
+}
+
+/* ── formato automático campos de tarjeta ── */
+(function(){
+ const numEl=document.getElementById('kfNum');
+ const expEl=document.getElementById('kfExp');
+ if(numEl){
+  numEl.addEventListener('input',()=>{
+   let v=numEl.value.replace(/\D/g,'').slice(0,16);
+   numEl.value=v.replace(/(.{4})/g,'$1 ').trim();
+  });
+ }
+ if(expEl){
+  expEl.addEventListener('input',e=>{
+   let v=expEl.value.replace(/\D/g,'');
+   if(v.length>=3)v=v.slice(0,2)+'/'+v.slice(2,4);
+   expEl.value=v;
+  });
+ }
+})();
 
 /* ── init ── */
 buildPetals();

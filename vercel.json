@@ -11,6 +11,7 @@
   ],
   "routes": [
     { "src": "/create-checkout-session", "dest": "backend/server.js" },
+    { "src": "/kushki-charge", "dest": "backend/server.js" },
     { "src": "/stripe-webhook", "dest": "backend/server.js" },
     { "src": "/stripe-webhook-client", "dest": "backend/server.js" },
     { "src": "/disponibilidad", "dest": "backend/server.js" },
