@@ -406,6 +406,7 @@ const DEFAULT_CONFIG = {
 };
 
 const CONFIG_KEY = 'evaluacion_miyagi_config';
+const ADMIN_PIN = '1850'; // PIN client-side. Para guardar en Supabase, usa el header x-admin-token con este valor.
 let TOKEN = '';
 let CONFIG = clone(DEFAULT_CONFIG);
 let DIRTY = false;
@@ -421,22 +422,17 @@ function wireLogin(){
   const tryLogin = async () => {
     const v = input.value.trim();
     if (!v) return;
-    try {
-      const r = await fetch('/api/auth/check', { headers: { 'x-admin-token': v } });
-      if (r.ok) {
-        TOKEN = v;
-        sessionStorage.setItem('morishita_admin_token', v);
-        err.classList.remove('show');
-        await openApp();
-      } else {
-        err.classList.add('show');
-        input.value = '';
-        input.focus();
-      }
-    } catch (e) {
+    if (v !== ADMIN_PIN) {
+      err.textContent = 'PIN incorrecto';
       err.classList.add('show');
-      err.textContent = 'Error de red';
+      input.value = '';
+      input.focus();
+      return;
     }
+    TOKEN = v;
+    sessionStorage.setItem('morishita_admin_token', v);
+    err.classList.remove('show');
+    await openApp();
   };
 
   btn.addEventListener('click', tryLogin);
@@ -683,6 +679,11 @@ async function saveConfig(){
       headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
       body: JSON.stringify({ key: CONFIG_KEY, value: JSON.stringify(CONFIG) })
     });
+    if (r.status === 401) {
+      updateSaveStatus('err');
+      alert('El servidor no aceptó el token 1850. Verifica que la variable ADMIN_TOKEN en Vercel sea "1850" (o no esté definida — usa 1850 por default).');
+      return;
+    }
     if (!r.ok) throw new Error('HTTP ' + r.status);
     DIRTY = false;
     updateSaveStatus('ok');
