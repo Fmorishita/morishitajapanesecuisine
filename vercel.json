@@ -5,6 +5,8 @@
     { "src": "index.html", "use": "@vercel/static" },
     { "src": "admin/index.html", "use": "@vercel/static" },
     { "src": "admin/contenido.html", "use": "@vercel/static" },
+    { "src": "evaluacion/miyagi.html", "use": "@vercel/static" },
+    { "src": "evaluacion/admin.html", "use": "@vercel/static" },
     { "src": "favicon.png", "use": "@vercel/static" },
     { "src": "favicon.ico", "use": "@vercel/static" },
     { "src": "img/**", "use": "@vercel/static" }
@@ -30,6 +32,10 @@
     { "src": "/admin/contenido/", "dest": "/admin/contenido.html" },
     { "src": "/admin", "dest": "/admin/index.html" },
     { "src": "/admin/", "dest": "/admin/index.html" },
+    { "src": "/evaluacion/miyagi", "dest": "/evaluacion/miyagi.html" },
+    { "src": "/evaluacion/miyagi/", "dest": "/evaluacion/miyagi.html" },
+    { "src": "/evaluacion/admin", "dest": "/evaluacion/admin.html" },
+    { "src": "/evaluacion/admin/", "dest": "/evaluacion/admin.html" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]

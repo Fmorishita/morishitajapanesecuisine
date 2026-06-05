@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>Evaluación de Cata — Morishita Japanese Cuisine</title>
+<meta name="theme-color" content="#0a0908"/>
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon.png"/>
+<link rel="apple-touch-icon" href="/favicon.png"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Antique+Soft&family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;}
+
+:root{
+  --bg:#0a0908;
+  --bg-soft:#13110e;
+  --surface:#1a1814;
+  --surface-2:#22201a;
+  --line:#2e2a23;
+  --line-soft:#211e19;
+  --fg:#f5f0e8;
+  --fg-mid:#d8d0c2;
+  --fg-soft:#9a9285;
+  --gold:#d4af6a;
+  --gold-soft:#b89559;
+  --gold-faint:rgba(212,175,106,.08);
+  --gold-line:rgba(212,175,106,.25);
+  --display:'Zen Antique Soft',serif;
+  --serif:'Cormorant','Georgia',serif;
+  --mono:'DM Mono',ui-monospace,monospace;
+}
+
+body{
+  font-family:var(--serif);
+  background:var(--bg);
+  background:linear-gradient(180deg,#0a0908 0%,#13110e 100%);
+  color:var(--fg);
+  min-height:100vh;
+  font-size:16px;
+  line-height:1.5;
+  overflow-x:hidden;
+}
+
+/* ── LOGIN GATE ────────────────────────────────────────── */
+.gate{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg,#0a0908 0%,#13110e 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:32px 24px;
+  z-index:100;
+  transition:opacity .35s ease;
+}
+.gate.hide{opacity:0;pointer-events:none;}
+.gate-logo{
+  font-family:var(--display);
+  font-size:54px;
+  color:var(--fg);
+  letter-spacing:.04em;
+  margin-bottom:8px;
+}
+.gate-brand{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.3em;
+  color:var(--gold);
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.gate-sub{
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.25em;
+  color:var(--fg-soft);
+  text-transform:uppercase;
+  margin-bottom:48px;
+}
+.gate-card{
+  width:100%;
+  max-width:340px;
+  background:rgba(20,17,14,.6);
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:32px 24px;
+  text-align:center;
+  backdrop-filter:blur(6px);
+}
+.gate-eyebrow{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.3em;
+  color:var(--gold);
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+.gate-title{
+  font-family:var(--serif);
+  font-size:22px;
+  font-weight:500;
+  color:var(--fg);
+  margin-bottom:8px;
+  letter-spacing:.01em;
+}
+.gate-note{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.1em;
+  color:var(--fg-soft);
+  line-height:1.6;
+  margin-bottom:28px;
+}
+.gate-input{
+  width:100%;
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--line);
+  color:var(--fg);
+  padding:16px 14px;
+  border-radius:4px;
+  font-family:var(--mono);
+  font-size:13px;
+  letter-spacing:.25em;
+  text-align:center;
+  outline:none;
+  margin-bottom:18px;
+  transition:border-color .25s;
+}
+.gate-input::placeholder{color:var(--fg-soft);letter-spacing:.2em;}
+.gate-input:focus{border-color:var(--gold);}
+.gate-btn{
+  width:100%;
+  background:var(--gold);
+  color:#0a0908;
+  border:none;
+  padding:16px;
+  border-radius:4px;
+  font-family:var(--mono);
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.25s;
+}
+.gate-btn:hover{background:#e6c285;transform:translateY(-1px);}
+.gate-error{
+  color:#e08585;
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  margin-top:14px;
+  opacity:0;
+  transition:opacity .25s;
+}
+.gate-error.show{opacity:1;}
+.gate-footer{
+  margin-top:40px;
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.25em;
+  color:var(--fg-soft);
+  text-transform:uppercase;
+  text-align:center;
+  opacity:.5;
+}
+
+/* ── APP ──────────────────────────────────────────────── */
+.app{
+  display:none;
+  max-width:560px;
+  margin:0 auto;
+  padding:24px 16px 120px;
+  position:relative;
+}
+.app.show{display:block;}
+
+/* HEADER */
+.brand{
+  text-align:center;
+  padding:8px 0 18px;
+}
+.brand-logo{
+  font-family:var(--display);
+  font-size:34px;
+  color:var(--fg);
+  letter-spacing:.12em;
+  line-height:1;
+  margin-bottom:4px;
+}
+.brand-tag{
+  font-family:var(--mono);
+  font-size:8.5px;
+  letter-spacing:.32em;
+  color:var(--gold);
+  text-transform:uppercase;
+}
+.brand-diamond{
+  color:var(--gold);
+  font-size:8px;
+  margin:10px 0 4px;
+  letter-spacing:.5em;
+}
+
+.event-title{
+  text-align:center;
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.32em;
+  color:var(--fg);
+  text-transform:uppercase;
+  margin-bottom:6px;
+  font-weight:400;
+}
+.event-meta{
+  text-align:center;
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:14px;
+  color:var(--gold);
+  margin-bottom:24px;
+  letter-spacing:.02em;
+}
+
+/* PROGRESS */
+.progress-wrap{
+  margin-bottom:22px;
+}
+.progress-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  margin-bottom:10px;
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.progress-label{color:var(--fg-mid);}
+.progress-pct{color:var(--gold);font-weight:500;}
+.progress-bar{
+  height:3px;
+  background:var(--line-soft);
+  border-radius:2px;
+  overflow:hidden;
+  position:relative;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--gold-soft),var(--gold));
+  border-radius:2px;
+  width:0%;
+  transition:width .45s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 8px rgba(212,175,106,.4);
+}
+
+/* CATEGORIES */
+.category{
+  background:rgba(20,17,14,.6);
+  border:1px solid var(--line);
+  border-radius:8px;
+  margin-bottom:14px;
+  overflow:hidden;
+}
+.category-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 18px;
+  cursor:pointer;
+  user-select:none;
+  border-bottom:1px solid transparent;
+  transition:border-color .25s, background .25s;
+}
+.category.open .category-head{
+  border-bottom-color:var(--line);
+}
+.category-name{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.3em;
+  color:var(--fg);
+  font-weight:500;
+}
+.category-chev{
+  color:var(--gold);
+  width:14px;
+  height:14px;
+  transition:transform .35s ease;
+  flex-shrink:0;
+}
+.category.open .category-chev{transform:rotate(180deg);}
+.category-body{
+  display:none;
+}
+.category.open .category-body{display:block;}
+
+/* DISH */
+.dish{
+  border-top:1px solid var(--line-soft);
+  padding:0;
+}
+.category-body .dish:first-child{border-top:none;}
+.dish-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 18px;
+  cursor:pointer;
+  user-select:none;
+  transition:background .2s;
+}
+.dish-head:hover{background:rgba(212,175,106,.02);}
+.dish-title{
+  font-family:var(--serif);
+  font-size:17px;
+  color:var(--fg);
+  flex:1;
+  padding-right:10px;
+  line-height:1.3;
+  font-weight:500;
+}
+.dish-num{color:var(--fg-soft);font-weight:400;font-family:var(--mono);font-size:13px;margin-right:6px;letter-spacing:.05em;}
+.dish-status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+}
+.dish-badge{
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  padding:5px 10px;
+  border-radius:3px;
+  border:1px solid var(--line);
+  color:var(--fg-soft);
+  white-space:nowrap;
+}
+.dish-badge.rated{
+  border-color:var(--gold-line);
+  color:var(--gold);
+  background:var(--gold-faint);
+}
+.dish-chev{
+  color:var(--fg-soft);
+  width:12px;
+  height:12px;
+  transition:transform .3s ease;
+  flex-shrink:0;
+}
+.dish.open .dish-chev{transform:rotate(180deg);color:var(--gold);}
+.dish-body{
+  display:none;
+  padding:4px 18px 22px;
+}
+.dish.open .dish-body{display:block;}
+.dish.open .dish-head{padding-bottom:8px;}
+
+/* RATING */
+.rating-label{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:14px;
+  color:var(--fg-soft);
+  margin-bottom:10px;
+  font-weight:400;
+}
+.rating-row{
+  display:flex;
+  gap:10px;
+  margin-bottom:18px;
+  justify-content:flex-start;
+  flex-wrap:wrap;
+}
+.rating-btn{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--fg-mid);
+  font-family:var(--serif);
+  font-size:17px;
+  font-weight:500;
+  cursor:pointer;
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.rating-btn:hover{border-color:var(--gold);color:var(--gold);transform:scale(1.05);}
+.rating-btn.active{
+  background:var(--gold);
+  border-color:var(--gold);
+  color:#0a0908;
+  font-weight:600;
+  box-shadow:0 0 16px rgba(212,175,106,.35);
+}
+
+/* FEEDBACK FIELDS */
+.feedback-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+}
+@media(min-width:480px){
+  .feedback-grid{grid-template-columns:1fr 1fr;}
+}
+.feedback-field{display:flex;flex-direction:column;gap:6px;}
+.feedback-label{
+  font-family:var(--mono);
+  font-size:9.5px;
+  letter-spacing:.22em;
+  color:var(--gold);
+  text-transform:uppercase;
+  font-weight:500;
+}
+.feedback-input{
+  background:rgba(10,9,8,.6);
+  border:1px solid var(--line);
+  color:var(--fg);
+  padding:11px 13px;
+  border-radius:4px;
+  font-family:var(--serif);
+  font-size:14px;
+  line-height:1.5;
+  outline:none;
+  resize:vertical;
+  min-height:74px;
+  transition:border-color .25s;
+  font-style:italic;
+}
+.feedback-input::placeholder{color:var(--fg-soft);opacity:.6;}
+.feedback-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,106,.08);}
+
+/* COMMENTS */
+.comments-box{
+  background:rgba(20,17,14,.6);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.comments-label{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.28em;
+  color:var(--fg);
+  text-transform:uppercase;
+  margin-bottom:12px;
+  font-weight:500;
+}
+.comments-input{
+  width:100%;
+  background:rgba(10,9,8,.6);
+  border:1px solid var(--line);
+  color:var(--fg);
+  padding:12px 14px;
+  border-radius:4px;
+  font-family:var(--serif);
+  font-size:14px;
+  line-height:1.5;
+  outline:none;
+  resize:vertical;
+  min-height:92px;
+  font-style:italic;
+  transition:border-color .25s;
+}
+.comments-input::placeholder{color:var(--fg-soft);opacity:.6;}
+.comments-input:focus{border-color:var(--gold);}
+.comments-counter{
+  text-align:right;
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--fg-soft);
+  letter-spacing:.1em;
+  margin-top:6px;
+}
+
+/* SUBMIT */
+.submit-wrap{margin-top:20px;}
+.submit-btn{
+  width:100%;
+  background:var(--gold);
+  color:#0a0908;
+  border:none;
+  padding:18px;
+  border-radius:6px;
+  font-family:var(--mono);
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.25s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+}
+.submit-btn:hover{background:#e6c285;transform:translateY(-1px);box-shadow:0 8px 24px rgba(212,175,106,.2);}
+.submit-btn:active{transform:translateY(0);}
+.submit-btn svg{width:18px;height:18px;}
+.submit-note{
+  text-align:center;
+  font-family:var(--mono);
+  font-size:9.5px;
+  letter-spacing:.2em;
+  color:var(--fg-soft);
+  text-transform:uppercase;
+  margin-top:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.submit-note svg{width:11px;height:11px;color:var(--gold);}
+
+/* FOOTER */
+.app-footer{
+  text-align:center;
+  margin-top:36px;
+  padding-top:26px;
+  border-top:1px solid var(--line-soft);
+  font-family:var(--mono);
+  font-size:9.5px;
+  letter-spacing:.32em;
+  color:var(--fg-soft);
+  text-transform:uppercase;
+}
+
+/* SAVE STATUS */
+.save-indicator{
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--surface);
+  color:var(--fg);
+  padding:10px 18px;
+  border-radius:24px;
+  border:1px solid var(--gold-line);
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  opacity:0;
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+  z-index:50;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+}
+.save-indicator svg{width:12px;height:12px;color:var(--gold);}
+.save-indicator.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* COMPLETION MODAL */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(10,9,8,.85);
+  backdrop-filter:blur(8px);
+  z-index:200;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.modal-backdrop.show{display:flex;}
+.modal{
+  background:linear-gradient(145deg,var(--bg-soft),#0a0908);
+  border:1px solid var(--gold-line);
+  border-radius:10px;
+  padding:36px 26px;
+  max-width:380px;
+  width:100%;
+  text-align:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(212,175,106,.1);
+}
+.modal-icon{
+  width:54px;
+  height:54px;
+  margin:0 auto 18px;
+  border-radius:50%;
+  background:var(--gold-faint);
+  border:1px solid var(--gold);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold);
+}
+.modal-icon svg{width:24px;height:24px;}
+.modal-title{
+  font-family:var(--serif);
+  font-size:24px;
+  color:var(--fg);
+  margin-bottom:10px;
+  font-weight:500;
+  letter-spacing:.01em;
+}
+.modal-text{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:15px;
+  color:var(--fg-soft);
+  line-height:1.6;
+  margin-bottom:26px;
+}
+.modal-actions{display:flex;flex-direction:column;gap:10px;}
+.modal-btn{
+  width:100%;
+  background:var(--gold);
+  color:#0a0908;
+  border:none;
+  padding:14px;
+  border-radius:5px;
+  font-family:var(--mono);
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:.25em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.2s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.modal-btn svg{width:14px;height:14px;}
+.modal-btn:hover{background:#e6c285;}
+.modal-btn.ghost{
+  background:transparent;
+  color:var(--fg-mid);
+  border:1px solid var(--line);
+}
+.modal-btn.ghost:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-faint);}
+
+/* TINY LINK ADMIN */
+.admin-corner{
+  position:fixed;
+  top:14px;
+  right:14px;
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.2em;
+  color:var(--fg-soft);
+  text-transform:uppercase;
+  text-decoration:none;
+  opacity:.35;
+  transition:opacity .25s, color .25s;
+  z-index:10;
+  padding:6px 10px;
+  border:1px solid var(--line);
+  border-radius:3px;
+  background:rgba(20,17,14,.5);
+  backdrop-filter:blur(4px);
+}
+.admin-corner:hover{opacity:1;color:var(--gold);border-color:var(--gold-line);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:var(--gold-soft);}
+
+/* INPUT FOCUS — móvil: evita zoom */
+@media(max-width:640px){
+  .feedback-input,.comments-input{font-size:16px;}
+  .gate-input{font-size:16px;}
+}
+
+/* PRINT (por si alguien imprime la página) */
+@media print{
+  .gate,.admin-corner,.submit-wrap,.save-indicator{display:none!important;}
+  body{background:#fff;color:#000;}
+}
+</style>
+</head>
+<body>
+
+<!-- ───── GATE / LOGIN ───── -->
+<div class="gate" id="gate">
+  <div class="gate-logo">森下</div>
+  <div class="gate-brand">MORISHITA</div>
+  <div class="gate-sub">Authentic Japanese Cuisine</div>
+
+  <div class="gate-card">
+    <div class="gate-eyebrow">Acceso Privado</div>
+    <div class="gate-title">Hoja de evaluación</div>
+    <div class="gate-note">
+      Esta página es de uso exclusivo del invitado.<br/>
+      Ingresa la contraseña para continuar.
+    </div>
+    <input type="password" id="gate-input" class="gate-input" placeholder="••••••••" autocomplete="off" inputmode="text"/>
+    <button class="gate-btn" id="gate-btn">Entrar</button>
+    <div class="gate-error" id="gate-error">Contraseña incorrecta</div>
+  </div>
+
+  <div class="gate-footer">Ensenada · Baja California</div>
+</div>
+
+<!-- ───── APP ───── -->
+<div class="app" id="app">
+
+  <a href="/evaluacion/admin" class="admin-corner" id="admin-link" title="Panel de administración">Admin</a>
+
+  <header class="brand">
+    <div class="brand-logo" id="brand-kanji">森下</div>
+    <div class="brand-tag" id="brand-tagline">Authentic Japanese Cuisine</div>
+    <div class="brand-diamond">◆</div>
+  </header>
+
+  <div class="event-title" id="event-title">Hoja de evaluación de cata</div>
+  <div class="event-meta" id="event-meta">— · —</div>
+
+  <div class="progress-wrap">
+    <div class="progress-row">
+      <span class="progress-label" id="progress-label">Progreso: 0 de 0 platillos</span>
+      <span class="progress-pct" id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <div id="categories-container"></div>
+
+  <div class="comments-box">
+    <div class="comments-label" id="comments-label">Comentarios generales</div>
+    <textarea
+      id="comments-input"
+      class="comments-input"
+      placeholder="Comparte tu impresión general de la experiencia de omakase…"
+      maxlength="500"></textarea>
+    <div class="comments-counter"><span id="comments-counter">0</span> / <span id="comments-max">500</span></div>
+  </div>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" id="submit-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+        <polyline points="7 3 7 8 15 8"></polyline>
+      </svg>
+      Finalizar y descargar PDF
+    </button>
+    <div class="submit-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+      Tu evaluación se guarda de forma segura
+    </div>
+  </div>
+
+  <footer class="app-footer" id="app-footer">Morishita Japanese Cuisine · Ensenada, B.C.</footer>
+</div>
+
+<!-- SAVE INDICATOR -->
+<div class="save-indicator" id="save-indicator">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+  Guardado
+</div>
+
+<!-- COMPLETION MODAL -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+    </div>
+    <div class="modal-title" id="modal-title">¡Evaluación lista!</div>
+    <div class="modal-text" id="modal-text">
+      Tu evaluación se descargará en formato PDF. Gracias por compartir tu experiencia con nosotros.
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn" id="modal-download">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Descargar PDF
+      </button>
+      <button class="modal-btn ghost" id="modal-close">Volver a la evaluación</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ─────────────────────────────────────────────────────────
+// DEFAULT CONFIG (overridable via admin panel)
+// ─────────────────────────────────────────────────────────
+const DEFAULT_CONFIG = {
+  password: 'miyagi2026',
+  evento: {
+    titulo: 'Hoja de evaluación de cata',
+    cliente: 'Miyagi Sushi',
+    fecha: '20 de junio de 2026',
+    descripcion: 'Evaluación privada de los rollos preparados durante la sesión de desarrollo de menú.'
+  },
+  restaurante: {
+    kanji: '森下',
+    nombre: 'MORISHITA',
+    tagline: 'Authentic Japanese Cuisine',
+    ubicacion: 'Ensenada, B.C.'
+  },
+  evaluacion: {
+    escalaMax: 5,
+    campoGusto: 'Lo que me gustó',
+    campoNoGusto: 'Lo que no me gustó',
+    placeholderGusto: 'Escribe aquí…',
+    placeholderNoGusto: 'Escribe aquí…',
+    comentariosLabel: 'Comentarios generales',
+    comentariosPlaceholder: 'Comparte tu impresión general de la experiencia de omakase…',
+    comentariosMax: 500
+  },
+  categorias: [
+    {
+      id: 'rollos',
+      nombre: 'ROLLOS',
+      platillos: [
+        { id: 'r1',  nombre: 'Tekka Maki' },
+        { id: 'r2',  nombre: 'Sake-Kappa Maki' },
+        { id: 'r3',  nombre: 'Futomaki Jardín' },
+        { id: 'r4',  nombre: 'Spicy Tuna' },
+        { id: 'r5',  nombre: 'Spicy Salmon Crunch' },
+        { id: 'r6',  nombre: 'Negitoro Maki' },
+        { id: 'r7',  nombre: 'Hamachi Maki' },
+        { id: 'r8',  nombre: 'Ebi Tempura Roll' },
+        { id: 'r9',  nombre: 'Unagi Roll' },
+        { id: 'r10', nombre: 'Rainbow Roll' },
+        { id: 'r11', nombre: 'Salmon Avocado Roll' },
+        { id: 'r12', nombre: 'Caterpillar Roll' },
+        { id: 'r13', nombre: 'Dragon Roll' },
+        { id: 'r14', nombre: 'Volcano Roll' },
+        { id: 'r15', nombre: 'Crunchy Roll' }
+      ]
+    },
+    {
+      id: 'entradas',
+      nombre: 'ENTRADAS',
+      platillos: [
+        { id: 'e1', nombre: 'Gyoza · Salsa Clásica' },
+        { id: 'e2', nombre: 'Gyoza · Salsa Picante' },
+        { id: 'e3', nombre: 'Poke Bowl' }
+      ]
+    }
+  ]
+};
+
+// ─────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────
+let CONFIG = null;
+let STATE = { ratings: {}, gusto: {}, noGusto: {}, comentarios: '', openCategoria: null, openDish: null };
+const STORAGE_KEY = 'morishita_eval_miyagi_v1';
+const CONFIG_REMOTE_KEY = 'evaluacion_miyagi_config';
+let SAVE_TIMER = null;
+let INDICATOR_TIMER = null;
+
+// ─────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────
+async function init(){
+  CONFIG = await loadConfig();
+  loadState();
+  renderApp();
+  wireGate();
+}
+
+async function loadConfig(){
+  // 1) Intenta cargar config remota (la que edita el admin)
+  try {
+    const r = await fetch('/api/content', { cache: 'no-store' });
+    if (r.ok) {
+      const data = await r.json();
+      const raw = data[CONFIG_REMOTE_KEY];
+      if (raw) {
+        try {
+          const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+          return mergeConfig(DEFAULT_CONFIG, parsed);
+        } catch (e) { console.warn('Config remota inválida:', e); }
+      }
+    }
+  } catch (e) { console.warn('No se pudo cargar config remota:', e); }
+  return structuredClone(DEFAULT_CONFIG);
+}
+
+function mergeConfig(base, override){
+  // Merge superficial pero respetando arrays completos cuando el override los define.
+  const out = structuredClone(base);
+  if (!override || typeof override !== 'object') return out;
+  for (const k of Object.keys(override)) {
+    const v = override[k];
+    if (Array.isArray(v)) out[k] = structuredClone(v);
+    else if (v && typeof v === 'object') out[k] = { ...out[k], ...v };
+    else if (v !== undefined && v !== null) out[k] = v;
+  }
+  return out;
+}
+
+function loadState(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      STATE = { ...STATE, ...parsed };
+    }
+  } catch(e) {}
+}
+
+function saveState(){
+  clearTimeout(SAVE_TIMER);
+  SAVE_TIMER = setTimeout(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        ratings: STATE.ratings,
+        gusto: STATE.gusto,
+        noGusto: STATE.noGusto,
+        comentarios: STATE.comentarios
+      }));
+      showSaveIndicator();
+    } catch(e) { console.warn('No se pudo guardar:', e); }
+  }, 400);
+}
+
+function showSaveIndicator(){
+  const el = document.getElementById('save-indicator');
+  el.classList.add('show');
+  clearTimeout(INDICATOR_TIMER);
+  INDICATOR_TIMER = setTimeout(() => el.classList.remove('show'), 1400);
+}
+
+// ─────────────────────────────────────────────────────────
+// GATE
+// ─────────────────────────────────────────────────────────
+function wireGate(){
+  const input = document.getElementById('gate-input');
+  const btn = document.getElementById('gate-btn');
+  const err = document.getElementById('gate-error');
+
+  // Sesión persistente (no pide pw cada vez)
+  if (sessionStorage.getItem('morishita_eval_ok') === '1') {
+    openApp();
+    return;
+  }
+
+  const tryAuth = () => {
+    const pw = input.value.trim();
+    if (pw === (CONFIG.password || '').trim()) {
+      err.classList.remove('show');
+      sessionStorage.setItem('morishita_eval_ok', '1');
+      openApp();
+    } else {
+      err.classList.add('show');
+      input.value = '';
+      input.focus();
+      // sutil "shake"
+      input.animate(
+        [{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(-3px)'},{transform:'translateX(0)'}],
+        { duration: 260 }
+      );
+    }
+  };
+
+  btn.addEventListener('click', tryAuth);
+  input.addEventListener('keyup', e => { if (e.key === 'Enter') tryAuth(); });
+  setTimeout(() => input.focus(), 250);
+}
+
+function openApp(){
+  const gate = document.getElementById('gate');
+  const app = document.getElementById('app');
+  gate.classList.add('hide');
+  setTimeout(() => {
+    gate.style.display = 'none';
+    app.classList.add('show');
+    renderProgress();
+  }, 350);
+}
+
+// ─────────────────────────────────────────────────────────
+// RENDER APP
+// ─────────────────────────────────────────────────────────
+function renderApp(){
+  // Brand / event
+  const r = CONFIG.restaurante || {};
+  document.getElementById('brand-kanji').textContent = r.kanji || '森下';
+  document.getElementById('brand-tagline').textContent = r.tagline || 'Authentic Japanese Cuisine';
+  document.getElementById('app-footer').textContent = `${r.nombre || 'Morishita'} Japanese Cuisine · ${r.ubicacion || 'Ensenada, B.C.'}`;
+
+  const ev = CONFIG.evento || {};
+  document.getElementById('event-title').textContent = ev.titulo || 'Hoja de evaluación de cata';
+  document.getElementById('event-meta').textContent = `${ev.cliente || ''}${ev.cliente && ev.fecha ? ' · ' : ''}${ev.fecha || ''}`;
+
+  // Comments
+  const evCfg = CONFIG.evaluacion || {};
+  document.getElementById('comments-label').textContent = evCfg.comentariosLabel || 'Comentarios generales';
+  const cmt = document.getElementById('comments-input');
+  cmt.placeholder = evCfg.comentariosPlaceholder || '';
+  cmt.maxLength = evCfg.comentariosMax || 500;
+  document.getElementById('comments-max').textContent = evCfg.comentariosMax || 500;
+  cmt.value = STATE.comentarios || '';
+  document.getElementById('comments-counter').textContent = cmt.value.length;
+  cmt.addEventListener('input', () => {
+    STATE.comentarios = cmt.value;
+    document.getElementById('comments-counter').textContent = cmt.value.length;
+    saveState();
+  });
+
+  // Categories
+  renderCategorias();
+
+  // Submit
+  document.getElementById('submit-btn').addEventListener('click', onSubmit);
+  document.getElementById('modal-close').addEventListener('click', () => {
+    document.getElementById('modal-backdrop').classList.remove('show');
+  });
+  document.getElementById('modal-download').addEventListener('click', () => {
+    generatePDF();
+  });
+
+  // Title
+  document.title = `${ev.titulo || 'Evaluación'} — ${r.nombre || 'Morishita'}`;
+}
+
+function renderCategorias(){
+  const container = document.getElementById('categories-container');
+  container.innerHTML = '';
+  const cats = CONFIG.categorias || [];
+  cats.forEach((cat, idx) => {
+    const catEl = document.createElement('div');
+    catEl.className = 'category' + (idx === 0 ? ' open' : '');
+    catEl.dataset.catId = cat.id;
+
+    const head = document.createElement('div');
+    head.className = 'category-head';
+    head.innerHTML = `
+      <div class="category-name">${escapeHtml(cat.nombre)}</div>
+      <svg class="category-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>`;
+    head.addEventListener('click', () => {
+      catEl.classList.toggle('open');
+    });
+    catEl.appendChild(head);
+
+    const body = document.createElement('div');
+    body.className = 'category-body';
+    (cat.platillos || []).forEach((dish, dIdx) => {
+      body.appendChild(renderDish(dish, dIdx + 1, cat.id, idx === 0 && dIdx === 0));
+    });
+    catEl.appendChild(body);
+    container.appendChild(catEl);
+  });
+}
+
+function renderDish(dish, num, catId, openFirst){
+  const ratedNow = STATE.ratings[dish.id];
+  const wrap = document.createElement('div');
+  wrap.className = 'dish' + (openFirst ? ' open' : '');
+  wrap.dataset.dishId = dish.id;
+
+  const head = document.createElement('div');
+  head.className = 'dish-head';
+  head.innerHTML = `
+    <div class="dish-title"><span class="dish-num">${num}.</span>${escapeHtml(dish.nombre)}</div>
+    <div class="dish-status">
+      <span class="dish-badge ${ratedNow ? 'rated' : ''}" data-role="badge">${ratedNow ? ('★ ' + ratedNow + '/' + (CONFIG.evaluacion.escalaMax||5)) : 'Sin evaluar'}</span>
+      <svg class="dish-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>`;
+  head.addEventListener('click', () => {
+    wrap.classList.toggle('open');
+  });
+  wrap.appendChild(head);
+
+  const body = document.createElement('div');
+  body.className = 'dish-body';
+
+  // Rating
+  body.innerHTML += `<div class="rating-label">Calificación</div>`;
+  const ratingRow = document.createElement('div');
+  ratingRow.className = 'rating-row';
+  const max = CONFIG.evaluacion.escalaMax || 5;
+  for (let i = 1; i <= max; i++){
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'rating-btn' + (STATE.ratings[dish.id] === i ? ' active' : '');
+    btn.textContent = i;
+    btn.dataset.val = i;
+    btn.addEventListener('click', () => {
+      STATE.ratings[dish.id] = i;
+      ratingRow.querySelectorAll('.rating-btn').forEach(b => b.classList.toggle('active', +b.dataset.val === i));
+      // badge
+      const badge = head.querySelector('[data-role="badge"]');
+      badge.className = 'dish-badge rated';
+      badge.textContent = '★ ' + i + '/' + max;
+      renderProgress();
+      saveState();
+    });
+    ratingRow.appendChild(btn);
+  }
+  body.appendChild(ratingRow);
+
+  // Feedback fields
+  const grid = document.createElement('div');
+  grid.className = 'feedback-grid';
+  const evCfg = CONFIG.evaluacion || {};
+  const gustoField = document.createElement('div');
+  gustoField.className = 'feedback-field';
+  gustoField.innerHTML = `<div class="feedback-label">${escapeHtml(evCfg.campoGusto || 'Lo que me gustó')}</div>`;
+  const gustoTA = document.createElement('textarea');
+  gustoTA.className = 'feedback-input';
+  gustoTA.placeholder = evCfg.placeholderGusto || 'Escribe aquí…';
+  gustoTA.value = STATE.gusto[dish.id] || '';
+  gustoTA.addEventListener('input', () => { STATE.gusto[dish.id] = gustoTA.value; saveState(); });
+  gustoField.appendChild(gustoTA);
+
+  const noGustoField = document.createElement('div');
+  noGustoField.className = 'feedback-field';
+  noGustoField.innerHTML = `<div class="feedback-label">${escapeHtml(evCfg.campoNoGusto || 'Lo que no me gustó')}</div>`;
+  const noGustoTA = document.createElement('textarea');
+  noGustoTA.className = 'feedback-input';
+  noGustoTA.placeholder = evCfg.placeholderNoGusto || 'Escribe aquí…';
+  noGustoTA.value = STATE.noGusto[dish.id] || '';
+  noGustoTA.addEventListener('input', () => { STATE.noGusto[dish.id] = noGustoTA.value; saveState(); });
+  noGustoField.appendChild(noGustoTA);
+
+  grid.appendChild(gustoField);
+  grid.appendChild(noGustoField);
+  body.appendChild(grid);
+
+  wrap.appendChild(body);
+  return wrap;
+}
+
+function totalDishes(){
+  return (CONFIG.categorias || []).reduce((sum, c) => sum + (c.platillos||[]).length, 0);
+}
+
+function totalRated(){
+  return Object.keys(STATE.ratings).filter(k => STATE.ratings[k]).length;
+}
+
+function renderProgress(){
+  const total = totalDishes();
+  const rated = Math.min(totalRated(), total);
+  const pct = total === 0 ? 0 : Math.round((rated / total) * 100);
+  document.getElementById('progress-label').textContent = `Progreso: ${rated} de ${total} platillos`;
+  document.getElementById('progress-pct').textContent = `${pct}%`;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function escapeHtml(s){
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ─────────────────────────────────────────────────────────
+// SUBMIT
+// ─────────────────────────────────────────────────────────
+function onSubmit(){
+  document.getElementById('modal-backdrop').classList.add('show');
+}
+
+// ─────────────────────────────────────────────────────────
+// PDF GENERATION
+// ─────────────────────────────────────────────────────────
+function generatePDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  const margin = 56;
+  let y = margin;
+
+  // Colors
+  const BG = [10,9,8];
+  const FG = [245,240,232];
+  const GOLD = [212,175,106];
+  const SOFT = [154,146,133];
+  const LINE = [60,55,46];
+
+  // Helpers
+  const setFG = () => doc.setTextColor(FG[0],FG[1],FG[2]);
+  const setGOLD = () => doc.setTextColor(GOLD[0],GOLD[1],GOLD[2]);
+  const setSOFT = () => doc.setTextColor(SOFT[0],SOFT[1],SOFT[2]);
+  const setLINE = () => doc.setDrawColor(LINE[0],LINE[1],LINE[2]);
+  const setGOLDLINE = () => doc.setDrawColor(GOLD[0],GOLD[1],GOLD[2]);
+  const fillBG = () => { doc.setFillColor(BG[0],BG[1],BG[2]); doc.rect(0,0,W,H,'F'); };
+  const fillGOLD = () => doc.setFillColor(GOLD[0],GOLD[1],GOLD[2]);
+
+  // === PAGE 1 — COVER ===
+  fillBG();
+  // brand
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(48);
+  setFG();
+  doc.text((CONFIG.restaurante.nombre || 'MORISHITA'), W/2, H/2 - 90, { align:'center' });
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  setGOLD();
+  doc.text((CONFIG.restaurante.tagline || 'AUTHENTIC JAPANESE CUISINE').toUpperCase(), W/2, H/2 - 68, { align:'center', charSpace: 2 });
+
+  // separator diamond
+  setGOLD();
+  doc.setFontSize(10);
+  doc.text('◆', W/2, H/2 - 36, { align:'center' });
+
+  // event title
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(10);
+  setSOFT();
+  doc.text('EXPERIENCIA PRIVADA DE EVALUACIÓN', W/2, H/2 - 14, { align:'center', charSpace: 3 });
+
+  doc.setFont('times','normal');
+  doc.setFontSize(34);
+  setFG();
+  doc.text((CONFIG.evento.titulo || 'Hoja de evaluación de cata'), W/2, H/2 + 26, { align:'center' });
+
+  doc.setFont('times','italic');
+  doc.setFontSize(15);
+  setGOLD();
+  doc.text(`${CONFIG.evento.cliente || ''}  ·  ${CONFIG.evento.fecha || ''}`, W/2, H/2 + 58, { align:'center' });
+
+  // line
+  setGOLDLINE();
+  doc.setLineWidth(0.6);
+  doc.line(W/2 - 30, H/2 + 80, W/2 + 30, H/2 + 80);
+
+  // summary chips
+  const total = totalDishes();
+  const rated = totalRated();
+  const pct = total === 0 ? 0 : Math.round((rated/total)*100);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  setSOFT();
+  doc.text(`PLATILLOS EVALUADOS: ${rated} / ${total}   ·   ${pct}% COMPLETADO`, W/2, H/2 + 110, { align:'center', charSpace: 1.5 });
+
+  // footer cover
+  doc.setFontSize(8);
+  setSOFT();
+  doc.text(`Generado el ${new Date().toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' })}`, W/2, H - margin, { align:'center', charSpace: 1.5 });
+  doc.text((CONFIG.restaurante.nombre || 'Morishita') + ' Japanese Cuisine · ' + (CONFIG.restaurante.ubicacion || 'Ensenada, B.C.'), W/2, H - margin + 14, { align:'center', charSpace: 1.5 });
+
+  // === PAGE 2+ — EVALUATIONS ===
+  doc.addPage();
+  fillBG();
+  y = margin;
+
+  // Header
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(11);
+  setGOLD();
+  doc.text('RESUMEN DE EVALUACIÓN', margin, y, { charSpace: 2.5 });
+  y += 6;
+  setGOLDLINE();
+  doc.setLineWidth(0.5);
+  doc.line(margin, y, margin + 70, y);
+  y += 22;
+
+  // Event meta block
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8.5);
+  setSOFT();
+  const metaLines = [
+    ['CLIENTE',     CONFIG.evento.cliente || '—'],
+    ['FECHA',       CONFIG.evento.fecha   || '—'],
+    ['SEDE',        (CONFIG.restaurante.nombre || 'Morishita') + ' Japanese Cuisine · ' + (CONFIG.restaurante.ubicacion || 'Ensenada, B.C.')],
+    ['MODALIDAD',   'Sesión privada de degustación y desarrollo de menú'],
+    ['PROGRESO',    `${rated} de ${total} platillos · ${pct}%`]
+  ];
+  metaLines.forEach(([k,v]) => {
+    doc.setFont('helvetica','normal');
+    setGOLD();
+    doc.text(k, margin, y, { charSpace: 1.8 });
+    setFG();
+    doc.setFontSize(10);
+    doc.text(String(v), margin + 90, y);
+    doc.setFontSize(8.5);
+    y += 16;
+  });
+
+  y += 12;
+  setLINE();
+  doc.setLineWidth(0.4);
+  doc.line(margin, y, W - margin, y);
+  y += 18;
+
+  // Categories
+  const cats = CONFIG.categorias || [];
+  for (const cat of cats) {
+    // Page break check
+    if (y > H - 120) { doc.addPage(); fillBG(); y = margin; }
+
+    // Category title
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(10);
+    setGOLD();
+    doc.text(cat.nombre, margin, y, { charSpace: 3 });
+    y += 6;
+    setGOLDLINE();
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, margin + 30, y);
+    y += 18;
+
+    // Dishes
+    let dishIndex = 1;
+    for (const dish of (cat.platillos || [])) {
+      const rating = STATE.ratings[dish.id] || 0;
+      const liked = (STATE.gusto[dish.id] || '').trim();
+      const disliked = (STATE.noGusto[dish.id] || '').trim();
+
+      // estimate height
+      const linesLiked = liked ? doc.splitTextToSize(liked, (W - margin*2 - 16) / 2) : ['—'];
+      const linesDisliked = disliked ? doc.splitTextToSize(disliked, (W - margin*2 - 16) / 2) : ['—'];
+      const blockHeight = 28 + Math.max(linesLiked.length, linesDisliked.length) * 11 + 14;
+      if (y + blockHeight > H - margin) { doc.addPage(); fillBG(); y = margin; }
+
+      // Dish header
+      doc.setFont('times','normal');
+      doc.setFontSize(13);
+      setFG();
+      doc.text(`${dishIndex}.  ${dish.nombre}`, margin, y);
+
+      // Rating chip on right
+      const ratingTxt = rating ? `★ ${rating}/${CONFIG.evaluacion.escalaMax || 5}` : 'Sin evaluar';
+      const txtW = doc.getTextWidth(ratingTxt);
+      const chipPad = 8;
+      const chipW = txtW + chipPad*2;
+      const chipH = 16;
+      const chipX = W - margin - chipW;
+      const chipY = y - 11;
+      if (rating) {
+        doc.setFillColor(212,175,106);
+        doc.roundedRect(chipX, chipY, chipW, chipH, 3, 3, 'F');
+        doc.setTextColor(10,9,8);
+      } else {
+        setLINE();
+        doc.setLineWidth(0.5);
+        doc.roundedRect(chipX, chipY, chipW, chipH, 3, 3, 'S');
+        setSOFT();
+      }
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(8);
+      doc.text(ratingTxt, chipX + chipPad, chipY + 11, { charSpace: 1 });
+      setFG();
+      y += 16;
+
+      // Feedback two columns
+      const colW = (W - margin*2 - 16) / 2;
+      const col1X = margin;
+      const col2X = margin + colW + 16;
+      let blockY = y;
+
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(7.5);
+      setGOLD();
+      doc.text((CONFIG.evaluacion.campoGusto || 'LO QUE ME GUSTÓ').toUpperCase(), col1X, blockY, { charSpace: 1.5 });
+      doc.text((CONFIG.evaluacion.campoNoGusto || 'LO QUE NO ME GUSTÓ').toUpperCase(), col2X, blockY, { charSpace: 1.5 });
+      blockY += 11;
+
+      doc.setFont('times','italic');
+      doc.setFontSize(9.5);
+      setFG();
+      doc.text(linesLiked, col1X, blockY);
+      doc.text(linesDisliked, col2X, blockY);
+
+      const usedLines = Math.max(linesLiked.length, linesDisliked.length);
+      y = blockY + usedLines * 11 + 14;
+
+      // light separator
+      setLINE();
+      doc.setLineWidth(0.3);
+      doc.line(margin, y - 8, W - margin, y - 8);
+      y += 4;
+
+      dishIndex++;
+    }
+
+    y += 10;
+  }
+
+  // GENERAL COMMENTS
+  if (y > H - 120) { doc.addPage(); fillBG(); y = margin; }
+  y += 6;
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  setGOLD();
+  doc.text((CONFIG.evaluacion.comentariosLabel || 'COMENTARIOS GENERALES').toUpperCase(), margin, y, { charSpace: 3 });
+  y += 6;
+  setGOLDLINE();
+  doc.line(margin, y, margin + 30, y);
+  y += 18;
+
+  const comentarios = (STATE.comentarios || '').trim();
+  doc.setFont('times','italic');
+  doc.setFontSize(11);
+  setFG();
+  const cLines = doc.splitTextToSize(comentarios || '— Sin comentarios —', W - margin*2);
+  doc.text(cLines, margin, y);
+  y += cLines.length * 14 + 24;
+
+  // Page footers (no podemos hacerlo retroactivo aquí; las páginas ya están)
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let p = 1; p <= pageCount; p++) {
+    doc.setPage(p);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(7.5);
+    setSOFT();
+    if (p > 1) {
+      doc.text((CONFIG.restaurante.nombre || 'MORISHITA') + ' · ' + (CONFIG.evento.titulo || 'EVALUACIÓN DE CATA').toUpperCase(),
+        margin, H - 28, { charSpace: 1.5 });
+      doc.text(`Página ${p} de ${pageCount}`, W - margin, H - 28, { align:'right', charSpace: 1.5 });
+    }
+  }
+
+  // Save
+  const fileTag = (CONFIG.evento.cliente || 'cliente').toLowerCase().replace(/[^a-z0-9]+/g,'_');
+  const dateTag = new Date().toISOString().slice(0,10);
+  doc.save(`evaluacion_${fileTag}_${dateTag}.pdf`);
+
+  document.getElementById('modal-backdrop').classList.remove('show');
+}
+
+// GO
+init();
+</script>
+</body>
+</html>
