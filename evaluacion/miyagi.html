@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
 <meta name="robots" content="noindex,nofollow"/>
 <title>Evaluación de Cata — Morishita Japanese Cuisine</title>
 <meta name="theme-color" content="#0a0908"/>
@@ -14,11 +14,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Zen+Antique+Soft&family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;}
+html{-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth;}
 
 :root{
   --bg:#0a0908;
@@ -45,13 +44,14 @@ body{
   background:linear-gradient(180deg,#0a0908 0%,#13110e 100%);
   color:var(--fg);
   min-height:100vh;
+  min-height:100dvh;
   font-size:16px;
   line-height:1.5;
   overflow-x:hidden;
 }
 
-/* ── LOGIN GATE ────────────────────────────────────────── */
-.gate{
+/* ── SCREENS ───────────────────────────────────────────── */
+.screen{
   position:fixed;
   inset:0;
   background:linear-gradient(180deg,#0a0908 0%,#13110e 100%);
@@ -59,45 +59,48 @@ body{
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding:32px 24px;
+  padding:32px 22px;
   z-index:100;
   transition:opacity .35s ease;
+  overflow-y:auto;
 }
-.gate.hide{opacity:0;pointer-events:none;}
-.gate-logo{
+.screen.hide{opacity:0;pointer-events:none;}
+
+.screen-logo{
   font-family:var(--display);
-  font-size:54px;
+  font-size:52px;
   color:var(--fg);
   letter-spacing:.04em;
   margin-bottom:8px;
+  line-height:1;
 }
-.gate-brand{
+.screen-brand{
   font-family:var(--mono);
-  font-size:11px;
-  letter-spacing:.3em;
+  font-size:10.5px;
+  letter-spacing:.32em;
   color:var(--gold);
   text-transform:uppercase;
   margin-bottom:6px;
 }
-.gate-sub{
+.screen-sub{
   font-family:var(--mono);
   font-size:9px;
   letter-spacing:.25em;
   color:var(--fg-soft);
   text-transform:uppercase;
-  margin-bottom:48px;
+  margin-bottom:40px;
 }
-.gate-card{
+.screen-card{
   width:100%;
-  max-width:340px;
-  background:rgba(20,17,14,.6);
+  max-width:360px;
+  background:rgba(20,17,14,.65);
   border:1px solid var(--line);
-  border-radius:6px;
-  padding:32px 24px;
+  border-radius:8px;
+  padding:30px 24px;
   text-align:center;
   backdrop-filter:blur(6px);
 }
-.gate-eyebrow{
+.screen-eyebrow{
   font-family:var(--mono);
   font-size:10px;
   letter-spacing:.3em;
@@ -105,68 +108,93 @@ body{
   text-transform:uppercase;
   margin-bottom:14px;
 }
-.gate-title{
+.screen-title{
   font-family:var(--serif);
   font-size:22px;
   font-weight:500;
   color:var(--fg);
-  margin-bottom:8px;
+  margin-bottom:10px;
   letter-spacing:.01em;
 }
-.gate-note{
-  font-family:var(--mono);
-  font-size:10px;
-  letter-spacing:.1em;
+.screen-note{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:13.5px;
   color:var(--fg-soft);
-  line-height:1.6;
-  margin-bottom:28px;
+  line-height:1.55;
+  margin-bottom:24px;
 }
-.gate-input{
+.screen-input{
   width:100%;
   background:rgba(255,255,255,.02);
   border:1px solid var(--line);
   color:var(--fg);
-  padding:16px 14px;
-  border-radius:4px;
-  font-family:var(--mono);
-  font-size:13px;
-  letter-spacing:.25em;
+  padding:15px 14px;
+  border-radius:5px;
+  font-family:var(--serif);
+  font-size:16px;
   text-align:center;
   outline:none;
-  margin-bottom:18px;
+  margin-bottom:16px;
   transition:border-color .25s;
 }
-.gate-input::placeholder{color:var(--fg-soft);letter-spacing:.2em;}
-.gate-input:focus{border-color:var(--gold);}
-.gate-btn{
+.screen-input.pw{font-family:var(--mono);letter-spacing:.25em;font-size:14px;}
+.screen-input::placeholder{color:var(--fg-soft);opacity:.7;}
+.screen-input:focus{border-color:var(--gold);}
+.screen-btn{
   width:100%;
   background:var(--gold);
   color:#0a0908;
   border:none;
-  padding:16px;
-  border-radius:4px;
+  padding:15px;
+  border-radius:5px;
   font-family:var(--mono);
   font-size:11px;
   font-weight:500;
-  letter-spacing:.3em;
+  letter-spacing:.28em;
   text-transform:uppercase;
   cursor:pointer;
   transition:.25s;
 }
-.gate-btn:hover{background:#e6c285;transform:translateY(-1px);}
-.gate-error{
+.screen-btn:hover{background:#e6c285;transform:translateY(-1px);}
+.screen-btn:disabled{opacity:.5;cursor:default;transform:none;}
+.screen-error{
   color:#e08585;
   font-family:var(--mono);
   font-size:10px;
   letter-spacing:.15em;
   text-transform:uppercase;
-  margin-top:14px;
+  margin-top:12px;
   opacity:0;
+  min-height:14px;
   transition:opacity .25s;
 }
-.gate-error.show{opacity:1;}
-.gate-footer{
-  margin-top:40px;
+.screen-error.show{opacity:1;}
+.screen-resume{
+  margin-top:14px;
+  padding:12px 14px;
+  background:rgba(212,175,106,.08);
+  border:1px solid var(--gold-line);
+  border-radius:5px;
+  text-align:left;
+}
+.screen-resume-title{
+  font-family:var(--mono);
+  font-size:9.5px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:6px;
+}
+.screen-resume-text{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:13px;
+  color:var(--fg-mid);
+  line-height:1.5;
+}
+.screen-footer{
+  margin-top:36px;
   font-family:var(--mono);
   font-size:9px;
   letter-spacing:.25em;
@@ -181,7 +209,7 @@ body{
   display:none;
   max-width:560px;
   margin:0 auto;
-  padding:24px 16px 120px;
+  padding:20px 14px 140px;
   position:relative;
 }
 .app.show{display:block;}
@@ -189,11 +217,11 @@ body{
 /* HEADER */
 .brand{
   text-align:center;
-  padding:8px 0 18px;
+  padding:6px 0 14px;
 }
 .brand-logo{
   font-family:var(--display);
-  font-size:34px;
+  font-size:32px;
   color:var(--fg);
   letter-spacing:.12em;
   line-height:1;
@@ -209,14 +237,14 @@ body{
 .brand-diamond{
   color:var(--gold);
   font-size:8px;
-  margin:10px 0 4px;
+  margin:9px 0 4px;
   letter-spacing:.5em;
 }
 
 .event-title{
   text-align:center;
   font-family:var(--mono);
-  font-size:11px;
+  font-size:10.5px;
   letter-spacing:.32em;
   color:var(--fg);
   text-transform:uppercase;
@@ -229,14 +257,31 @@ body{
   font-style:italic;
   font-size:14px;
   color:var(--gold);
-  margin-bottom:24px;
+  margin-bottom:6px;
   letter-spacing:.02em;
 }
-
-/* PROGRESS */
-.progress-wrap{
+.event-user{
+  text-align:center;
+  font-family:var(--mono);
+  font-size:9.5px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--fg-soft);
   margin-bottom:22px;
 }
+.event-user b{color:var(--fg);font-weight:500;}
+.event-user a{
+  color:var(--gold);
+  text-decoration:none;
+  margin-left:8px;
+  padding-left:10px;
+  border-left:1px solid var(--line);
+  cursor:pointer;
+}
+.event-user a:hover{opacity:.7;}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:22px;}
 .progress-row{
   display:flex;
   justify-content:space-between;
@@ -270,34 +315,33 @@ body{
   background:rgba(20,17,14,.6);
   border:1px solid var(--line);
   border-radius:8px;
-  margin-bottom:14px;
+  margin-bottom:12px;
   overflow:hidden;
 }
 .category-head{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:18px 18px;
+  padding:16px 16px;
   cursor:pointer;
   user-select:none;
   border-bottom:1px solid transparent;
   transition:border-color .25s, background .25s;
+  gap:10px;
 }
-.category.open .category-head{
-  border-bottom-color:var(--line);
-}
-.category-head-text{min-width:0;flex:1;padding-right:12px;}
+.category.open .category-head{border-bottom-color:var(--line);}
+.category-head-text{min-width:0;flex:1;}
 .category-name{
   font-family:var(--mono);
-  font-size:12px;
-  letter-spacing:.3em;
+  font-size:11.5px;
+  letter-spacing:.28em;
   color:var(--fg);
   font-weight:500;
 }
 .category-desc{
   font-family:var(--serif);
   font-style:italic;
-  font-size:12.5px;
+  font-size:12px;
   color:var(--fg-soft);
   margin-top:5px;
   letter-spacing:.01em;
@@ -312,49 +356,41 @@ body{
   flex-shrink:0;
 }
 .category.open .category-chev{transform:rotate(180deg);}
-.category-body{
-  display:none;
-}
+.category-body{display:none;}
 .category.open .category-body{display:block;}
 
 /* DISH */
-.dish{
-  border-top:1px solid var(--line-soft);
-  padding:0;
-}
+.dish{border-top:1px solid var(--line-soft);}
 .category-body .dish:first-child{border-top:none;}
 .dish-head{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:16px 18px;
+  padding:14px 16px;
   cursor:pointer;
   user-select:none;
   transition:background .2s;
+  gap:10px;
 }
 .dish-head:hover{background:rgba(212,175,106,.02);}
 .dish-title{
   font-family:var(--serif);
-  font-size:17px;
+  font-size:16.5px;
   color:var(--fg);
   flex:1;
-  padding-right:10px;
+  padding-right:6px;
   line-height:1.3;
   font-weight:500;
+  min-width:0;
 }
-.dish-num{color:var(--fg-soft);font-weight:400;font-family:var(--mono);font-size:13px;margin-right:6px;letter-spacing:.05em;}
-.dish-status{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-shrink:0;
-}
+.dish-num{color:var(--fg-soft);font-weight:400;font-family:var(--mono);font-size:12px;margin-right:7px;letter-spacing:.05em;}
+.dish-status{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .dish-badge{
   font-family:var(--mono);
   font-size:9px;
-  letter-spacing:.18em;
+  letter-spacing:.16em;
   text-transform:uppercase;
-  padding:5px 10px;
+  padding:5px 9px;
   border-radius:3px;
   border:1px solid var(--line);
   color:var(--fg-soft);
@@ -370,44 +406,6 @@ body{
   color:#0a0908;
   background:var(--gold);
 }
-
-/* DISH SAVE / SEND */
-.dish-save-row{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  margin-top:18px;
-  flex-wrap:wrap;
-}
-.dish-save-btn{
-  background:transparent;
-  border:1px solid var(--gold-line);
-  color:var(--gold);
-  padding:11px 18px;
-  border-radius:5px;
-  font-family:var(--mono);
-  font-size:10.5px;
-  font-weight:500;
-  letter-spacing:.22em;
-  text-transform:uppercase;
-  cursor:pointer;
-  transition:.2s;
-  display:inline-flex;
-  align-items:center;
-  gap:9px;
-  -webkit-tap-highlight-color:transparent;
-}
-.dish-save-btn svg{width:14px;height:14px;}
-.dish-save-btn:hover:not(:disabled){background:var(--gold);color:#0a0908;border-color:var(--gold);}
-.dish-save-btn:disabled{opacity:.5;cursor:default;}
-.dish-save-status{
-  font-family:var(--mono);
-  font-size:10px;
-  letter-spacing:.12em;
-  color:var(--fg-soft);
-}
-.dish-save-status.ok{color:var(--gold);}
-.dish-save-status.local{color:#caa765;}
 .dish-chev{
   color:var(--fg-soft);
   width:12px;
@@ -416,12 +414,9 @@ body{
   flex-shrink:0;
 }
 .dish.open .dish-chev{transform:rotate(180deg);color:var(--gold);}
-.dish-body{
-  display:none;
-  padding:4px 18px 22px;
-}
+.dish-body{display:none;padding:4px 16px 20px;}
 .dish.open .dish-body{display:block;}
-.dish.open .dish-head{padding-bottom:8px;}
+.dish.open .dish-head{padding-bottom:6px;}
 
 /* RATING */
 .rating-label{
@@ -439,19 +434,16 @@ body{
   letter-spacing:.12em;
   color:var(--gold);
   text-transform:uppercase;
-  margin-left:4px;
+  margin-left:6px;
 }
 .rating-row{
-  display:flex;
+  display:grid;
+  grid-template-columns:repeat(5, 1fr);
   gap:8px;
-  margin-bottom:18px;
-  justify-content:flex-start;
-  flex-wrap:wrap;
-  max-width:236px;
+  margin-bottom:16px;
 }
 .rating-btn{
-  width:40px;
-  height:40px;
+  height:44px;
   border-radius:50%;
   border:1px solid var(--line);
   background:transparent;
@@ -465,26 +457,20 @@ body{
   align-items:center;
   justify-content:center;
   -webkit-tap-highlight-color:transparent;
-  flex:0 0 auto;
+  padding:0;
 }
-.rating-btn:hover{border-color:var(--gold);color:var(--gold);transform:scale(1.05);}
+.rating-btn:hover{border-color:var(--gold);color:var(--gold);}
 .rating-btn.active{
   background:var(--gold);
   border-color:var(--gold);
   color:#0a0908;
   font-weight:600;
-  box-shadow:0 0 16px rgba(212,175,106,.35);
+  box-shadow:0 0 14px rgba(212,175,106,.35);
 }
 
-/* FEEDBACK FIELDS */
-.feedback-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:14px;
-}
-@media(min-width:480px){
-  .feedback-grid{grid-template-columns:1fr 1fr;}
-}
+/* FEEDBACK */
+.feedback-grid{display:grid;grid-template-columns:1fr;gap:12px;}
+@media(min-width:500px){.feedback-grid{grid-template-columns:1fr 1fr;}}
 .feedback-field{display:flex;flex-direction:column;gap:6px;}
 .feedback-label{
   font-family:var(--mono);
@@ -501,16 +487,61 @@ body{
   padding:11px 13px;
   border-radius:4px;
   font-family:var(--serif);
-  font-size:14px;
+  font-size:15px;
   line-height:1.5;
   outline:none;
   resize:vertical;
-  min-height:74px;
+  min-height:70px;
   transition:border-color .25s;
   font-style:italic;
 }
 .feedback-input::placeholder{color:var(--fg-soft);opacity:.6;}
 .feedback-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,106,.08);}
+
+/* DISH SAVE */
+.dish-save-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top:16px;
+  flex-wrap:wrap;
+}
+.dish-save-btn{
+  flex:1;
+  min-width:160px;
+  background:var(--gold);
+  border:1px solid var(--gold);
+  color:#0a0908;
+  padding:13px 18px;
+  border-radius:5px;
+  font-family:var(--mono);
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.2s;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  -webkit-tap-highlight-color:transparent;
+}
+.dish-save-btn svg{width:14px;height:14px;}
+.dish-save-btn:hover:not(:disabled){background:#e6c285;border-color:#e6c285;}
+.dish-save-btn:disabled{opacity:.6;cursor:default;}
+.dish-save-btn.next-mode{background:transparent;color:var(--gold);}
+.dish-save-btn.next-mode:hover:not(:disabled){background:var(--gold);color:#0a0908;}
+.dish-save-status{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.12em;
+  color:var(--fg-soft);
+  flex-basis:100%;
+  text-align:center;
+}
+.dish-save-status.ok{color:var(--gold);}
+.dish-save-status.local{color:#caa765;}
 
 /* COMMENTS */
 .comments-box{
@@ -537,7 +568,7 @@ body{
   padding:12px 14px;
   border-radius:4px;
   font-family:var(--serif);
-  font-size:14px;
+  font-size:15px;
   line-height:1.5;
   outline:none;
   resize:vertical;
@@ -557,7 +588,7 @@ body{
 }
 
 /* SUBMIT */
-.submit-wrap{margin-top:20px;}
+.submit-wrap{margin-top:24px;}
 .submit-btn{
   width:100%;
   background:var(--gold);
@@ -567,7 +598,7 @@ body{
   border-radius:6px;
   font-family:var(--mono);
   font-size:12px;
-  font-weight:500;
+  font-weight:600;
   letter-spacing:.28em;
   text-transform:uppercase;
   cursor:pointer;
@@ -576,9 +607,18 @@ body{
   align-items:center;
   justify-content:center;
   gap:12px;
+  position:relative;
 }
-.submit-btn:hover{background:#e6c285;transform:translateY(-1px);box-shadow:0 8px 24px rgba(212,175,106,.2);}
-.submit-btn:active{transform:translateY(0);}
+.submit-btn.ready{
+  box-shadow:0 8px 28px rgba(212,175,106,.32), 0 0 0 1px var(--gold);
+  animation:pulseGold 2.4s ease-in-out infinite;
+}
+@keyframes pulseGold{
+  0%,100%{box-shadow:0 8px 28px rgba(212,175,106,.32), 0 0 0 1px var(--gold);}
+  50%{box-shadow:0 12px 36px rgba(212,175,106,.45), 0 0 0 1px var(--gold);}
+}
+.submit-btn:disabled{opacity:.55;cursor:default;animation:none;box-shadow:none;}
+.submit-btn:hover:not(:disabled){background:#e6c285;transform:translateY(-1px);}
 .submit-btn svg{width:18px;height:18px;}
 .submit-note{
   text-align:center;
@@ -588,18 +628,14 @@ body{
   color:var(--fg-soft);
   text-transform:uppercase;
   margin-top:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
 }
-.submit-note svg{width:11px;height:11px;color:var(--gold);}
+.submit-note.warn{color:var(--gold);}
 
-/* FOOTER */
+/* APP FOOTER */
 .app-footer{
   text-align:center;
-  margin-top:36px;
-  padding-top:26px;
+  margin-top:32px;
+  padding-top:24px;
   border-top:1px solid var(--line-soft);
   font-family:var(--mono);
   font-size:9.5px;
@@ -608,7 +644,7 @@ body{
   text-transform:uppercase;
 }
 
-/* SAVE STATUS */
+/* SAVE INDICATOR */
 .save-indicator{
   position:fixed;
   bottom:24px;
@@ -634,28 +670,37 @@ body{
 .save-indicator svg{width:12px;height:12px;color:var(--gold);}
 .save-indicator.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* COMPLETION MODAL */
+/* MODAL */
 .modal-backdrop{
   position:fixed;
   inset:0;
-  background:rgba(10,9,8,.85);
+  background:rgba(10,9,8,.88);
   backdrop-filter:blur(8px);
   z-index:200;
   display:none;
-  align-items:center;
+  align-items:flex-end;
   justify-content:center;
-  padding:24px;
+  padding:0;
+  overflow-y:auto;
+}
+@media(min-width:520px){
+  .modal-backdrop{align-items:center;padding:24px;}
 }
 .modal-backdrop.show{display:flex;}
 .modal{
   background:linear-gradient(145deg,var(--bg-soft),#0a0908);
   border:1px solid var(--gold-line);
-  border-radius:10px;
-  padding:36px 26px;
-  max-width:380px;
+  border-radius:14px 14px 0 0;
+  padding:32px 22px 28px;
+  max-width:480px;
   width:100%;
   text-align:center;
-  box-shadow:0 30px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(212,175,106,.1);
+  box-shadow:0 -20px 60px rgba(0,0,0,.7);
+  max-height:96vh;
+  overflow-y:auto;
+}
+@media(min-width:520px){
+  .modal{border-radius:12px;}
 }
 .modal-icon{
   width:54px;
@@ -684,7 +729,7 @@ body{
   font-size:15px;
   color:var(--fg-soft);
   line-height:1.6;
-  margin-bottom:26px;
+  margin-bottom:22px;
 }
 .modal-actions{display:flex;flex-direction:column;gap:10px;}
 .modal-btn{
@@ -696,8 +741,8 @@ body{
   border-radius:5px;
   font-family:var(--mono);
   font-size:11px;
-  font-weight:500;
-  letter-spacing:.25em;
+  font-weight:600;
+  letter-spacing:.22em;
   text-transform:uppercase;
   cursor:pointer;
   transition:.2s;
@@ -708,6 +753,7 @@ body{
 }
 .modal-btn svg{width:14px;height:14px;}
 .modal-btn:hover{background:#e6c285;}
+.modal-btn:disabled{opacity:.5;cursor:default;}
 .modal-btn.ghost{
   background:transparent;
   color:var(--fg-mid);
@@ -715,7 +761,71 @@ body{
 }
 .modal-btn.ghost:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-faint);}
 
-/* TINY LINK ADMIN */
+/* TOP-5 SELECTION LIST */
+.top-list{
+  text-align:left;
+  margin:6px 0 22px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:rgba(10,9,8,.5);
+  overflow:hidden;
+}
+.top-list-head{
+  font-family:var(--mono);
+  font-size:9.5px;
+  letter-spacing:.2em;
+  color:var(--fg-soft);
+  text-transform:uppercase;
+  padding:10px 14px;
+  border-bottom:1px solid var(--line);
+  background:rgba(212,175,106,.04);
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+.top-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px 14px;
+  border-bottom:1px solid var(--line-soft);
+  cursor:pointer;
+  user-select:none;
+  transition:background .15s;
+}
+.top-row:last-child{border-bottom:none;}
+.top-row:hover{background:rgba(255,255,255,.015);}
+.top-row.selected{background:rgba(212,175,106,.06);}
+.top-check{
+  width:22px;height:22px;flex-shrink:0;border-radius:5px;
+  border:1.5px solid var(--line);background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  transition:.2s;
+}
+.top-row.selected .top-check{
+  background:var(--gold);border-color:var(--gold);
+}
+.top-check svg{width:13px;height:13px;color:#0a0908;opacity:0;transition:.2s;}
+.top-row.selected .top-check svg{opacity:1;}
+.top-name{flex:1;font-family:var(--serif);font-size:16px;color:var(--fg);min-width:0;}
+.top-score{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.08em;
+  color:var(--gold);
+  font-weight:500;
+  flex-shrink:0;
+}
+.top-row.tie .top-score{color:#e6c285;}
+.top-counter{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;
+}
+.top-help{
+  font-family:var(--serif);font-style:italic;font-size:13px;color:var(--fg-soft);
+  margin:14px 0 18px;line-height:1.5;
+}
+
+/* TINY ADMIN LINK */
 .admin-corner{
   position:fixed;
   top:14px;
@@ -738,51 +848,66 @@ body{
 .admin-corner:hover{opacity:1;color:var(--gold);border-color:var(--gold-line);}
 
 /* SCROLLBAR */
-::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:var(--bg);}
-::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
 ::-webkit-scrollbar-thumb:hover{background:var(--gold-soft);}
 
-/* INPUT FOCUS — móvil: evita zoom */
+/* MOBILE-FIRST OVERRIDES */
 @media(max-width:640px){
-  .feedback-input,.comments-input{font-size:16px;}
-  .gate-input{font-size:16px;}
+  .feedback-input,.comments-input,.screen-input{font-size:16px;}
 }
-
-/* PRINT (por si alguien imprime la página) */
 @media print{
-  .gate,.admin-corner,.submit-wrap,.save-indicator{display:none!important;}
+  .screen,.admin-corner,.submit-wrap,.save-indicator{display:none!important;}
   body{background:#fff;color:#000;}
 }
 </style>
 </head>
 <body>
 
-<!-- ───── GATE / LOGIN ───── -->
-<div class="gate" id="gate">
-  <div class="gate-logo">森下</div>
-  <div class="gate-brand">MORISHITA</div>
-  <div class="gate-sub">Authentic Japanese Cuisine</div>
-
-  <div class="gate-card">
-    <div class="gate-eyebrow">Acceso Privado</div>
-    <div class="gate-title">Hoja de evaluación</div>
-    <div class="gate-note">
-      Esta página es de uso exclusivo del invitado.<br/>
-      Ingresa la contraseña para continuar.
-    </div>
-    <input type="password" id="gate-input" class="gate-input" placeholder="••••••••" autocomplete="off" inputmode="text"/>
-    <button class="gate-btn" id="gate-btn">Entrar</button>
-    <div class="gate-error" id="gate-error">Contraseña incorrecta</div>
+<!-- ───── GATE: contraseña ───── -->
+<div class="screen" id="screen-gate">
+  <div class="screen-logo">森下</div>
+  <div class="screen-brand">MORISHITA</div>
+  <div class="screen-sub">Authentic Japanese Cuisine</div>
+  <div class="screen-card">
+    <div class="screen-eyebrow">Acceso privado</div>
+    <div class="screen-title">Hoja de evaluación</div>
+    <div class="screen-note">Ingresa la contraseña para continuar.</div>
+    <input id="gate-input" type="password" class="screen-input pw" placeholder="••••••••" autocomplete="off"/>
+    <button id="gate-btn" class="screen-btn">Entrar</button>
+    <div id="gate-error" class="screen-error">Contraseña incorrecta</div>
   </div>
+  <div class="screen-footer">Ensenada · Baja California</div>
+</div>
 
-  <div class="gate-footer">Ensenada · Baja California</div>
+<!-- ───── NAME: nombre del evaluador ───── -->
+<div class="screen" id="screen-name" style="display:none;">
+  <div class="screen-logo">森下</div>
+  <div class="screen-brand">MORISHITA</div>
+  <div class="screen-sub">Degustación nuevo menú</div>
+  <div class="screen-card">
+    <div class="screen-eyebrow">¿Quién evalúa hoy?</div>
+    <div class="screen-title">Tu nombre</div>
+    <div class="screen-note">
+      Tu evaluación se guarda con tu nombre.<br/>
+      Si varias personas prueban, cada una tiene su propia sesión.
+    </div>
+    <input id="name-input" type="text" class="screen-input" placeholder="Ej. Carlos Miyagi" autocomplete="off" maxlength="60"/>
+    <button id="name-btn" class="screen-btn">Comenzar</button>
+    <div id="name-error" class="screen-error">Ingresa un nombre</div>
+    <div id="name-resume" class="screen-resume" style="display:none;">
+      <div class="screen-resume-title">Tienes una evaluación a medias</div>
+      <div class="screen-resume-text" id="name-resume-text">—</div>
+    </div>
+  </div>
+  <div class="screen-footer">20 de junio de 2026</div>
 </div>
 
 <!-- ───── APP ───── -->
 <div class="app" id="app">
 
-  <a href="/evaluacion/admin" class="admin-corner" id="admin-link" title="Panel de administración">Admin</a>
+  <a href="/evaluacion/admin" class="admin-corner" title="Panel de administración">Admin</a>
 
   <header class="brand">
     <div class="brand-logo" id="brand-kanji">森下</div>
@@ -790,8 +915,9 @@ body{
     <div class="brand-diamond">◆</div>
   </header>
 
-  <div class="event-title" id="event-title">Hoja de evaluación de cata</div>
+  <div class="event-title" id="event-title">Degustación nuevo menú</div>
   <div class="event-meta" id="event-meta">— · —</div>
+  <div class="event-user">Evaluando como <b id="event-user-name">—</b><a id="event-user-switch" title="Cambiar persona">Cambiar</a></div>
 
   <div class="progress-wrap">
     <div class="progress-row">
@@ -808,7 +934,7 @@ body{
     <textarea
       id="comments-input"
       class="comments-input"
-      placeholder="Comparte tu impresión general de la experiencia de omakase…"
+      placeholder="Comparte tu impresión general de la degustación…"
       maxlength="500"></textarea>
     <div class="comments-counter"><span id="comments-counter">0</span> / <span id="comments-max">500</span></div>
   </div>
@@ -816,34 +942,50 @@ body{
   <div class="submit-wrap">
     <button class="submit-btn" id="submit-btn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-        <polyline points="17 21 17 13 7 13 7 21"></polyline>
-        <polyline points="7 3 7 8 15 8"></polyline>
+        <line x1="22" y1="2" x2="11" y2="13"></line>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
       </svg>
-      Finalizar y descargar PDF
+      <span id="submit-btn-text">Enviar información</span>
     </button>
-    <div class="submit-note">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-      </svg>
-      Tu evaluación se guarda de forma segura
-    </div>
+    <div class="submit-note" id="submit-note">Completa los platillos para activar el envío.</div>
   </div>
 
   <footer class="app-footer" id="app-footer">Morishita Japanese Cuisine · Ensenada, B.C.</footer>
 </div>
 
-<!-- SAVE INDICATOR -->
 <div class="save-indicator" id="save-indicator">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="20 6 9 17 4 12"></polyline>
-  </svg>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
   Guardado
 </div>
 
-<!-- COMPLETION MODAL -->
-<div class="modal-backdrop" id="modal-backdrop">
+<!-- ───── MODAL: selección Top ───── -->
+<div class="modal-backdrop" id="modal-top">
+  <div class="modal">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+    </div>
+    <div class="modal-title">Elige tus rollos preferidos</div>
+    <div class="modal-text" id="modal-top-text">
+      Selecciona al menos <b>5</b> rollos. Si quieres conservar más de 5 favoritos, marca los que quieras —
+      los rollos seleccionados son los que recibirán receta.
+    </div>
+    <div class="top-list-head">
+      <span>Rollos calificados</span>
+      <span class="top-counter"><span id="top-count">0</span> seleccionados</span>
+    </div>
+    <div class="top-list" id="top-list"></div>
+    <div class="top-help" id="top-help"></div>
+    <div class="modal-actions">
+      <button class="modal-btn" id="top-confirm">Confirmar y continuar</button>
+      <button class="modal-btn ghost" id="top-cancel">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ───── MODAL: éxito ───── -->
+<div class="modal-backdrop" id="modal-done">
   <div class="modal">
     <div class="modal-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -851,9 +993,9 @@ body{
         <polyline points="22 4 12 14.01 9 11.01"></polyline>
       </svg>
     </div>
-    <div class="modal-title" id="modal-title">¡Evaluación lista!</div>
-    <div class="modal-text" id="modal-text">
-      Tu evaluación se descargará en formato PDF. Gracias por compartir tu experiencia con nosotros.
+    <div class="modal-title">¡Evaluación enviada!</div>
+    <div class="modal-text" id="modal-done-text">
+      Tu evaluación quedó guardada. Puedes descargar el PDF con tu Top ahora mismo.
     </div>
     <div class="modal-actions">
       <button class="modal-btn" id="modal-download">
@@ -873,7 +1015,7 @@ body{
 'use strict';
 
 // ─────────────────────────────────────────────────────────
-// DEFAULT CONFIG (overridable via admin panel)
+// DEFAULT CONFIG (overridable por el admin via /api/content)
 // ─────────────────────────────────────────────────────────
 const DEFAULT_CONFIG = {
   version: 2,
@@ -900,69 +1042,17 @@ const DEFAULT_CONFIG = {
     comentariosPlaceholder: 'Comparte tu impresión general de la degustación…',
     comentariosMax: 500
   },
-  // Orden de servicio: de sabores ligeros a más intensos.
-  // oficial:true  → cuenta para el Top 5 de rollos que recibirán receta.
-  // oficial:false → se evalúa pero no compite por el Top 5 (entradas / vegetarianos).
   categorias: [
-    {
-      id: 'entradas',
-      nombre: 'ENTRADAS',
-      desc: 'Para abrir la degustación · porción pequeña',
-      oficial: false,
-      platillos: [
-        { id: 'ent_gyozas',  nombre: 'Gyozas' },
-        { id: 'ent_noodles', nombre: 'Noodles' }
-      ]
-    },
-    {
-      id: 'bloque1',
-      nombre: 'BLOQUE 1 · LIGEROS',
-      desc: 'Rollos más frescos y suaves',
-      oficial: true,
-      platillos: [
-        { id: 'r_avocado', nombre: 'Avocado Roll' },
-        { id: 'r_masago',  nombre: 'Masago Especial' },
-        { id: 'r_baja',    nombre: 'Baja Roll' }
-      ]
-    },
-    {
-      id: 'bloque2',
-      nombre: 'BLOQUE 2 · PESCADOS',
-      desc: 'Pescados y rollos más japoneses',
-      oficial: true,
-      platillos: [
-        { id: 'r_aburi',           nombre: 'Aburi Tuna Roll' },
-        { id: 'r_niji',            nombre: 'Niji Roll' },
-        { id: 'r_salmon_flameado', nombre: 'Salmón Flameado Roll' },
-        { id: 'r_sake',            nombre: 'Sake Roll' },
-        { id: 'r_akami',           nombre: 'Akami Spicy Roll' }
-      ]
-    },
-    {
-      id: 'bloque3',
-      nombre: 'BLOQUE 3 · CREMOSOS Y FRITOS',
-      desc: 'Rollos cremosos, fritos y más pesados',
-      oficial: true,
-      platillos: [
-        { id: 'r_fuji',        nombre: 'Fuji Nevado Roll' },
-        { id: 'r_tempura',     nombre: 'Tempura Roll' },
-        { id: 'r_ebi_panko',   nombre: 'Ebi Panko' },
-        { id: 'r_ebi_tampico', nombre: 'Ebi Tampico Roll' },
-        { id: 'r_kanikama',    nombre: 'Kanikama Roll' },
-        { id: 'r_yaki',        nombre: 'Yaki Tempura Roll' }
-      ]
-    },
-    {
-      id: 'vegetarianos',
-      nombre: 'VEGETARIANOS · EXTRA',
-      desc: 'Fuera del menú comercial · no cuenta para el Top 5',
-      oficial: false,
-      extra: true,
-      platillos: [
-        { id: 'v_inari', nombre: 'Inari Maki' },
-        { id: 'v_nasu',  nombre: 'Nasu Roll' }
-      ]
-    }
+    { id:'entradas', nombre:'ENTRADAS', desc:'Para abrir la degustación · porción pequeña', oficial:false,
+      platillos:[ {id:'ent_gyozas',nombre:'Gyozas'}, {id:'ent_noodles',nombre:'Noodles'} ] },
+    { id:'bloque1', nombre:'BLOQUE 1 · LIGEROS', desc:'Rollos más frescos y suaves', oficial:true,
+      platillos:[ {id:'r_avocado',nombre:'Avocado Roll'}, {id:'r_masago',nombre:'Masago Especial'}, {id:'r_baja',nombre:'Baja Roll'} ] },
+    { id:'bloque2', nombre:'BLOQUE 2 · PESCADOS', desc:'Pescados y rollos más japoneses', oficial:true,
+      platillos:[ {id:'r_aburi',nombre:'Aburi Tuna Roll'}, {id:'r_niji',nombre:'Niji Roll'}, {id:'r_salmon_flameado',nombre:'Salmón Flameado Roll'}, {id:'r_sake',nombre:'Sake Roll'}, {id:'r_akami',nombre:'Akami Spicy Roll'} ] },
+    { id:'bloque3', nombre:'BLOQUE 3 · CREMOSOS Y FRITOS', desc:'Rollos cremosos, fritos y más pesados', oficial:true,
+      platillos:[ {id:'r_fuji',nombre:'Fuji Nevado Roll'}, {id:'r_tempura',nombre:'Tempura Roll'}, {id:'r_ebi_panko',nombre:'Ebi Panko'}, {id:'r_ebi_tampico',nombre:'Ebi Tampico Roll'}, {id:'r_kanikama',nombre:'Kanikama Roll'}, {id:'r_yaki',nombre:'Yaki Tempura Roll'} ] },
+    { id:'vegetarianos', nombre:'VEGETARIANOS · EXTRA', desc:'Fuera del menú comercial · no cuenta para el Top', oficial:false, extra:true,
+      platillos:[ {id:'v_inari',nombre:'Inari Maki'}, {id:'v_nasu',nombre:'Nasu Roll'} ] }
   ]
 };
 
@@ -970,62 +1060,73 @@ const DEFAULT_CONFIG = {
 // STATE
 // ─────────────────────────────────────────────────────────
 let CONFIG = null;
-let STATE = { ratings: {}, gusto: {}, noGusto: {}, enviado: {}, comentarios: '', updated_at: null };
-const STORAGE_KEY = 'morishita_eval_miyagi_v1';
+let STATE = newState();
+let DISH_FLAT = []; // [{cat, dish, num, headEl, wrapEl}]
+let SAVE_TIMER = null, INDICATOR_TIMER = null;
+let CHOSEN_TOP = null; // array de dish ids seleccionados como Top
 const CONFIG_REMOTE_KEY = 'evaluacion_miyagi_config';
-const RESP_REMOTE_KEY = 'evaluacion_miyagi_respuestas';
-let SAVE_TIMER = null;
-let INDICATOR_TIMER = null;
+
+function newState(){
+  return {
+    nombre: '',
+    slug: '',
+    ratings: {},
+    gusto: {},
+    noGusto: {},
+    enviado: {},
+    comentarios: '',
+    topSeleccion: null,
+    started_at: null,
+    updated_at: null,
+    submitted_at: null,
+    submitted: false
+  };
+}
+
+// ─────────────────────────────────────────────────────────
+// SLUGIFY
+// ─────────────────────────────────────────────────────────
+function slugify(s){
+  return String(s||'')
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g,'_')
+    .replace(/^_+|_+$/g,'')
+    .slice(0,60);
+}
+function storageKey(slug){ return 'morishita_eval_v2__' + slug; }
 
 // ─────────────────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────────────────
 async function init(){
-  const { cfg, resp } = await loadRemote();
-  CONFIG = cfg ? mergeConfig(DEFAULT_CONFIG, cfg) : structuredClone(DEFAULT_CONFIG);
-  loadState();
-  // Si el servidor tiene respuestas más recientes (p. ej. desde otro dispositivo),
-  // las usamos como base para no perder lo ya capturado.
-  if (resp && resp.updated_at) {
-    const remoteNewer = !STATE.updated_at || new Date(resp.updated_at) > new Date(STATE.updated_at);
-    if (remoteNewer) {
-      STATE.ratings    = resp.ratings    || {};
-      STATE.gusto      = resp.gusto      || {};
-      STATE.noGusto    = resp.noGusto    || {};
-      STATE.enviado    = resp.enviado    || {};
-      STATE.comentarios = resp.comentarios || '';
-      STATE.updated_at = resp.updated_at;
-      saveLocalNow();
-    }
-  }
-  renderApp();
+  CONFIG = await loadConfig();
+  applyConfigToHeader();
   wireGate();
+  wireName();
+  wireApp();
 }
 
-async function loadRemote(){
+async function loadConfig(){
   try {
-    const r = await fetch('/api/content', { cache: 'no-store' });
+    const r = await fetch('/api/content', { cache:'no-store' });
     if (r.ok) {
       const data = await r.json();
-      let cfg = null, resp = null;
-      if (data[CONFIG_REMOTE_KEY]) {
-        try { cfg = typeof data[CONFIG_REMOTE_KEY] === 'string' ? JSON.parse(data[CONFIG_REMOTE_KEY]) : data[CONFIG_REMOTE_KEY]; }
-        catch (e) { console.warn('Config remota inválida:', e); }
+      const raw = data[CONFIG_REMOTE_KEY];
+      if (raw) {
+        try {
+          const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+          if ((parsed.version || 0) >= (DEFAULT_CONFIG.version || 0)) {
+            return mergeConfig(DEFAULT_CONFIG, parsed);
+          }
+        } catch (e) { console.warn('Config remota inválida:', e); }
       }
-      if (data[RESP_REMOTE_KEY]) {
-        try { resp = typeof data[RESP_REMOTE_KEY] === 'string' ? JSON.parse(data[RESP_REMOTE_KEY]) : data[RESP_REMOTE_KEY]; }
-        catch (e) { console.warn('Respuestas remotas inválidas:', e); }
-      }
-      // Si la config remota es de una versión anterior al menú actual, ignórala.
-      if (cfg && (cfg.version || 0) < (DEFAULT_CONFIG.version || 0)) cfg = null;
-      return { cfg, resp };
     }
-  } catch (e) { console.warn('No se pudo cargar del servidor:', e); }
-  return { cfg: null, resp: null };
+  } catch (e) { console.warn('No se pudo cargar config:', e); }
+  return structuredClone(DEFAULT_CONFIG);
 }
 
 function mergeConfig(base, override){
-  // Merge superficial pero respetando arrays completos cuando el override los define.
   const out = structuredClone(base);
   if (!override || typeof override !== 'object') return out;
   for (const k of Object.keys(override)) {
@@ -1037,75 +1138,27 @@ function mergeConfig(base, override){
   return out;
 }
 
-function loadState(){
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      STATE = { ...STATE, ...parsed };
-    }
-  } catch(e) {}
-}
-
-function collectRespuestas(){
-  return {
-    ratings: STATE.ratings,
-    gusto: STATE.gusto,
-    noGusto: STATE.noGusto,
-    enviado: STATE.enviado,
-    comentarios: STATE.comentarios,
-    updated_at: STATE.updated_at
-  };
-}
-
-function saveLocalNow(){
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collectRespuestas())); } catch(e) {}
-}
-
-function saveState(){
-  STATE.updated_at = new Date().toISOString();
-  clearTimeout(SAVE_TIMER);
-  SAVE_TIMER = setTimeout(() => {
-    saveLocalNow();
-    showSaveIndicator();
-  }, 400);
-}
-
-// Envía las respuestas al servidor (best-effort). Devuelve true si se guardó.
-async function pushRemote(){
-  STATE.updated_at = new Date().toISOString();
-  saveLocalNow();
-  try {
-    const r = await fetch('/api/evaluacion/save', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: CONFIG.password, respuestas: collectRespuestas() })
-    });
-    return r.ok;
-  } catch (e) {
-    console.warn('No se pudo sincronizar con el servidor:', e);
-    return false;
-  }
-}
-
-function showSaveIndicator(){
-  const el = document.getElementById('save-indicator');
-  el.classList.add('show');
-  clearTimeout(INDICATOR_TIMER);
-  INDICATOR_TIMER = setTimeout(() => el.classList.remove('show'), 1400);
+function applyConfigToHeader(){
+  const r = CONFIG.restaurante || {};
+  document.getElementById('brand-kanji').textContent = r.kanji || '森下';
+  document.getElementById('brand-tagline').textContent = r.tagline || 'Authentic Japanese Cuisine';
+  document.getElementById('app-footer').textContent = `${r.nombre || 'Morishita'} Japanese Cuisine · ${r.ubicacion || 'Ensenada, B.C.'}`;
+  const ev = CONFIG.evento || {};
+  document.getElementById('event-title').textContent = ev.titulo || 'Hoja de evaluación';
+  document.getElementById('event-meta').textContent = `${ev.cliente || ''}${ev.cliente && ev.fecha ? ' · ' : ''}${ev.fecha || ''}`;
+  document.title = `${ev.titulo || 'Evaluación'} — ${r.nombre || 'Morishita'}`;
 }
 
 // ─────────────────────────────────────────────────────────
-// GATE
+// SCREEN 1 — Contraseña
 // ─────────────────────────────────────────────────────────
 function wireGate(){
   const input = document.getElementById('gate-input');
   const btn = document.getElementById('gate-btn');
   const err = document.getElementById('gate-error');
 
-  // Sesión persistente (no pide pw cada vez)
-  if (sessionStorage.getItem('morishita_eval_ok') === '1') {
-    openApp();
+  if (sessionStorage.getItem('morishita_eval_pw_ok') === '1') {
+    showNameScreen();
     return;
   }
 
@@ -1113,49 +1166,153 @@ function wireGate(){
     const pw = input.value.trim();
     if (pw === (CONFIG.password || '').trim()) {
       err.classList.remove('show');
-      sessionStorage.setItem('morishita_eval_ok', '1');
-      openApp();
+      sessionStorage.setItem('morishita_eval_pw_ok', '1');
+      showNameScreen();
     } else {
       err.classList.add('show');
       input.value = '';
       input.focus();
-      // sutil "shake"
       input.animate(
         [{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(-3px)'},{transform:'translateX(0)'}],
         { duration: 260 }
       );
     }
   };
-
   btn.addEventListener('click', tryAuth);
   input.addEventListener('keyup', e => { if (e.key === 'Enter') tryAuth(); });
-  setTimeout(() => input.focus(), 250);
+  setTimeout(() => input.focus(), 200);
 }
 
-function openApp(){
-  const gate = document.getElementById('gate');
-  const app = document.getElementById('app');
+function showNameScreen(){
+  const gate = document.getElementById('screen-gate');
   gate.classList.add('hide');
   setTimeout(() => {
     gate.style.display = 'none';
-    app.classList.add('show');
-    renderProgress();
+    document.getElementById('screen-name').style.display = 'flex';
+    setTimeout(() => document.getElementById('name-input').focus(), 60);
   }, 350);
 }
 
 // ─────────────────────────────────────────────────────────
-// RENDER APP
+// SCREEN 2 — Nombre
 // ─────────────────────────────────────────────────────────
-function renderApp(){
-  // Brand / event
-  const r = CONFIG.restaurante || {};
-  document.getElementById('brand-kanji').textContent = r.kanji || '森下';
-  document.getElementById('brand-tagline').textContent = r.tagline || 'Authentic Japanese Cuisine';
-  document.getElementById('app-footer').textContent = `${r.nombre || 'Morishita'} Japanese Cuisine · ${r.ubicacion || 'Ensenada, B.C.'}`;
+function wireName(){
+  const input = document.getElementById('name-input');
+  const btn = document.getElementById('name-btn');
+  const err = document.getElementById('name-error');
+  const resume = document.getElementById('name-resume');
+  const resumeText = document.getElementById('name-resume-text');
 
-  const ev = CONFIG.evento || {};
-  document.getElementById('event-title').textContent = ev.titulo || 'Hoja de evaluación de cata';
-  document.getElementById('event-meta').textContent = `${ev.cliente || ''}${ev.cliente && ev.fecha ? ' · ' : ''}${ev.fecha || ''}`;
+  // Si ya hay una sesión en localStorage del que llenó última vez en este dispositivo,
+  // la mostramos pre-llenada para conveniencia.
+  const lastSlug = localStorage.getItem('morishita_eval_last_slug');
+  if (lastSlug) {
+    try {
+      const raw = localStorage.getItem(storageKey(lastSlug));
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (s && s.nombre) input.value = s.nombre;
+      }
+    } catch (e) {}
+  }
+
+  function checkResume(){
+    const slug = slugify(input.value);
+    if (!slug) { resume.style.display = 'none'; return; }
+    try {
+      const raw = localStorage.getItem(storageKey(slug));
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (s && !s.submitted) {
+          const total = totalDishes();
+          const rated = Object.keys(s.ratings||{}).filter(k => s.ratings[k]).length;
+          const when = s.updated_at ? new Date(s.updated_at).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' }) : '';
+          resumeText.textContent = `${rated} de ${total} platillos · última edición ${when}. Al continuar, retomas donde la dejaste.`;
+          resume.style.display = 'block';
+          return;
+        }
+      }
+    } catch (e) {}
+    resume.style.display = 'none';
+  }
+
+  input.addEventListener('input', checkResume);
+  checkResume();
+
+  const submit = () => {
+    const nombre = input.value.trim();
+    if (nombre.length < 2) {
+      err.textContent = 'Ingresa al menos 2 caracteres';
+      err.classList.add('show');
+      input.focus();
+      return;
+    }
+    err.classList.remove('show');
+    startEvaluation(nombre);
+  };
+  btn.addEventListener('click', submit);
+  input.addEventListener('keyup', e => { if (e.key === 'Enter') submit(); });
+}
+
+function startEvaluation(nombre){
+  const slug = slugify(nombre);
+  STATE = newState();
+  STATE.nombre = nombre;
+  STATE.slug = slug;
+  STATE.started_at = new Date().toISOString();
+
+  // Recuperar progreso previo de ESTA persona en este dispositivo (si existe).
+  try {
+    const raw = localStorage.getItem(storageKey(slug));
+    if (raw) {
+      const prev = JSON.parse(raw);
+      if (prev && !prev.submitted) {
+        STATE = { ...STATE, ...prev };
+        STATE.nombre = nombre;
+        STATE.slug = slug;
+      }
+    }
+  } catch (e) {}
+
+  localStorage.setItem('morishita_eval_last_slug', slug);
+  renderApp();
+  closeNameScreen();
+}
+
+function closeNameScreen(){
+  const s = document.getElementById('screen-name');
+  s.classList.add('hide');
+  setTimeout(() => {
+    s.style.display = 'none';
+    document.getElementById('app').classList.add('show');
+    renderProgress();
+    updateSubmitState();
+  }, 350);
+}
+
+function changeUser(){
+  // Volver a la pantalla de nombre.
+  document.getElementById('app').classList.remove('show');
+  const s = document.getElementById('screen-name');
+  s.style.display = 'flex';
+  s.classList.remove('hide');
+  setTimeout(() => {
+    const inp = document.getElementById('name-input');
+    inp.value = '';
+    inp.focus();
+    document.getElementById('name-resume').style.display = 'none';
+  }, 100);
+}
+
+// ─────────────────────────────────────────────────────────
+// APP RENDER
+// ─────────────────────────────────────────────────────────
+function wireApp(){
+  document.getElementById('event-user-switch').addEventListener('click', e => { e.preventDefault(); changeUser(); });
+}
+
+function renderApp(){
+  document.getElementById('event-user-name').textContent = STATE.nombre || '—';
 
   // Comments
   const evCfg = CONFIG.evaluacion || {};
@@ -1166,33 +1323,25 @@ function renderApp(){
   document.getElementById('comments-max').textContent = evCfg.comentariosMax || 500;
   cmt.value = STATE.comentarios || '';
   document.getElementById('comments-counter').textContent = cmt.value.length;
-  cmt.addEventListener('input', () => {
+  cmt.oninput = () => {
     STATE.comentarios = cmt.value;
     document.getElementById('comments-counter').textContent = cmt.value.length;
-    saveState();
-  });
+    saveLocal();
+  };
 
-  // Categories
   renderCategorias();
 
-  // Submit
-  document.getElementById('submit-btn').addEventListener('click', onSubmit);
-  document.getElementById('modal-close').addEventListener('click', () => {
-    document.getElementById('modal-backdrop').classList.remove('show');
-  });
-  document.getElementById('modal-download').addEventListener('click', () => {
-    generatePDF();
-  });
-
-  // Title
-  document.title = `${ev.titulo || 'Evaluación'} — ${r.nombre || 'Morishita'}`;
+  document.getElementById('submit-btn').onclick = onSubmit;
+  document.getElementById('modal-close').onclick = () => document.getElementById('modal-done').classList.remove('show');
+  document.getElementById('modal-download').onclick = () => generatePDF();
 }
 
 function renderCategorias(){
   const container = document.getElementById('categories-container');
   container.innerHTML = '';
+  DISH_FLAT = [];
   const cats = CONFIG.categorias || [];
-  let serveNum = 0; // contador continuo del orden de servicio (sin contar los extra)
+  let serveNum = 0;
   cats.forEach((cat, idx) => {
     const catEl = document.createElement('div');
     catEl.className = 'category' + (idx === 0 ? ' open' : '') + (cat.extra ? ' category-extra' : '');
@@ -1208,7 +1357,7 @@ function renderCategorias(){
       <svg class="category-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="6 9 12 15 18 9"></polyline>
       </svg>`;
-    head.addEventListener('click', () => { catEl.classList.toggle('open'); });
+    head.addEventListener('click', () => catEl.classList.toggle('open'));
     catEl.appendChild(head);
 
     const body = document.createElement('div');
@@ -1216,7 +1365,10 @@ function renderCategorias(){
     let localNum = 0;
     (cat.platillos || []).forEach((dish, dIdx) => {
       const num = cat.extra ? (++localNum) : (++serveNum);
-      body.appendChild(renderDish(dish, num, cat.id, idx === 0 && dIdx === 0));
+      const isFirst = idx === 0 && dIdx === 0;
+      const built = renderDish(dish, num, cat, isFirst);
+      body.appendChild(built.wrap);
+      DISH_FLAT.push({ cat, dish, num, headEl: built.head, wrapEl: built.wrap, catEl });
     });
     catEl.appendChild(body);
     container.appendChild(catEl);
@@ -1239,7 +1391,7 @@ function refreshBadge(head, dish){
   badge.textContent = b.txt;
 }
 
-function renderDish(dish, num, catId, openFirst){
+function renderDish(dish, num, cat, openFirst){
   const wrap = document.createElement('div');
   wrap.className = 'dish' + (openFirst ? ' open' : '');
   wrap.dataset.dishId = dish.id;
@@ -1256,13 +1408,12 @@ function renderDish(dish, num, catId, openFirst){
         <polyline points="6 9 12 15 18 9"></polyline>
       </svg>
     </div>`;
-  head.addEventListener('click', () => { wrap.classList.toggle('open'); });
+  head.addEventListener('click', () => wrap.classList.toggle('open'));
   wrap.appendChild(head);
 
   const body = document.createElement('div');
   body.className = 'dish-body';
 
-  // Rating 1..max
   body.innerHTML += `<div class="rating-label">Calificación <span class="rating-scale">(1 al ${max})</span></div>`;
   const ratingRow = document.createElement('div');
   ratingRow.className = 'rating-row';
@@ -1275,103 +1426,122 @@ function renderDish(dish, num, catId, openFirst){
     btn.addEventListener('click', () => {
       STATE.ratings[dish.id] = i;
       ratingRow.querySelectorAll('.rating-btn').forEach(x => x.classList.toggle('active', +x.dataset.val === i));
-      // Al cambiar la calificación, marcamos como pendiente de envío de nuevo.
       STATE.enviado[dish.id] = false;
       refreshBadge(head, dish);
-      renderProgress();
-      saveState();
+      updateSaveBtnLabel();
+      saveLocal();
     });
     ratingRow.appendChild(btn);
   }
   body.appendChild(ratingRow);
 
-  // Feedback fields
+  // Feedback
   const grid = document.createElement('div');
   grid.className = 'feedback-grid';
   const evCfg = CONFIG.evaluacion || {};
-  const gustoField = document.createElement('div');
-  gustoField.className = 'feedback-field';
-  gustoField.innerHTML = `<div class="feedback-label">${escapeHtml(evCfg.campoGusto || 'Lo que me gustó')}</div>`;
-  const gustoTA = document.createElement('textarea');
-  gustoTA.className = 'feedback-input';
-  gustoTA.placeholder = evCfg.placeholderGusto || 'Escribe aquí…';
-  gustoTA.value = STATE.gusto[dish.id] || '';
-  gustoTA.addEventListener('input', () => { STATE.gusto[dish.id] = gustoTA.value; STATE.enviado[dish.id] = false; saveState(); });
-  gustoField.appendChild(gustoTA);
-
-  const noGustoField = document.createElement('div');
-  noGustoField.className = 'feedback-field';
-  noGustoField.innerHTML = `<div class="feedback-label">${escapeHtml(evCfg.campoNoGusto || 'Lo que no me gustó')}</div>`;
-  const noGustoTA = document.createElement('textarea');
-  noGustoTA.className = 'feedback-input';
-  noGustoTA.placeholder = evCfg.placeholderNoGusto || 'Escribe aquí…';
-  noGustoTA.value = STATE.noGusto[dish.id] || '';
-  noGustoTA.addEventListener('input', () => { STATE.noGusto[dish.id] = noGustoTA.value; STATE.enviado[dish.id] = false; saveState(); });
-  noGustoField.appendChild(noGustoTA);
-
-  grid.appendChild(gustoField);
-  grid.appendChild(noGustoField);
+  const mk = (label, ph, val, onChange) => {
+    const field = document.createElement('div');
+    field.className = 'feedback-field';
+    field.innerHTML = `<div class="feedback-label">${escapeHtml(label)}</div>`;
+    const ta = document.createElement('textarea');
+    ta.className = 'feedback-input';
+    ta.placeholder = ph;
+    ta.value = val || '';
+    ta.addEventListener('input', () => { onChange(ta.value); saveLocal(); });
+    field.appendChild(ta);
+    return field;
+  };
+  grid.appendChild(mk(evCfg.campoGusto || 'Lo que me gustó', evCfg.placeholderGusto || 'Escribe aquí…', STATE.gusto[dish.id], v => { STATE.gusto[dish.id] = v; STATE.enviado[dish.id] = false; }));
+  grid.appendChild(mk(evCfg.campoNoGusto || 'Lo que no me gustó', evCfg.placeholderNoGusto || 'Escribe aquí…', STATE.noGusto[dish.id], v => { STATE.noGusto[dish.id] = v; STATE.enviado[dish.id] = false; }));
   body.appendChild(grid);
 
-  // Save / send row
+  // Save row
   const saveRow = document.createElement('div');
   saveRow.className = 'dish-save-row';
   const saveBtn = document.createElement('button');
   saveBtn.type = 'button';
   saveBtn.className = 'dish-save-btn';
-  saveBtn.innerHTML = `
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-    Guardar platillo`;
-  const saveStatus = document.createElement('span');
-  saveStatus.className = 'dish-save-status';
-  if (STATE.enviado[dish.id]) { saveStatus.textContent = '✓ Guardado'; saveStatus.classList.add('ok'); }
+  const status = document.createElement('span');
+  status.className = 'dish-save-status';
+  if (STATE.enviado[dish.id]) { status.textContent = '✓ Guardado'; status.classList.add('ok'); }
+
+  const setBtnLabel = () => {
+    const idx = DISH_FLAT.findIndex(f => f.dish.id === dish.id);
+    const isLast = idx >= DISH_FLAT.length - 1;
+    if (isLast) {
+      saveBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Guardar último platillo`;
+    } else {
+      saveBtn.innerHTML = `Guardar y siguiente <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+    }
+  };
+  setBtnLabel();
+  saveBtn._setLabel = setBtnLabel;
 
   saveBtn.addEventListener('click', async () => {
-    saveBtn.disabled = true;
-    saveStatus.className = 'dish-save-status';
-    saveStatus.textContent = 'Guardando…';
+    if (!STATE.ratings[dish.id]) {
+      // No bloqueamos: el usuario puede guardar sin calificar (skip).
+      // Pero damos un nudge.
+      if (!confirm('No has puesto calificación. ¿Guardar de todos modos y pasar al siguiente?')) return;
+    }
     STATE.enviado[dish.id] = true;
+    saveBtn.disabled = true;
+    status.className = 'dish-save-status';
+    status.textContent = 'Guardando…';
     const ok = await pushRemote();
     const hora = new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
-    saveStatus.classList.add(ok ? 'ok' : 'local');
-    saveStatus.textContent = ok ? `✓ Guardado · ${hora}` : `✓ Guardado en este equipo · ${hora}`;
+    status.classList.add(ok ? 'ok' : 'local');
+    status.textContent = ok ? `✓ Guardado · ${hora}` : `✓ Guardado en este equipo · ${hora}`;
     refreshBadge(head, dish);
     renderProgress();
+    updateSubmitState();
     saveBtn.disabled = false;
+    advanceToNext(dish.id);
   });
 
   saveRow.appendChild(saveBtn);
-  saveRow.appendChild(saveStatus);
+  saveRow.appendChild(status);
   body.appendChild(saveRow);
 
   wrap.appendChild(body);
-  return wrap;
+  return { wrap, head };
+}
+
+function updateSaveBtnLabel(){
+  // El label de "siguiente" depende de la posición; al cambiar rating no cambia,
+  // pero llamamos por consistencia si se agregan más cambios futuros.
+}
+
+function advanceToNext(currentDishId){
+  const idx = DISH_FLAT.findIndex(f => f.dish.id === currentDishId);
+  // cerrar el actual
+  const cur = DISH_FLAT[idx];
+  if (cur) cur.wrapEl.classList.remove('open');
+  const next = DISH_FLAT[idx + 1];
+  if (next) {
+    // abrir su categoría si está cerrada
+    next.catEl.classList.add('open');
+    next.wrapEl.classList.add('open');
+    setTimeout(() => {
+      const top = next.wrapEl.getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }, 150);
+  } else {
+    // Era el último: scroll al botón principal
+    setTimeout(() => {
+      const btn = document.getElementById('submit-btn');
+      const top = btn.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top, behavior: 'smooth' });
+      btn.focus({ preventScroll: true });
+    }, 120);
+  }
 }
 
 function totalDishes(){
-  return (CONFIG.categorias || []).reduce((sum, c) => sum + (c.platillos||[]).length, 0);
+  return (CONFIG.categorias || []).reduce((s, c) => s + (c.platillos||[]).length, 0);
 }
-
 function totalRated(){
   return Object.keys(STATE.ratings).filter(k => STATE.ratings[k]).length;
 }
-
-// Top 5 rollos oficiales mejor calificados (para las recetas).
-function getTop5(){
-  const list = [];
-  let order = 0;
-  (CONFIG.categorias || []).forEach(cat => {
-    if (cat.oficial === false) return; // entradas y vegetarianos no compiten
-    (cat.platillos || []).forEach(d => {
-      order++;
-      const rating = STATE.ratings[d.id] || 0;
-      if (rating > 0) list.push({ nombre: d.nombre, rating, order });
-    });
-  });
-  list.sort((a, b) => b.rating - a.rating || a.order - b.order);
-  return list.slice(0, 5);
-}
-
 function renderProgress(){
   const total = totalDishes();
   const rated = Math.min(totalRated(), total);
@@ -1380,46 +1550,188 @@ function renderProgress(){
   document.getElementById('progress-pct').textContent = `${pct}%`;
   document.getElementById('progress-fill').style.width = pct + '%';
 }
+function updateSubmitState(){
+  const total = totalDishes();
+  const rated = totalRated();
+  const btn = document.getElementById('submit-btn');
+  const note = document.getElementById('submit-note');
+  if (rated >= total) {
+    btn.disabled = false;
+    btn.classList.add('ready');
+    note.textContent = '✓ Todo evaluado · listo para enviar';
+    note.classList.remove('warn');
+  } else if (rated > 0) {
+    btn.disabled = false;
+    btn.classList.remove('ready');
+    note.textContent = `Faltan ${total - rated} de ${total} — puedes enviar lo que llevas`;
+    note.classList.add('warn');
+  } else {
+    btn.disabled = true;
+    btn.classList.remove('ready');
+    note.textContent = 'Califica y guarda al menos un platillo para enviar.';
+    note.classList.remove('warn');
+  }
+}
 
 function escapeHtml(s){
   return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 // ─────────────────────────────────────────────────────────
-// SUBMIT
+// PERSISTENCIA
 // ─────────────────────────────────────────────────────────
-async function onSubmit(){
-  // Marca todos los platillos calificados como enviados y sincroniza.
-  Object.keys(STATE.ratings).forEach(k => { if (STATE.ratings[k]) STATE.enviado[k] = true; });
-  const btn = document.getElementById('submit-btn');
-  const original = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = 'Guardando…';
-  await pushRemote();
-  btn.disabled = false;
-  btn.innerHTML = original;
-  document.getElementById('modal-backdrop').classList.add('show');
+function payloadForSave(){
+  return {
+    nombre: STATE.nombre, slug: STATE.slug,
+    ratings: STATE.ratings, gusto: STATE.gusto, noGusto: STATE.noGusto,
+    enviado: STATE.enviado, comentarios: STATE.comentarios,
+    topSeleccion: STATE.topSeleccion,
+    started_at: STATE.started_at, updated_at: STATE.updated_at,
+    submitted_at: STATE.submitted_at, submitted: !!STATE.submitted
+  };
+}
+function saveLocalNow(){
+  if (!STATE.slug) return;
+  STATE.updated_at = new Date().toISOString();
+  try { localStorage.setItem(storageKey(STATE.slug), JSON.stringify(payloadForSave())); } catch(e) {}
+}
+function saveLocal(){
+  clearTimeout(SAVE_TIMER);
+  SAVE_TIMER = setTimeout(() => { saveLocalNow(); showSaveIndicator(); }, 450);
+}
+async function pushRemote(){
+  saveLocalNow();
+  try {
+    const r = await fetch('/api/evaluacion/save', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ password: CONFIG.password, nombre: STATE.nombre, sesion: payloadForSave() })
+    });
+    return r.ok;
+  } catch(e) { console.warn('Push remote falló:', e); return false; }
+}
+function showSaveIndicator(){
+  const el = document.getElementById('save-indicator');
+  el.classList.add('show');
+  clearTimeout(INDICATOR_TIMER);
+  INDICATOR_TIMER = setTimeout(() => el.classList.remove('show'), 1400);
 }
 
 // ─────────────────────────────────────────────────────────
-// PDF GENERATION
+// SUBMIT FLOW
+// ─────────────────────────────────────────────────────────
+function rollosOficialesOrdenados(){
+  const list = [];
+  (CONFIG.categorias || []).forEach(cat => {
+    if (cat.oficial === false) return;
+    (cat.platillos || []).forEach(d => {
+      const rating = STATE.ratings[d.id] || 0;
+      if (rating > 0) list.push({ id: d.id, nombre: d.nombre, rating });
+    });
+  });
+  // Mayor rating primero; en empate, el orden de aparición original (estable)
+  list.sort((a, b) => b.rating - a.rating);
+  return list;
+}
+
+async function onSubmit(){
+  const total = totalDishes();
+  const rated = totalRated();
+  if (rated < total) {
+    if (!confirm(`Faltan ${total - rated} platillos por calificar. ¿Enviar de todos modos?`)) return;
+  }
+  // Marcar todos los calificados como enviados
+  Object.keys(STATE.ratings).forEach(k => { if (STATE.ratings[k]) STATE.enviado[k] = true; });
+
+  const rollos = rollosOficialesOrdenados();
+  if (rollos.length > 5) {
+    showTopSelector(rollos);
+    return;
+  }
+  // 5 o menos: usar todos directamente.
+  CHOSEN_TOP = rollos.map(r => r.id);
+  STATE.topSeleccion = CHOSEN_TOP;
+  await finalizeSubmit();
+}
+
+function showTopSelector(rollos){
+  const max = CONFIG.evaluacion.escalaMax || 10;
+  CHOSEN_TOP = rollos.slice(0, 5).map(r => r.id);
+  // Si hay empate en la frontera (el 5° y 6° tienen el mismo puntaje), avisamos.
+  const hasTie = rollos.length > 5 && rollos[4].rating === rollos[5].rating;
+
+  const help = document.getElementById('top-help');
+  if (hasTie) {
+    const tieRating = rollos[4].rating;
+    const empate = rollos.filter(r => r.rating === tieRating);
+    help.innerHTML = `Hay <b>${empate.length} rollos</b> con calificación <b>${tieRating}/${max}</b>. Elige cuáles entran al Top final.`;
+  } else {
+    help.innerHTML = `Tienes <b>${rollos.length}</b> rollos calificados. Si quieres más de 5 favoritos, marca los adicionales.`;
+  }
+
+  const list = document.getElementById('top-list');
+  list.innerHTML = '';
+  rollos.forEach((r, i) => {
+    const row = document.createElement('div');
+    row.className = 'top-row' + (CHOSEN_TOP.includes(r.id) ? ' selected' : '') + (hasTie && r.rating === rollos[4].rating ? ' tie' : '');
+    row.innerHTML = `
+      <div class="top-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      <div class="top-name">${escapeHtml(r.nombre)}</div>
+      <div class="top-score">${r.rating} / ${max}</div>`;
+    row.addEventListener('click', () => {
+      const idx = CHOSEN_TOP.indexOf(r.id);
+      if (idx >= 0) CHOSEN_TOP.splice(idx, 1);
+      else CHOSEN_TOP.push(r.id);
+      row.classList.toggle('selected');
+      updateTopCounter();
+    });
+    list.appendChild(row);
+  });
+  updateTopCounter();
+  document.getElementById('modal-top').classList.add('show');
+
+  document.getElementById('top-cancel').onclick = () => document.getElementById('modal-top').classList.remove('show');
+  document.getElementById('top-confirm').onclick = async () => {
+    if (CHOSEN_TOP.length < 5) { alert('Debes seleccionar al menos 5 rollos.'); return; }
+    STATE.topSeleccion = CHOSEN_TOP.slice();
+    document.getElementById('modal-top').classList.remove('show');
+    await finalizeSubmit();
+  };
+}
+
+function updateTopCounter(){
+  document.getElementById('top-count').textContent = CHOSEN_TOP.length;
+  const ok = CHOSEN_TOP.length >= 5;
+  const btn = document.getElementById('top-confirm');
+  btn.disabled = !ok;
+  btn.textContent = ok ? `Confirmar ${CHOSEN_TOP.length} seleccionado${CHOSEN_TOP.length===1?'':'s'}` : `Selecciona al menos 5 (van ${CHOSEN_TOP.length})`;
+}
+
+async function finalizeSubmit(){
+  STATE.submitted = true;
+  STATE.submitted_at = new Date().toISOString();
+  saveLocalNow();
+  await pushRemote();
+  document.getElementById('modal-done').classList.add('show');
+}
+
+// ─────────────────────────────────────────────────────────
+// PDF
 // ─────────────────────────────────────────────────────────
 function generatePDF(){
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+  const doc = new jsPDF({ unit:'pt', format:'letter' });
   const W = doc.internal.pageSize.getWidth();
   const H = doc.internal.pageSize.getHeight();
   const margin = 56;
   let y = margin;
 
-  // Colors
   const BG = [10,9,8];
   const FG = [245,240,232];
   const GOLD = [212,175,106];
   const SOFT = [154,146,133];
   const LINE = [60,55,46];
 
-  // Helpers
   const setFG = () => doc.setTextColor(FG[0],FG[1],FG[2]);
   const setGOLD = () => doc.setTextColor(GOLD[0],GOLD[1],GOLD[2]);
   const setSOFT = () => doc.setTextColor(SOFT[0],SOFT[1],SOFT[2]);
@@ -1428,189 +1740,121 @@ function generatePDF(){
   const fillBG = () => { doc.setFillColor(BG[0],BG[1],BG[2]); doc.rect(0,0,W,H,'F'); };
   const fillGOLD = () => doc.setFillColor(GOLD[0],GOLD[1],GOLD[2]);
 
-  // === PAGE 1 — COVER ===
+  // === COVER ===
   fillBG();
-  // brand
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(48);
-  setFG();
+  doc.setFont('helvetica','bold'); doc.setFontSize(48); setFG();
   doc.text((CONFIG.restaurante.nombre || 'MORISHITA'), W/2, H/2 - 90, { align:'center' });
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(9);
-  setGOLD();
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); setGOLD();
   doc.text((CONFIG.restaurante.tagline || 'AUTHENTIC JAPANESE CUISINE').toUpperCase(), W/2, H/2 - 68, { align:'center', charSpace: 2 });
-
-  // separator diamond
-  setGOLD();
-  doc.setFontSize(10);
+  setGOLD(); doc.setFontSize(10);
   doc.text('◆', W/2, H/2 - 36, { align:'center' });
-
-  // event title
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(10);
-  setSOFT();
-  doc.text('EXPERIENCIA PRIVADA DE EVALUACIÓN', W/2, H/2 - 14, { align:'center', charSpace: 3 });
-
-  doc.setFont('times','normal');
-  doc.setFontSize(34);
-  setFG();
-  doc.text((CONFIG.evento.titulo || 'Hoja de evaluación de cata'), W/2, H/2 + 26, { align:'center' });
-
-  doc.setFont('times','italic');
-  doc.setFontSize(15);
-  setGOLD();
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); setSOFT();
+  doc.text('EVALUACIÓN PRIVADA DE DEGUSTACIÓN', W/2, H/2 - 14, { align:'center', charSpace: 3 });
+  doc.setFont('times','normal'); doc.setFontSize(34); setFG();
+  doc.text((CONFIG.evento.titulo || 'Hoja de evaluación'), W/2, H/2 + 26, { align:'center' });
+  doc.setFont('times','italic'); doc.setFontSize(15); setGOLD();
   doc.text(`${CONFIG.evento.cliente || ''}  ·  ${CONFIG.evento.fecha || ''}`, W/2, H/2 + 58, { align:'center' });
-
-  // line
-  setGOLDLINE();
-  doc.setLineWidth(0.6);
+  setGOLDLINE(); doc.setLineWidth(0.6);
   doc.line(W/2 - 30, H/2 + 80, W/2 + 30, H/2 + 80);
-
-  // summary chips
-  const total = totalDishes();
-  const rated = totalRated();
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); setFG();
+  doc.text(`Evaluado por: ${STATE.nombre || '—'}`, W/2, H/2 + 102, { align:'center' });
+  const total = totalDishes(), rated = totalRated();
   const pct = total === 0 ? 0 : Math.round((rated/total)*100);
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(9);
-  setSOFT();
-  doc.text(`PLATILLOS EVALUADOS: ${rated} / ${total}   ·   ${pct}% COMPLETADO`, W/2, H/2 + 110, { align:'center', charSpace: 1.5 });
-
-  // footer cover
+  doc.setFontSize(9); setSOFT();
+  doc.text(`PLATILLOS EVALUADOS: ${rated} / ${total}   ·   ${pct}%`, W/2, H/2 + 122, { align:'center', charSpace: 1.5 });
   doc.setFontSize(8);
-  setSOFT();
   doc.text(`Generado el ${new Date().toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' })}`, W/2, H - margin, { align:'center', charSpace: 1.5 });
   doc.text((CONFIG.restaurante.nombre || 'Morishita') + ' Japanese Cuisine · ' + (CONFIG.restaurante.ubicacion || 'Ensenada, B.C.'), W/2, H - margin + 14, { align:'center', charSpace: 1.5 });
 
-  // === PAGE 2+ — EVALUATIONS ===
-  doc.addPage();
-  fillBG();
-  y = margin;
+  // === PAGE 2 — TOP + RESUMEN ===
+  doc.addPage(); fillBG(); y = margin;
 
-  // Header
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(11);
-  setGOLD();
+  doc.setFont('helvetica','bold'); doc.setFontSize(11); setGOLD();
   doc.text('RESUMEN DE EVALUACIÓN', margin, y, { charSpace: 2.5 });
   y += 6;
-  setGOLDLINE();
-  doc.setLineWidth(0.5);
+  setGOLDLINE(); doc.setLineWidth(0.5);
   doc.line(margin, y, margin + 70, y);
   y += 22;
 
-  // Event meta block
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(8.5);
-  setSOFT();
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.5); setSOFT();
   const metaLines = [
-    ['CLIENTE',     CONFIG.evento.cliente || '—'],
-    ['FECHA',       CONFIG.evento.fecha   || '—'],
-    ['SEDE',        (CONFIG.restaurante.nombre || 'Morishita') + ' Japanese Cuisine · ' + (CONFIG.restaurante.ubicacion || 'Ensenada, B.C.')],
-    ['MODALIDAD',   'Sesión privada de degustación y desarrollo de menú'],
-    ['PROGRESO',    `${rated} de ${total} platillos · ${pct}%`]
+    ['EVALUADOR', STATE.nombre || '—'],
+    ['CLIENTE',   CONFIG.evento.cliente || '—'],
+    ['FECHA',     CONFIG.evento.fecha   || '—'],
+    ['SEDE',      (CONFIG.restaurante.nombre || 'Morishita') + ' · ' + (CONFIG.restaurante.ubicacion || 'Ensenada, B.C.')],
+    ['PROGRESO', `${rated} de ${total} platillos · ${pct}%`]
   ];
   metaLines.forEach(([k,v]) => {
-    doc.setFont('helvetica','normal');
-    setGOLD();
-    doc.text(k, margin, y, { charSpace: 1.8 });
-    setFG();
-    doc.setFontSize(10);
+    setGOLD(); doc.text(k, margin, y, { charSpace: 1.8 });
+    setFG(); doc.setFontSize(10);
     doc.text(String(v), margin + 90, y);
     doc.setFontSize(8.5);
     y += 16;
   });
-
-  y += 12;
-  setLINE();
-  doc.setLineWidth(0.4);
+  y += 12; setLINE(); doc.setLineWidth(0.4);
   doc.line(margin, y, W - margin, y);
   y += 22;
 
-  // === TOP 5 — rollos mejor evaluados ===
-  const top5 = getTop5();
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(10);
-  setGOLD();
-  doc.text('TOP 5 · ROLLOS MEJOR EVALUADOS', margin, y, { charSpace: 2.5 });
+  // === TOP CHOSEN ===
+  const chosenIds = STATE.topSeleccion || [];
+  const allRollos = rollosOficialesOrdenados();
+  const chosen = chosenIds.map(id => allRollos.find(r => r.id === id)).filter(Boolean);
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(10); setGOLD();
+  doc.text(`TOP ${chosen.length || 5} · ROLLOS ELEGIDOS`, margin, y, { charSpace: 2.5 });
   y += 6;
-  setGOLDLINE();
-  doc.setLineWidth(0.5);
+  setGOLDLINE(); doc.setLineWidth(0.5);
   doc.line(margin, y, margin + 60, y);
   y += 16;
-  doc.setFont('times','italic');
-  doc.setFontSize(9.5);
-  setSOFT();
-  doc.text('Rollos del menú comercial con mejor calificación — base para las recetas a entregar.', margin, y);
+  doc.setFont('times','italic'); doc.setFontSize(9.5); setSOFT();
+  doc.text('Rollos seleccionados por el evaluador como sus preferidos — base para las recetas.', margin, y);
   y += 18;
 
-  if (top5.length === 0) {
+  if (chosen.length === 0) {
     doc.setFont('times','italic'); doc.setFontSize(11); setFG();
-    doc.text('— Aún no hay rollos calificados —', margin, y);
+    doc.text('— Aún no hay rollos seleccionados —', margin, y);
     y += 22;
   } else {
-    top5.forEach((d, i) => {
-      // Rank circle
+    chosen.forEach((d, i) => {
+      if (y > H - 80) { doc.addPage(); fillBG(); y = margin; }
       fillGOLD();
       doc.circle(margin + 9, y - 4, 9, 'F');
-      doc.setTextColor(10,9,8);
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(11);
-      doc.text(String(i + 1), margin + 9, y - 0.5, { align: 'center' });
-      // Name
-      setFG();
-      doc.setFont('times','normal');
-      doc.setFontSize(14);
+      doc.setTextColor(10,9,8); doc.setFont('helvetica','bold'); doc.setFontSize(11);
+      doc.text(String(i + 1), margin + 9, y - 0.5, { align:'center' });
+      setFG(); doc.setFont('times','normal'); doc.setFontSize(14);
       doc.text(d.nombre, margin + 28, y);
-      // Score
-      setGOLD();
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(13);
-      doc.text(d.rating + ' / ' + (CONFIG.evaluacion.escalaMax || 10), W - margin, y, { align: 'right' });
+      setGOLD(); doc.setFont('helvetica','bold'); doc.setFontSize(13);
+      doc.text(d.rating + ' / ' + (CONFIG.evaluacion.escalaMax || 10), W - margin, y, { align:'right' });
       y += 26;
     });
   }
-  y += 4;
-  setLINE();
-  doc.setLineWidth(0.4);
+  y += 4; setLINE(); doc.setLineWidth(0.4);
   doc.line(margin, y, W - margin, y);
-  y += 20;
+  y += 22;
 
-  // Categories
+  // === DETALLE POR CATEGORÍA ===
   const cats = CONFIG.categorias || [];
   for (const cat of cats) {
-    // Page break check
     if (y > H - 120) { doc.addPage(); fillBG(); y = margin; }
-
-    // Category title
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(10);
-    setGOLD();
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); setGOLD();
     doc.text(cat.nombre, margin, y, { charSpace: 3 });
     y += 6;
-    setGOLDLINE();
-    doc.setLineWidth(0.5);
+    setGOLDLINE(); doc.setLineWidth(0.5);
     doc.line(margin, y, margin + 30, y);
     y += 18;
 
-    // Dishes
     let dishIndex = 1;
     for (const dish of (cat.platillos || [])) {
       const rating = STATE.ratings[dish.id] || 0;
       const liked = (STATE.gusto[dish.id] || '').trim();
       const disliked = (STATE.noGusto[dish.id] || '').trim();
-
-      // estimate height
       const linesLiked = liked ? doc.splitTextToSize(liked, (W - margin*2 - 16) / 2) : ['—'];
       const linesDisliked = disliked ? doc.splitTextToSize(disliked, (W - margin*2 - 16) / 2) : ['—'];
       const blockHeight = 28 + Math.max(linesLiked.length, linesDisliked.length) * 11 + 14;
       if (y + blockHeight > H - margin) { doc.addPage(); fillBG(); y = margin; }
 
-      // Dish header
-      doc.setFont('times','normal');
-      doc.setFontSize(13);
-      setFG();
+      doc.setFont('times','normal'); doc.setFontSize(13); setFG();
       doc.text(`${dishIndex}.  ${dish.nombre}`, margin, y);
-
-      // Rating chip on right
       const ratingTxt = rating ? `★ ${rating}/${CONFIG.evaluacion.escalaMax || 10}` : 'Sin evaluar';
       const txtW = doc.getTextWidth(ratingTxt);
       const chipPad = 8;
@@ -1623,94 +1867,63 @@ function generatePDF(){
         doc.roundedRect(chipX, chipY, chipW, chipH, 3, 3, 'F');
         doc.setTextColor(10,9,8);
       } else {
-        setLINE();
-        doc.setLineWidth(0.5);
+        setLINE(); doc.setLineWidth(0.5);
         doc.roundedRect(chipX, chipY, chipW, chipH, 3, 3, 'S');
         setSOFT();
       }
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(8);
+      doc.setFont('helvetica','bold'); doc.setFontSize(8);
       doc.text(ratingTxt, chipX + chipPad, chipY + 11, { charSpace: 1 });
       setFG();
       y += 16;
 
-      // Feedback two columns
       const colW = (W - margin*2 - 16) / 2;
       const col1X = margin;
       const col2X = margin + colW + 16;
-      let blockY = y;
-
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(7.5);
-      setGOLD();
-      doc.text((CONFIG.evaluacion.campoGusto || 'LO QUE ME GUSTÓ').toUpperCase(), col1X, blockY, { charSpace: 1.5 });
-      doc.text((CONFIG.evaluacion.campoNoGusto || 'LO QUE NO ME GUSTÓ').toUpperCase(), col2X, blockY, { charSpace: 1.5 });
-      blockY += 11;
-
-      doc.setFont('times','italic');
-      doc.setFontSize(9.5);
-      setFG();
-      doc.text(linesLiked, col1X, blockY);
-      doc.text(linesDisliked, col2X, blockY);
-
+      doc.setFont('helvetica','bold'); doc.setFontSize(7.5); setGOLD();
+      doc.text((CONFIG.evaluacion.campoGusto || 'LO QUE ME GUSTÓ').toUpperCase(), col1X, y, { charSpace: 1.5 });
+      doc.text((CONFIG.evaluacion.campoNoGusto || 'LO QUE NO ME GUSTÓ').toUpperCase(), col2X, y, { charSpace: 1.5 });
+      y += 11;
+      doc.setFont('times','italic'); doc.setFontSize(9.5); setFG();
+      doc.text(linesLiked, col1X, y);
+      doc.text(linesDisliked, col2X, y);
       const usedLines = Math.max(linesLiked.length, linesDisliked.length);
-      y = blockY + usedLines * 11 + 14;
-
-      // light separator
-      setLINE();
-      doc.setLineWidth(0.3);
+      y += usedLines * 11 + 14;
+      setLINE(); doc.setLineWidth(0.3);
       doc.line(margin, y - 8, W - margin, y - 8);
       y += 4;
-
       dishIndex++;
     }
-
     y += 10;
   }
 
-  // GENERAL COMMENTS
   if (y > H - 120) { doc.addPage(); fillBG(); y = margin; }
-  y += 6;
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(10);
-  setGOLD();
+  doc.setFont('helvetica','bold'); doc.setFontSize(10); setGOLD();
   doc.text((CONFIG.evaluacion.comentariosLabel || 'COMENTARIOS GENERALES').toUpperCase(), margin, y, { charSpace: 3 });
   y += 6;
-  setGOLDLINE();
-  doc.line(margin, y, margin + 30, y);
-  y += 18;
-
+  setGOLDLINE(); doc.line(margin, y, margin + 30, y); y += 18;
   const comentarios = (STATE.comentarios || '').trim();
-  doc.setFont('times','italic');
-  doc.setFontSize(11);
-  setFG();
+  doc.setFont('times','italic'); doc.setFontSize(11); setFG();
   const cLines = doc.splitTextToSize(comentarios || '— Sin comentarios —', W - margin*2);
   doc.text(cLines, margin, y);
-  y += cLines.length * 14 + 24;
 
-  // Page footers (no podemos hacerlo retroactivo aquí; las páginas ya están)
+  // Footers
   const pageCount = doc.internal.getNumberOfPages();
   for (let p = 1; p <= pageCount; p++) {
     doc.setPage(p);
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(7.5);
-    setSOFT();
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); setSOFT();
     if (p > 1) {
-      doc.text((CONFIG.restaurante.nombre || 'MORISHITA') + ' · ' + (CONFIG.evento.titulo || 'EVALUACIÓN DE CATA').toUpperCase(),
+      doc.text((CONFIG.restaurante.nombre || 'MORISHITA') + ' · ' + ((CONFIG.evento.titulo || 'EVALUACIÓN').toUpperCase()) + ' · ' + (STATE.nombre || ''),
         margin, H - 28, { charSpace: 1.5 });
       doc.text(`Página ${p} de ${pageCount}`, W - margin, H - 28, { align:'right', charSpace: 1.5 });
     }
   }
 
-  // Save
-  const fileTag = (CONFIG.evento.cliente || 'cliente').toLowerCase().replace(/[^a-z0-9]+/g,'_');
+  const fileTag = (slugify(STATE.nombre) || 'evaluador');
+  const cliTag = slugify(CONFIG.evento.cliente || 'cliente');
   const dateTag = new Date().toISOString().slice(0,10);
-  doc.save(`evaluacion_${fileTag}_${dateTag}.pdf`);
-
-  document.getElementById('modal-backdrop').classList.remove('show');
+  doc.save(`evaluacion_${cliTag}_${fileTag}_${dateTag}.pdf`);
 }
 
-// GO
 init();
 </script>
 </body>

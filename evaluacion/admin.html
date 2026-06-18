@@ -95,6 +95,117 @@ body{font-family:var(--sans);background:var(--bg);color:var(--fg);min-height:100
 .cat-oficial{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-soft);cursor:pointer;white-space:nowrap;user-select:none;}
 .cat-oficial input{width:15px;height:15px;accent-color:var(--gold);cursor:pointer;}
 .cat-oficial:hover{color:var(--gold);}
+
+/* SESSIONS */
+.session-card{
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:6px;
+  margin-bottom:10px;
+  overflow:hidden;
+}
+.session-head{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px 18px;
+  cursor:pointer;
+  user-select:none;
+  transition:background .2s;
+  flex-wrap:wrap;
+}
+.session-head:hover{background:rgba(212,175,106,.04);}
+.session-name{
+  font-family:'Cormorant',serif;
+  font-size:18px;
+  color:var(--fg);
+  font-weight:500;
+  flex:1;
+  min-width:160px;
+}
+.session-stat{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--fg-soft);
+}
+.session-stat b{color:var(--gold);font-weight:500;}
+.session-stat.sent{color:var(--green);}
+.session-stat.draft{color:var(--gold);}
+.session-actions{display:flex;gap:6px;}
+.session-card.open .session-head{border-bottom:1px solid var(--line);}
+.session-body{display:none;padding:18px;background:rgba(0,0,0,.18);}
+.session-card.open .session-body{display:block;}
+.session-meta{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:10px 24px;
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--line);
+}
+.session-meta-item{display:flex;flex-direction:column;gap:3px;}
+.session-meta-label{
+  font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;
+}
+.session-meta-value{font-family:'Cormorant',serif;font-size:14px;color:var(--fg);font-style:italic;}
+.session-top{
+  background:rgba(212,175,106,.04);
+  border:1px solid var(--gold-line);
+  border-radius:5px;
+  padding:12px 14px;
+  margin-bottom:18px;
+}
+.session-top-label{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:8px;
+}
+.session-top-list{display:flex;flex-direction:column;gap:6px;}
+.session-top-item{
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'Cormorant',serif;font-size:14px;color:var(--fg);
+}
+.session-top-item .pos{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--gold);color:#000;font-weight:600;font-size:11px;font-family:var(--mono);margin-right:10px;
+}
+.session-top-item .score{color:var(--gold);font-family:var(--mono);font-size:12px;letter-spacing:.06em;}
+.session-dishes{display:flex;flex-direction:column;gap:8px;}
+.session-dish{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:4px;
+  padding:10px 14px;
+}
+.session-dish-row1{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.session-dish-name{font-family:'Cormorant',serif;font-size:15px;color:var(--fg);font-weight:500;}
+.session-dish-rating{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.08em;flex-shrink:0;}
+.session-dish-rating.empty{color:var(--fg-soft);}
+.session-dish-fb{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:8px;
+  font-family:'Cormorant',serif;font-style:italic;font-size:13px;color:var(--fg-mid);
+}
+@media(max-width:520px){ .session-dish-fb{grid-template-columns:1fr;} }
+.session-dish-fb .lbl{
+  font-family:var(--mono);font-style:normal;font-size:8.5px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:3px;display:block;
+}
+.session-comments{
+  margin-top:16px;padding:12px 14px;
+  background:var(--surface);border:1px solid var(--line);border-radius:4px;
+  font-family:'Cormorant',serif;font-style:italic;font-size:14px;color:var(--fg-mid);line-height:1.5;
+}
+.session-cat-title{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--fg-soft);text-transform:uppercase;
+  margin:14px 0 8px;
+}
+.session-cat-title:first-child{margin-top:0;}
 .cat-name-input{flex:1;min-width:160px;background:transparent;border:1px solid transparent;color:var(--fg);padding:8px 10px;border-radius:3px;font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;outline:none;transition:.2s;font-weight:500;}
 .cat-name-input:hover{border-color:var(--line);}
 .cat-name-input:focus{border-color:var(--gold);background:rgba(212,175,106,.04);}
@@ -337,6 +448,30 @@ body{font-family:var(--sans);background:var(--bg);color:var(--fg);min-height:100
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
           Agregar categoría
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. SESIONES RECIBIDAS -->
+  <div class="section open">
+    <div class="section-head" onclick="this.parentElement.classList.toggle('open'); if(this.parentElement.classList.contains('open')) loadSessions();">
+      <h3><span class="num">06</span> Sesiones recibidas</h3>
+      <svg class="section-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </div>
+    <div class="section-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+        <p style="font-family:'Cormorant',serif;font-style:italic;color:var(--fg-soft);font-size:14px;line-height:1.5;margin:0;">
+          Cada persona que llenó la hoja aparece como una sesión separada. Haz clic en una sesión para ver el detalle.
+        </p>
+        <button class="btn" id="refresh-sessions">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+          Actualizar
+        </button>
+      </div>
+      <div id="sessions-list">
+        <div style="text-align:center;padding:40px;color:var(--fg-soft);font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;">
+          Cargando sesiones…
+        </div>
       </div>
     </div>
   </div>
@@ -786,6 +921,133 @@ document.getElementById('reset-btn').addEventListener('click', () => {
   renderAll();
   markDirty();
 });
+
+// ─── SESIONES RECIBIDAS ───
+async function loadSessions(){
+  const wrap = document.getElementById('sessions-list');
+  wrap.innerHTML = '<div style="text-align:center;padding:40px;color:var(--fg-soft);font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;">Cargando…</div>';
+  try {
+    const r = await fetch('/api/evaluacion/sessions', { headers:{ 'x-admin-token': TOKEN }, cache:'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const { sessions } = await r.json();
+    renderSessions(sessions || []);
+  } catch (e) {
+    wrap.innerHTML = `<div style="text-align:center;padding:40px;color:var(--red);font-family:var(--mono);font-size:11px;letter-spacing:.15em;">Error: ${esc(e.message)}</div>`;
+  }
+}
+
+function renderSessions(list){
+  const wrap = document.getElementById('sessions-list');
+  if (!list.length) {
+    wrap.innerHTML = `<div style="text-align:center;padding:40px;color:var(--fg-soft);font-family:'Cormorant',serif;font-style:italic;font-size:15px;">Aún no hay sesiones recibidas. Cuando un evaluador envíe su evaluación, aparecerá aquí.</div>`;
+    return;
+  }
+  const max = CONFIG.evaluacion?.escalaMax || 10;
+  const cats = CONFIG.categorias || [];
+  const total = cats.reduce((s,c) => s + (c.platillos||[]).length, 0);
+  const dishMap = {}; const dishCat = {};
+  cats.forEach(c => (c.platillos||[]).forEach(d => { dishMap[d.id] = d.nombre; dishCat[d.id] = c.nombre; }));
+
+  wrap.innerHTML = list.map(s => {
+    const rated = Object.keys(s.ratings||{}).filter(k => s.ratings[k]).length;
+    const updated = s.updated_at ? new Date(s.updated_at).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' }) : '—';
+    const started = s.started_at ? new Date(s.started_at).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' }) : '—';
+    const submitted = s.submitted_at ? new Date(s.submitted_at).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' }) : null;
+    const status = s.submitted ? `<span class="session-stat sent">● Enviada</span>` : `<span class="session-stat draft">○ En curso</span>`;
+
+    // Top elegido por el evaluador
+    let topHTML = '';
+    const topIds = s.topSeleccion || [];
+    if (topIds.length) {
+      const items = topIds.map((id, i) => {
+        const name = dishMap[id] || id;
+        const score = (s.ratings||{})[id] || '—';
+        return `<div class="session-top-item"><span><span class="pos">${i+1}</span>${esc(name)}</span><span class="score">${score} / ${max}</span></div>`;
+      }).join('');
+      topHTML = `
+        <div class="session-top">
+          <div class="session-top-label">Top ${topIds.length} elegido por ${esc(s.nombre)}</div>
+          <div class="session-top-list">${items}</div>
+        </div>`;
+    }
+
+    // Detalle por categoría
+    const detail = cats.map(cat => {
+      const rows = (cat.platillos||[]).map(d => {
+        const rating = (s.ratings||{})[d.id] || 0;
+        const liked = ((s.gusto||{})[d.id] || '').trim();
+        const disliked = ((s.noGusto||{})[d.id] || '').trim();
+        const fb = (liked || disliked) ? `
+          <div class="session-dish-fb">
+            <div><span class="lbl">+ Le gustó</span>${esc(liked) || '—'}</div>
+            <div><span class="lbl">− No le gustó</span>${esc(disliked) || '—'}</div>
+          </div>` : '';
+        return `
+          <div class="session-dish">
+            <div class="session-dish-row1">
+              <span class="session-dish-name">${esc(d.nombre)}</span>
+              <span class="session-dish-rating ${rating ? '' : 'empty'}">${rating ? ('★ ' + rating + ' / ' + max) : 'Sin evaluar'}</span>
+            </div>
+            ${fb}
+          </div>`;
+      }).join('');
+      return `<div class="session-cat-title">${esc(cat.nombre)}</div><div class="session-dishes">${rows}</div>`;
+    }).join('');
+
+    const comments = (s.comentarios || '').trim();
+    const commentsHTML = comments ? `<div class="session-comments">"${esc(comments)}"</div>` : '';
+
+    return `
+      <div class="session-card" data-slug="${esc(s.slug || '')}">
+        <div class="session-head" onclick="this.parentElement.classList.toggle('open')">
+          <div class="session-name">${esc(s.nombre || '— sin nombre —')}</div>
+          ${status}
+          <span class="session-stat"><b>${rated}</b>/${total} platillos</span>
+          <span class="session-stat">${updated}</span>
+          <div class="session-actions">
+            <button class="icon-btn danger" title="Eliminar sesión" onclick="event.stopPropagation(); deleteSession('${esc(s.slug || '')}', '${esc(s.nombre || '')}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        </div>
+        <div class="session-body">
+          <div class="session-meta">
+            <div class="session-meta-item"><span class="session-meta-label">Evaluador</span><span class="session-meta-value">${esc(s.nombre || '—')}</span></div>
+            <div class="session-meta-item"><span class="session-meta-label">Inició</span><span class="session-meta-value">${started}</span></div>
+            <div class="session-meta-item"><span class="session-meta-label">Última edición</span><span class="session-meta-value">${updated}</span></div>
+            ${submitted ? `<div class="session-meta-item"><span class="session-meta-label">Enviada</span><span class="session-meta-value">${submitted}</span></div>` : ''}
+          </div>
+          ${topHTML}
+          ${detail}
+          ${commentsHTML}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function deleteSession(slug, nombre){
+  if (!slug) return;
+  if (!confirm(`¿Eliminar la sesión de "${nombre || slug}"? Esta acción no se puede deshacer.`)) return;
+  try {
+    const r = await fetch('/api/evaluacion/sessions/' + encodeURIComponent(slug), {
+      method:'DELETE',
+      headers:{ 'x-admin-token': TOKEN }
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    await loadSessions();
+  } catch (e) {
+    alert('Error al eliminar: ' + e.message);
+  }
+}
+
+document.getElementById('refresh-sessions').addEventListener('click', loadSessions);
+
+// Cargar sesiones cuando el admin abra exitosamente
+const _origOpenApp = openApp;
+openApp = async function(){
+  await _origOpenApp();
+  loadSessions();
+};
 
 // GO
 wireLogin();
