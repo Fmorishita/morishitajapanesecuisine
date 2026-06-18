@@ -494,6 +494,57 @@ app.get('/api/content/history', requireAdmin, async (req, res) => {
 // GET /api/auth/check — valida el token de admin sin leer datos
 app.get('/api/auth/check', requireAdmin, (req, res) => res.json({ ok: true }));
 
+// ================================================================
+// ENDPOINT: Guardar respuestas de la evaluación del cliente (Miyagi)
+// POST /api/evaluacion/save
+// Body: { password, respuestas }
+// Público pero protegido por la contraseña del cliente (la misma que abre
+// la hoja de evaluación). Guarda todo en site_content bajo una sola key,
+// para que la sesión no se pierda aunque el cliente cambie de dispositivo.
+// ================================================================
+const EVAL_CONFIG_KEY = 'evaluacion_miyagi_config';
+const EVAL_RESP_KEY   = 'evaluacion_miyagi_respuestas';
+const EVAL_DEFAULT_PASSWORD = 'miyagi2026';
+
+async function getEvalPassword() {
+  try {
+    const { data } = await supabase
+      .from('site_content').select('value').eq('key', EVAL_CONFIG_KEY).maybeSingle();
+    if (data && data.value) {
+      const cfg = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+      if (cfg && cfg.password) return String(cfg.password);
+    }
+  } catch (e) {
+    console.warn('No se pudo leer la contraseña de evaluación:', e.message);
+  }
+  return EVAL_DEFAULT_PASSWORD;
+}
+
+app.post('/api/evaluacion/save', async (req, res) => {
+  try {
+    const { password, respuestas } = req.body || {};
+    if (!respuestas || typeof respuestas !== 'object') {
+      return res.status(400).json({ error: 'Faltan respuestas' });
+    }
+
+    const expected = await getEvalPassword();
+    if (String(password || '') !== expected) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    const payload = { ...respuestas, updated_at: new Date().toISOString() };
+    const { error } = await supabase
+      .from('site_content')
+      .upsert({ key: EVAL_RESP_KEY, value: JSON.stringify(payload), updated_at: new Date().toISOString() });
+    if (error) throw error;
+
+    res.json({ ok: true, updated_at: payload.updated_at });
+  } catch (err) {
+    console.error('Error en /api/evaluacion/save:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ----------------------------------------------------------------
 // HEALTH CHECK (útil para verificar que todo está bien configurado)
 // ----------------------------------------------------------------

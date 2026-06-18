@@ -24,6 +24,7 @@
     { "src": "/api/content/undo", "dest": "backend/server.js" },
     { "src": "/api/content/history", "dest": "backend/server.js" },
     { "src": "/api/content", "dest": "backend/server.js" },
+    { "src": "/api/evaluacion/save", "dest": "backend/server.js" },
     { "src": "/health", "dest": "backend/server.js" },
     { "src": "/favicon.png", "dest": "/favicon.png", "headers": { "cache-control": "public, max-age=86400" } },
     { "src": "/favicon.ico", "dest": "/favicon.ico", "headers": { "cache-control": "public, max-age=86400" } },

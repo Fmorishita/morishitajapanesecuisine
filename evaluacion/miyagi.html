@@ -286,6 +286,7 @@ body{
 .category.open .category-head{
   border-bottom-color:var(--line);
 }
+.category-head-text{min-width:0;flex:1;padding-right:12px;}
 .category-name{
   font-family:var(--mono);
   font-size:12px;
@@ -293,6 +294,16 @@ body{
   color:var(--fg);
   font-weight:500;
 }
+.category-desc{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:12.5px;
+  color:var(--fg-soft);
+  margin-top:5px;
+  letter-spacing:.01em;
+  line-height:1.35;
+}
+.category-extra .category-name{color:var(--fg-soft);}
 .category-chev{
   color:var(--gold);
   width:14px;
@@ -354,6 +365,49 @@ body{
   color:var(--gold);
   background:var(--gold-faint);
 }
+.dish-badge.sent{
+  border-color:var(--gold);
+  color:#0a0908;
+  background:var(--gold);
+}
+
+/* DISH SAVE / SEND */
+.dish-save-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-top:18px;
+  flex-wrap:wrap;
+}
+.dish-save-btn{
+  background:transparent;
+  border:1px solid var(--gold-line);
+  color:var(--gold);
+  padding:11px 18px;
+  border-radius:5px;
+  font-family:var(--mono);
+  font-size:10.5px;
+  font-weight:500;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.2s;
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  -webkit-tap-highlight-color:transparent;
+}
+.dish-save-btn svg{width:14px;height:14px;}
+.dish-save-btn:hover:not(:disabled){background:var(--gold);color:#0a0908;border-color:var(--gold);}
+.dish-save-btn:disabled{opacity:.5;cursor:default;}
+.dish-save-status{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.12em;
+  color:var(--fg-soft);
+}
+.dish-save-status.ok{color:var(--gold);}
+.dish-save-status.local{color:#caa765;}
 .dish-chev{
   color:var(--fg-soft);
   width:12px;
@@ -378,22 +432,32 @@ body{
   margin-bottom:10px;
   font-weight:400;
 }
+.rating-scale{
+  font-family:var(--mono);
+  font-style:normal;
+  font-size:9.5px;
+  letter-spacing:.12em;
+  color:var(--gold);
+  text-transform:uppercase;
+  margin-left:4px;
+}
 .rating-row{
   display:flex;
-  gap:10px;
+  gap:8px;
   margin-bottom:18px;
   justify-content:flex-start;
   flex-wrap:wrap;
+  max-width:236px;
 }
 .rating-btn{
-  width:42px;
-  height:42px;
+  width:40px;
+  height:40px;
   border-radius:50%;
   border:1px solid var(--line);
   background:transparent;
   color:var(--fg-mid);
   font-family:var(--serif);
-  font-size:17px;
+  font-size:16px;
   font-weight:500;
   cursor:pointer;
   transition:all .2s cubic-bezier(.4,0,.2,1);
@@ -401,6 +465,7 @@ body{
   align-items:center;
   justify-content:center;
   -webkit-tap-highlight-color:transparent;
+  flex:0 0 auto;
 }
 .rating-btn:hover{border-color:var(--gold);color:var(--gold);transform:scale(1.05);}
 .rating-btn.active{
@@ -811,12 +876,13 @@ body{
 // DEFAULT CONFIG (overridable via admin panel)
 // ─────────────────────────────────────────────────────────
 const DEFAULT_CONFIG = {
+  version: 2,
   password: 'miyagi2026',
   evento: {
-    titulo: 'Hoja de evaluación de cata',
+    titulo: 'Degustación nuevo menú',
     cliente: 'Miyagi Sushi',
     fecha: '20 de junio de 2026',
-    descripcion: 'Evaluación privada de los rollos preparados durante la sesión de desarrollo de menú.'
+    descripcion: 'Evaluación privada del nuevo menú preparado durante la sesión de desarrollo.'
   },
   restaurante: {
     kanji: '森下',
@@ -825,44 +891,76 @@ const DEFAULT_CONFIG = {
     ubicacion: 'Ensenada, B.C.'
   },
   evaluacion: {
-    escalaMax: 5,
+    escalaMax: 10,
     campoGusto: 'Lo que me gustó',
     campoNoGusto: 'Lo que no me gustó',
     placeholderGusto: 'Escribe aquí…',
     placeholderNoGusto: 'Escribe aquí…',
     comentariosLabel: 'Comentarios generales',
-    comentariosPlaceholder: 'Comparte tu impresión general de la experiencia de omakase…',
+    comentariosPlaceholder: 'Comparte tu impresión general de la degustación…',
     comentariosMax: 500
   },
+  // Orden de servicio: de sabores ligeros a más intensos.
+  // oficial:true  → cuenta para el Top 5 de rollos que recibirán receta.
+  // oficial:false → se evalúa pero no compite por el Top 5 (entradas / vegetarianos).
   categorias: [
-    {
-      id: 'rollos',
-      nombre: 'ROLLOS',
-      platillos: [
-        { id: 'r1',  nombre: 'Tekka Maki' },
-        { id: 'r2',  nombre: 'Sake-Kappa Maki' },
-        { id: 'r3',  nombre: 'Futomaki Jardín' },
-        { id: 'r4',  nombre: 'Spicy Tuna' },
-        { id: 'r5',  nombre: 'Spicy Salmon Crunch' },
-        { id: 'r6',  nombre: 'Negitoro Maki' },
-        { id: 'r7',  nombre: 'Hamachi Maki' },
-        { id: 'r8',  nombre: 'Ebi Tempura Roll' },
-        { id: 'r9',  nombre: 'Unagi Roll' },
-        { id: 'r10', nombre: 'Rainbow Roll' },
-        { id: 'r11', nombre: 'Salmon Avocado Roll' },
-        { id: 'r12', nombre: 'Caterpillar Roll' },
-        { id: 'r13', nombre: 'Dragon Roll' },
-        { id: 'r14', nombre: 'Volcano Roll' },
-        { id: 'r15', nombre: 'Crunchy Roll' }
-      ]
-    },
     {
       id: 'entradas',
       nombre: 'ENTRADAS',
+      desc: 'Para abrir la degustación · porción pequeña',
+      oficial: false,
       platillos: [
-        { id: 'e1', nombre: 'Gyoza · Salsa Clásica' },
-        { id: 'e2', nombre: 'Gyoza · Salsa Picante' },
-        { id: 'e3', nombre: 'Poke Bowl' }
+        { id: 'ent_gyozas',  nombre: 'Gyozas' },
+        { id: 'ent_noodles', nombre: 'Noodles' }
+      ]
+    },
+    {
+      id: 'bloque1',
+      nombre: 'BLOQUE 1 · LIGEROS',
+      desc: 'Rollos más frescos y suaves',
+      oficial: true,
+      platillos: [
+        { id: 'r_avocado', nombre: 'Avocado Roll' },
+        { id: 'r_masago',  nombre: 'Masago Especial' },
+        { id: 'r_baja',    nombre: 'Baja Roll' }
+      ]
+    },
+    {
+      id: 'bloque2',
+      nombre: 'BLOQUE 2 · PESCADOS',
+      desc: 'Pescados y rollos más japoneses',
+      oficial: true,
+      platillos: [
+        { id: 'r_aburi',           nombre: 'Aburi Tuna Roll' },
+        { id: 'r_niji',            nombre: 'Niji Roll' },
+        { id: 'r_salmon_flameado', nombre: 'Salmón Flameado Roll' },
+        { id: 'r_sake',            nombre: 'Sake Roll' },
+        { id: 'r_akami',           nombre: 'Akami Spicy Roll' }
+      ]
+    },
+    {
+      id: 'bloque3',
+      nombre: 'BLOQUE 3 · CREMOSOS Y FRITOS',
+      desc: 'Rollos cremosos, fritos y más pesados',
+      oficial: true,
+      platillos: [
+        { id: 'r_fuji',        nombre: 'Fuji Nevado Roll' },
+        { id: 'r_tempura',     nombre: 'Tempura Roll' },
+        { id: 'r_ebi_panko',   nombre: 'Ebi Panko' },
+        { id: 'r_ebi_tampico', nombre: 'Ebi Tampico Roll' },
+        { id: 'r_kanikama',    nombre: 'Kanikama Roll' },
+        { id: 'r_yaki',        nombre: 'Yaki Tempura Roll' }
+      ]
+    },
+    {
+      id: 'vegetarianos',
+      nombre: 'VEGETARIANOS · EXTRA',
+      desc: 'Fuera del menú comercial · no cuenta para el Top 5',
+      oficial: false,
+      extra: true,
+      platillos: [
+        { id: 'v_inari', nombre: 'Inari Maki' },
+        { id: 'v_nasu',  nombre: 'Nasu Roll' }
       ]
     }
   ]
@@ -872,9 +970,10 @@ const DEFAULT_CONFIG = {
 // STATE
 // ─────────────────────────────────────────────────────────
 let CONFIG = null;
-let STATE = { ratings: {}, gusto: {}, noGusto: {}, comentarios: '', openCategoria: null, openDish: null };
+let STATE = { ratings: {}, gusto: {}, noGusto: {}, enviado: {}, comentarios: '', updated_at: null };
 const STORAGE_KEY = 'morishita_eval_miyagi_v1';
 const CONFIG_REMOTE_KEY = 'evaluacion_miyagi_config';
+const RESP_REMOTE_KEY = 'evaluacion_miyagi_respuestas';
 let SAVE_TIMER = null;
 let INDICATOR_TIMER = null;
 
@@ -882,28 +981,47 @@ let INDICATOR_TIMER = null;
 // INIT
 // ─────────────────────────────────────────────────────────
 async function init(){
-  CONFIG = await loadConfig();
+  const { cfg, resp } = await loadRemote();
+  CONFIG = cfg ? mergeConfig(DEFAULT_CONFIG, cfg) : structuredClone(DEFAULT_CONFIG);
   loadState();
+  // Si el servidor tiene respuestas más recientes (p. ej. desde otro dispositivo),
+  // las usamos como base para no perder lo ya capturado.
+  if (resp && resp.updated_at) {
+    const remoteNewer = !STATE.updated_at || new Date(resp.updated_at) > new Date(STATE.updated_at);
+    if (remoteNewer) {
+      STATE.ratings    = resp.ratings    || {};
+      STATE.gusto      = resp.gusto      || {};
+      STATE.noGusto    = resp.noGusto    || {};
+      STATE.enviado    = resp.enviado    || {};
+      STATE.comentarios = resp.comentarios || '';
+      STATE.updated_at = resp.updated_at;
+      saveLocalNow();
+    }
+  }
   renderApp();
   wireGate();
 }
 
-async function loadConfig(){
-  // 1) Intenta cargar config remota (la que edita el admin)
+async function loadRemote(){
   try {
     const r = await fetch('/api/content', { cache: 'no-store' });
     if (r.ok) {
       const data = await r.json();
-      const raw = data[CONFIG_REMOTE_KEY];
-      if (raw) {
-        try {
-          const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-          return mergeConfig(DEFAULT_CONFIG, parsed);
-        } catch (e) { console.warn('Config remota inválida:', e); }
+      let cfg = null, resp = null;
+      if (data[CONFIG_REMOTE_KEY]) {
+        try { cfg = typeof data[CONFIG_REMOTE_KEY] === 'string' ? JSON.parse(data[CONFIG_REMOTE_KEY]) : data[CONFIG_REMOTE_KEY]; }
+        catch (e) { console.warn('Config remota inválida:', e); }
       }
+      if (data[RESP_REMOTE_KEY]) {
+        try { resp = typeof data[RESP_REMOTE_KEY] === 'string' ? JSON.parse(data[RESP_REMOTE_KEY]) : data[RESP_REMOTE_KEY]; }
+        catch (e) { console.warn('Respuestas remotas inválidas:', e); }
+      }
+      // Si la config remota es de una versión anterior al menú actual, ignórala.
+      if (cfg && (cfg.version || 0) < (DEFAULT_CONFIG.version || 0)) cfg = null;
+      return { cfg, resp };
     }
-  } catch (e) { console.warn('No se pudo cargar config remota:', e); }
-  return structuredClone(DEFAULT_CONFIG);
+  } catch (e) { console.warn('No se pudo cargar del servidor:', e); }
+  return { cfg: null, resp: null };
 }
 
 function mergeConfig(base, override){
@@ -929,19 +1047,45 @@ function loadState(){
   } catch(e) {}
 }
 
+function collectRespuestas(){
+  return {
+    ratings: STATE.ratings,
+    gusto: STATE.gusto,
+    noGusto: STATE.noGusto,
+    enviado: STATE.enviado,
+    comentarios: STATE.comentarios,
+    updated_at: STATE.updated_at
+  };
+}
+
+function saveLocalNow(){
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collectRespuestas())); } catch(e) {}
+}
+
 function saveState(){
+  STATE.updated_at = new Date().toISOString();
   clearTimeout(SAVE_TIMER);
   SAVE_TIMER = setTimeout(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        ratings: STATE.ratings,
-        gusto: STATE.gusto,
-        noGusto: STATE.noGusto,
-        comentarios: STATE.comentarios
-      }));
-      showSaveIndicator();
-    } catch(e) { console.warn('No se pudo guardar:', e); }
+    saveLocalNow();
+    showSaveIndicator();
   }, 400);
+}
+
+// Envía las respuestas al servidor (best-effort). Devuelve true si se guardó.
+async function pushRemote(){
+  STATE.updated_at = new Date().toISOString();
+  saveLocalNow();
+  try {
+    const r = await fetch('/api/evaluacion/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: CONFIG.password, respuestas: collectRespuestas() })
+    });
+    return r.ok;
+  } catch (e) {
+    console.warn('No se pudo sincronizar con el servidor:', e);
+    return false;
+  }
 }
 
 function showSaveIndicator(){
@@ -1048,62 +1192,80 @@ function renderCategorias(){
   const container = document.getElementById('categories-container');
   container.innerHTML = '';
   const cats = CONFIG.categorias || [];
+  let serveNum = 0; // contador continuo del orden de servicio (sin contar los extra)
   cats.forEach((cat, idx) => {
     const catEl = document.createElement('div');
-    catEl.className = 'category' + (idx === 0 ? ' open' : '');
+    catEl.className = 'category' + (idx === 0 ? ' open' : '') + (cat.extra ? ' category-extra' : '');
     catEl.dataset.catId = cat.id;
 
     const head = document.createElement('div');
     head.className = 'category-head';
     head.innerHTML = `
-      <div class="category-name">${escapeHtml(cat.nombre)}</div>
+      <div class="category-head-text">
+        <div class="category-name">${escapeHtml(cat.nombre)}</div>
+        ${cat.desc ? `<div class="category-desc">${escapeHtml(cat.desc)}</div>` : ''}
+      </div>
       <svg class="category-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="6 9 12 15 18 9"></polyline>
       </svg>`;
-    head.addEventListener('click', () => {
-      catEl.classList.toggle('open');
-    });
+    head.addEventListener('click', () => { catEl.classList.toggle('open'); });
     catEl.appendChild(head);
 
     const body = document.createElement('div');
     body.className = 'category-body';
+    let localNum = 0;
     (cat.platillos || []).forEach((dish, dIdx) => {
-      body.appendChild(renderDish(dish, dIdx + 1, cat.id, idx === 0 && dIdx === 0));
+      const num = cat.extra ? (++localNum) : (++serveNum);
+      body.appendChild(renderDish(dish, num, cat.id, idx === 0 && dIdx === 0));
     });
     catEl.appendChild(body);
     container.appendChild(catEl);
   });
 }
 
+function badgeMarkup(dish){
+  const max = CONFIG.evaluacion.escalaMax || 10;
+  const rating = STATE.ratings[dish.id];
+  const sent = STATE.enviado[dish.id];
+  if (rating) return { cls: 'dish-badge rated' + (sent ? ' sent' : ''), txt: (sent ? '✓ ' : '★ ') + rating + '/' + max };
+  if (sent)   return { cls: 'dish-badge sent', txt: '✓ Guardado' };
+  return { cls: 'dish-badge', txt: 'Sin evaluar' };
+}
+
+function refreshBadge(head, dish){
+  const badge = head.querySelector('[data-role="badge"]');
+  const b = badgeMarkup(dish);
+  badge.className = b.cls;
+  badge.textContent = b.txt;
+}
+
 function renderDish(dish, num, catId, openFirst){
-  const ratedNow = STATE.ratings[dish.id];
   const wrap = document.createElement('div');
   wrap.className = 'dish' + (openFirst ? ' open' : '');
   wrap.dataset.dishId = dish.id;
+  const max = CONFIG.evaluacion.escalaMax || 10;
 
   const head = document.createElement('div');
   head.className = 'dish-head';
+  const b0 = badgeMarkup(dish);
   head.innerHTML = `
     <div class="dish-title"><span class="dish-num">${num}.</span>${escapeHtml(dish.nombre)}</div>
     <div class="dish-status">
-      <span class="dish-badge ${ratedNow ? 'rated' : ''}" data-role="badge">${ratedNow ? ('★ ' + ratedNow + '/' + (CONFIG.evaluacion.escalaMax||5)) : 'Sin evaluar'}</span>
+      <span class="${b0.cls}" data-role="badge">${b0.txt}</span>
       <svg class="dish-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="6 9 12 15 18 9"></polyline>
       </svg>
     </div>`;
-  head.addEventListener('click', () => {
-    wrap.classList.toggle('open');
-  });
+  head.addEventListener('click', () => { wrap.classList.toggle('open'); });
   wrap.appendChild(head);
 
   const body = document.createElement('div');
   body.className = 'dish-body';
 
-  // Rating
-  body.innerHTML += `<div class="rating-label">Calificación</div>`;
+  // Rating 1..max
+  body.innerHTML += `<div class="rating-label">Calificación <span class="rating-scale">(1 al ${max})</span></div>`;
   const ratingRow = document.createElement('div');
   ratingRow.className = 'rating-row';
-  const max = CONFIG.evaluacion.escalaMax || 5;
   for (let i = 1; i <= max; i++){
     const btn = document.createElement('button');
     btn.type = 'button';
@@ -1112,11 +1274,10 @@ function renderDish(dish, num, catId, openFirst){
     btn.dataset.val = i;
     btn.addEventListener('click', () => {
       STATE.ratings[dish.id] = i;
-      ratingRow.querySelectorAll('.rating-btn').forEach(b => b.classList.toggle('active', +b.dataset.val === i));
-      // badge
-      const badge = head.querySelector('[data-role="badge"]');
-      badge.className = 'dish-badge rated';
-      badge.textContent = '★ ' + i + '/' + max;
+      ratingRow.querySelectorAll('.rating-btn').forEach(x => x.classList.toggle('active', +x.dataset.val === i));
+      // Al cambiar la calificación, marcamos como pendiente de envío de nuevo.
+      STATE.enviado[dish.id] = false;
+      refreshBadge(head, dish);
       renderProgress();
       saveState();
     });
@@ -1135,7 +1296,7 @@ function renderDish(dish, num, catId, openFirst){
   gustoTA.className = 'feedback-input';
   gustoTA.placeholder = evCfg.placeholderGusto || 'Escribe aquí…';
   gustoTA.value = STATE.gusto[dish.id] || '';
-  gustoTA.addEventListener('input', () => { STATE.gusto[dish.id] = gustoTA.value; saveState(); });
+  gustoTA.addEventListener('input', () => { STATE.gusto[dish.id] = gustoTA.value; STATE.enviado[dish.id] = false; saveState(); });
   gustoField.appendChild(gustoTA);
 
   const noGustoField = document.createElement('div');
@@ -1145,12 +1306,43 @@ function renderDish(dish, num, catId, openFirst){
   noGustoTA.className = 'feedback-input';
   noGustoTA.placeholder = evCfg.placeholderNoGusto || 'Escribe aquí…';
   noGustoTA.value = STATE.noGusto[dish.id] || '';
-  noGustoTA.addEventListener('input', () => { STATE.noGusto[dish.id] = noGustoTA.value; saveState(); });
+  noGustoTA.addEventListener('input', () => { STATE.noGusto[dish.id] = noGustoTA.value; STATE.enviado[dish.id] = false; saveState(); });
   noGustoField.appendChild(noGustoTA);
 
   grid.appendChild(gustoField);
   grid.appendChild(noGustoField);
   body.appendChild(grid);
+
+  // Save / send row
+  const saveRow = document.createElement('div');
+  saveRow.className = 'dish-save-row';
+  const saveBtn = document.createElement('button');
+  saveBtn.type = 'button';
+  saveBtn.className = 'dish-save-btn';
+  saveBtn.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    Guardar platillo`;
+  const saveStatus = document.createElement('span');
+  saveStatus.className = 'dish-save-status';
+  if (STATE.enviado[dish.id]) { saveStatus.textContent = '✓ Guardado'; saveStatus.classList.add('ok'); }
+
+  saveBtn.addEventListener('click', async () => {
+    saveBtn.disabled = true;
+    saveStatus.className = 'dish-save-status';
+    saveStatus.textContent = 'Guardando…';
+    STATE.enviado[dish.id] = true;
+    const ok = await pushRemote();
+    const hora = new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    saveStatus.classList.add(ok ? 'ok' : 'local');
+    saveStatus.textContent = ok ? `✓ Guardado · ${hora}` : `✓ Guardado en este equipo · ${hora}`;
+    refreshBadge(head, dish);
+    renderProgress();
+    saveBtn.disabled = false;
+  });
+
+  saveRow.appendChild(saveBtn);
+  saveRow.appendChild(saveStatus);
+  body.appendChild(saveRow);
 
   wrap.appendChild(body);
   return wrap;
@@ -1162,6 +1354,22 @@ function totalDishes(){
 
 function totalRated(){
   return Object.keys(STATE.ratings).filter(k => STATE.ratings[k]).length;
+}
+
+// Top 5 rollos oficiales mejor calificados (para las recetas).
+function getTop5(){
+  const list = [];
+  let order = 0;
+  (CONFIG.categorias || []).forEach(cat => {
+    if (cat.oficial === false) return; // entradas y vegetarianos no compiten
+    (cat.platillos || []).forEach(d => {
+      order++;
+      const rating = STATE.ratings[d.id] || 0;
+      if (rating > 0) list.push({ nombre: d.nombre, rating, order });
+    });
+  });
+  list.sort((a, b) => b.rating - a.rating || a.order - b.order);
+  return list.slice(0, 5);
 }
 
 function renderProgress(){
@@ -1180,7 +1388,16 @@ function escapeHtml(s){
 // ─────────────────────────────────────────────────────────
 // SUBMIT
 // ─────────────────────────────────────────────────────────
-function onSubmit(){
+async function onSubmit(){
+  // Marca todos los platillos calificados como enviados y sincroniza.
+  Object.keys(STATE.ratings).forEach(k => { if (STATE.ratings[k]) STATE.enviado[k] = true; });
+  const btn = document.getElementById('submit-btn');
+  const original = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = 'Guardando…';
+  await pushRemote();
+  btn.disabled = false;
+  btn.innerHTML = original;
   document.getElementById('modal-backdrop').classList.add('show');
 }
 
@@ -1306,7 +1523,56 @@ function generatePDF(){
   setLINE();
   doc.setLineWidth(0.4);
   doc.line(margin, y, W - margin, y);
+  y += 22;
+
+  // === TOP 5 — rollos mejor evaluados ===
+  const top5 = getTop5();
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  setGOLD();
+  doc.text('TOP 5 · ROLLOS MEJOR EVALUADOS', margin, y, { charSpace: 2.5 });
+  y += 6;
+  setGOLDLINE();
+  doc.setLineWidth(0.5);
+  doc.line(margin, y, margin + 60, y);
+  y += 16;
+  doc.setFont('times','italic');
+  doc.setFontSize(9.5);
+  setSOFT();
+  doc.text('Rollos del menú comercial con mejor calificación — base para las recetas a entregar.', margin, y);
   y += 18;
+
+  if (top5.length === 0) {
+    doc.setFont('times','italic'); doc.setFontSize(11); setFG();
+    doc.text('— Aún no hay rollos calificados —', margin, y);
+    y += 22;
+  } else {
+    top5.forEach((d, i) => {
+      // Rank circle
+      fillGOLD();
+      doc.circle(margin + 9, y - 4, 9, 'F');
+      doc.setTextColor(10,9,8);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(11);
+      doc.text(String(i + 1), margin + 9, y - 0.5, { align: 'center' });
+      // Name
+      setFG();
+      doc.setFont('times','normal');
+      doc.setFontSize(14);
+      doc.text(d.nombre, margin + 28, y);
+      // Score
+      setGOLD();
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(13);
+      doc.text(d.rating + ' / ' + (CONFIG.evaluacion.escalaMax || 10), W - margin, y, { align: 'right' });
+      y += 26;
+    });
+  }
+  y += 4;
+  setLINE();
+  doc.setLineWidth(0.4);
+  doc.line(margin, y, W - margin, y);
+  y += 20;
 
   // Categories
   const cats = CONFIG.categorias || [];
@@ -1345,7 +1611,7 @@ function generatePDF(){
       doc.text(`${dishIndex}.  ${dish.nombre}`, margin, y);
 
       // Rating chip on right
-      const ratingTxt = rating ? `★ ${rating}/${CONFIG.evaluacion.escalaMax || 5}` : 'Sin evaluar';
+      const ratingTxt = rating ? `★ ${rating}/${CONFIG.evaluacion.escalaMax || 10}` : 'Sin evaluar';
       const txtW = doc.getTextWidth(ratingTxt);
       const chipPad = 8;
       const chipW = txtW + chipPad*2;
