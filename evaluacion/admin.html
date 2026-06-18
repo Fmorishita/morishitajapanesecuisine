@@ -89,6 +89,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--fg);min-height:100
 .cat-list{display:flex;flex-direction:column;gap:14px;}
 .cat-card{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;overflow:hidden;}
 .cat-card-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(255,255,255,.01);border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.cat-card-meta{display:flex;align-items:center;gap:14px;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.cat-desc-input{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--line);color:var(--fg-mid);padding:8px 10px;border-radius:3px;font-family:'Cormorant',serif;font-style:italic;font-size:13px;outline:none;transition:.2s;}
+.cat-desc-input:focus{border-color:var(--gold);color:var(--fg);}
+.cat-oficial{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-soft);cursor:pointer;white-space:nowrap;user-select:none;}
+.cat-oficial input{width:15px;height:15px;accent-color:var(--gold);cursor:pointer;}
+.cat-oficial:hover{color:var(--gold);}
 .cat-name-input{flex:1;min-width:160px;background:transparent;border:1px solid transparent;color:var(--fg);padding:8px 10px;border-radius:3px;font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;outline:none;transition:.2s;font-weight:500;}
 .cat-name-input:hover{border-color:var(--line);}
 .cat-name-input:focus{border-color:var(--gold);background:rgba(212,175,106,.04);}
@@ -278,7 +284,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--fg);min-height:100
     <div class="section-body">
       <div class="fields-grid">
         <div class="field">
-          <div class="field-label">Escala máxima</div>
+          <div class="field-label">Escala máxima <span class="hint">(califican del 1 al N)</span></div>
           <input class="input" type="number" min="3" max="10" id="esc" data-bind="evaluacion.escalaMax"/>
         </div>
         <div class="field">
@@ -320,6 +326,11 @@ body{font-family:var(--sans);background:var(--bg);color:var(--fg);min-height:100
       <svg class="section-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </div>
     <div class="section-body">
+      <p style="font-family:'Cormorant',serif;font-style:italic;color:var(--fg-soft);font-size:14px;margin-bottom:18px;line-height:1.5;">
+        El orden de las categorías y de los platillos es el orden en que el cliente los verá y servirás.
+        Marca <strong style="color:var(--gold);font-style:normal;">“Cuenta para el Top 5”</strong> solo en las categorías de rollos del menú comercial:
+        de ahí salen los 5 mejor calificados que aparecen al final del PDF.
+      </p>
       <div class="cat-list" id="cat-list"></div>
       <div class="add-cat-row">
         <button class="btn" id="add-cat">
@@ -348,12 +359,13 @@ body{font-family:var(--sans);background:var(--bg);color:var(--fg);min-height:100
 'use strict';
 
 const DEFAULT_CONFIG = {
+  version: 2,
   password: 'miyagi2026',
   evento: {
-    titulo: 'Hoja de evaluación de cata',
+    titulo: 'Degustación nuevo menú',
     cliente: 'Miyagi Sushi',
     fecha: '20 de junio de 2026',
-    descripcion: 'Evaluación privada de los rollos preparados durante la sesión de desarrollo de menú.'
+    descripcion: 'Evaluación privada del nuevo menú preparado durante la sesión de desarrollo.'
   },
   restaurante: {
     kanji: '森下',
@@ -362,44 +374,62 @@ const DEFAULT_CONFIG = {
     ubicacion: 'Ensenada, B.C.'
   },
   evaluacion: {
-    escalaMax: 5,
+    escalaMax: 10,
     campoGusto: 'Lo que me gustó',
     campoNoGusto: 'Lo que no me gustó',
     placeholderGusto: 'Escribe aquí…',
     placeholderNoGusto: 'Escribe aquí…',
     comentariosLabel: 'Comentarios generales',
-    comentariosPlaceholder: 'Comparte tu impresión general de la experiencia de omakase…',
+    comentariosPlaceholder: 'Comparte tu impresión general de la degustación…',
     comentariosMax: 500
   },
   categorias: [
     {
-      id: 'rollos',
-      nombre: 'ROLLOS',
+      id: 'entradas', nombre: 'ENTRADAS', desc: 'Para abrir la degustación · porción pequeña',
+      oficial: false,
       platillos: [
-        { id: 'r1',  nombre: 'Tekka Maki' },
-        { id: 'r2',  nombre: 'Sake-Kappa Maki' },
-        { id: 'r3',  nombre: 'Futomaki Jardín' },
-        { id: 'r4',  nombre: 'Spicy Tuna' },
-        { id: 'r5',  nombre: 'Spicy Salmon Crunch' },
-        { id: 'r6',  nombre: 'Negitoro Maki' },
-        { id: 'r7',  nombre: 'Hamachi Maki' },
-        { id: 'r8',  nombre: 'Ebi Tempura Roll' },
-        { id: 'r9',  nombre: 'Unagi Roll' },
-        { id: 'r10', nombre: 'Rainbow Roll' },
-        { id: 'r11', nombre: 'Salmon Avocado Roll' },
-        { id: 'r12', nombre: 'Caterpillar Roll' },
-        { id: 'r13', nombre: 'Dragon Roll' },
-        { id: 'r14', nombre: 'Volcano Roll' },
-        { id: 'r15', nombre: 'Crunchy Roll' }
+        { id: 'ent_gyozas',  nombre: 'Gyozas' },
+        { id: 'ent_noodles', nombre: 'Noodles' }
       ]
     },
     {
-      id: 'entradas',
-      nombre: 'ENTRADAS',
+      id: 'bloque1', nombre: 'BLOQUE 1 · LIGEROS', desc: 'Rollos más frescos y suaves',
+      oficial: true,
       platillos: [
-        { id: 'e1', nombre: 'Gyoza · Salsa Clásica' },
-        { id: 'e2', nombre: 'Gyoza · Salsa Picante' },
-        { id: 'e3', nombre: 'Poke Bowl' }
+        { id: 'r_avocado', nombre: 'Avocado Roll' },
+        { id: 'r_masago',  nombre: 'Masago Especial' },
+        { id: 'r_baja',    nombre: 'Baja Roll' }
+      ]
+    },
+    {
+      id: 'bloque2', nombre: 'BLOQUE 2 · PESCADOS', desc: 'Pescados y rollos más japoneses',
+      oficial: true,
+      platillos: [
+        { id: 'r_aburi',           nombre: 'Aburi Tuna Roll' },
+        { id: 'r_niji',            nombre: 'Niji Roll' },
+        { id: 'r_salmon_flameado', nombre: 'Salmón Flameado Roll' },
+        { id: 'r_sake',            nombre: 'Sake Roll' },
+        { id: 'r_akami',           nombre: 'Akami Spicy Roll' }
+      ]
+    },
+    {
+      id: 'bloque3', nombre: 'BLOQUE 3 · CREMOSOS Y FRITOS', desc: 'Rollos cremosos, fritos y más pesados',
+      oficial: true,
+      platillos: [
+        { id: 'r_fuji',        nombre: 'Fuji Nevado Roll' },
+        { id: 'r_tempura',     nombre: 'Tempura Roll' },
+        { id: 'r_ebi_panko',   nombre: 'Ebi Panko' },
+        { id: 'r_ebi_tampico', nombre: 'Ebi Tampico Roll' },
+        { id: 'r_kanikama',    nombre: 'Kanikama Roll' },
+        { id: 'r_yaki',        nombre: 'Yaki Tempura Roll' }
+      ]
+    },
+    {
+      id: 'vegetarianos', nombre: 'VEGETARIANOS · EXTRA', desc: 'Fuera del menú comercial · no cuenta para el Top 5',
+      oficial: false, extra: true,
+      platillos: [
+        { id: 'v_inari', nombre: 'Inari Maki' },
+        { id: 'v_nasu',  nombre: 'Nasu Roll' }
       ]
     }
   ]
@@ -461,8 +491,14 @@ async function loadConfig(){
     if (raw) {
       try {
         const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-        CONFIG = mergeConfig(DEFAULT_CONFIG, parsed);
-        document.getElementById('sync-status').innerHTML = '<span style="color:var(--green);">Config cargada desde Supabase</span>';
+        if ((parsed.version || 0) < (DEFAULT_CONFIG.version || 0)) {
+          // Config remota de una versión anterior: usamos el menú nuevo por defecto.
+          CONFIG = clone(DEFAULT_CONFIG);
+          document.getElementById('sync-status').innerHTML = '<span style="color:var(--gold);">Config anterior detectada — cargado el menú nuevo (guarda para actualizar)</span>';
+        } else {
+          CONFIG = mergeConfig(DEFAULT_CONFIG, parsed);
+          document.getElementById('sync-status').innerHTML = '<span style="color:var(--green);">Config cargada desde Supabase</span>';
+        }
       } catch (e) {
         console.warn('Config remota inválida, usando defaults:', e);
         document.getElementById('sync-status').innerHTML = '<span style="color:var(--gold);">Sin config remota — mostrando defaults</span>';
@@ -547,6 +583,21 @@ function renderCatCard(cat, idx){
   head.querySelector('[data-act="up"]').onclick   = () => moveCat(idx, -1);
   head.querySelector('[data-act="down"]').onclick = () => moveCat(idx,  1);
   head.querySelector('[data-act="del"]').onclick  = () => deleteCat(idx);
+
+  // Meta: descripción + cuenta para Top 5
+  const meta = document.createElement('div');
+  meta.className = 'cat-card-meta';
+  meta.innerHTML = `
+    <input class="cat-desc-input" type="text" value="${esc(cat.desc || '')}" placeholder="Descripción corta del bloque (opcional)"/>
+    <label class="cat-oficial" title="Si está activo, los platillos de esta categoría compiten por el Top 5 de rollos para receta.">
+      <input type="checkbox" ${cat.oficial !== false ? 'checked' : ''}/>
+      <span>Cuenta para el Top 5</span>
+    </label>`;
+  const descInp = meta.querySelector('.cat-desc-input');
+  const oficialChk = meta.querySelector('input[type=checkbox]');
+  descInp.oninput = () => { cat.desc = descInp.value; markDirty(); };
+  oficialChk.onchange = () => { cat.oficial = oficialChk.checked; markDirty(); };
+  card.appendChild(meta);
 
   // dishes list
   const dList = document.createElement('div');
