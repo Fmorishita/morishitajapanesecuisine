@@ -495,16 +495,22 @@ app.get('/api/content/history', requireAdmin, async (req, res) => {
 app.get('/api/auth/check', requireAdmin, (req, res) => res.json({ ok: true }));
 
 // ================================================================
-// ENDPOINT: Guardar respuestas de la evaluación del cliente (Miyagi)
-// POST /api/evaluacion/save
-// Body: { password, respuestas }
-// Público pero protegido por la contraseña del cliente (la misma que abre
-// la hoja de evaluación). Guarda todo en site_content bajo una sola key,
-// para que la sesión no se pierda aunque el cliente cambie de dispositivo.
+// ENDPOINTS: Hoja de evaluación (Miyagi) — sesiones por nombre.
+// Cada persona que llena la hoja crea su propia sesión, guardada
+// como una key separada en site_content. El admin puede listarlas todas.
 // ================================================================
 const EVAL_CONFIG_KEY = 'evaluacion_miyagi_config';
-const EVAL_RESP_KEY   = 'evaluacion_miyagi_respuestas';
+const EVAL_SESSION_PREFIX = 'evaluacion_miyagi_session__';
 const EVAL_DEFAULT_PASSWORD = 'miyagi2026';
+
+function slugifyNombre(n) {
+  return String(n || '')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '') // sin acentos
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, 60);
+}
 
 async function getEvalPassword() {
   try {
@@ -520,27 +526,75 @@ async function getEvalPassword() {
   return EVAL_DEFAULT_PASSWORD;
 }
 
+// POST /api/evaluacion/save  — público (gateado por la contraseña del cliente)
+// Body: { password, nombre, sesion }
+// `sesion` es el objeto completo de la persona (ratings, gusto, etc.).
 app.post('/api/evaluacion/save', async (req, res) => {
   try {
-    const { password, respuestas } = req.body || {};
-    if (!respuestas || typeof respuestas !== 'object') {
-      return res.status(400).json({ error: 'Faltan respuestas' });
+    const { password, nombre, sesion } = req.body || {};
+    if (!sesion || typeof sesion !== 'object') {
+      return res.status(400).json({ error: 'Falta el cuerpo de la sesión' });
     }
+    const slug = slugifyNombre(nombre);
+    if (!slug) return res.status(400).json({ error: 'Falta el nombre' });
 
     const expected = await getEvalPassword();
     if (String(password || '') !== expected) {
       return res.status(401).json({ error: 'No autorizado' });
     }
 
-    const payload = { ...respuestas, updated_at: new Date().toISOString() };
+    const payload = {
+      ...sesion,
+      nombre: String(nombre).trim(),
+      slug,
+      updated_at: new Date().toISOString()
+    };
+    const key = EVAL_SESSION_PREFIX + slug;
     const { error } = await supabase
       .from('site_content')
-      .upsert({ key: EVAL_RESP_KEY, value: JSON.stringify(payload), updated_at: new Date().toISOString() });
+      .upsert({ key, value: JSON.stringify(payload), updated_at: new Date().toISOString() });
     if (error) throw error;
 
-    res.json({ ok: true, updated_at: payload.updated_at });
+    res.json({ ok: true, slug, updated_at: payload.updated_at });
   } catch (err) {
     console.error('Error en /api/evaluacion/save:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/evaluacion/sessions  — admin
+// Devuelve todas las sesiones recibidas, ordenadas por última actualización desc.
+app.get('/api/evaluacion/sessions', requireAdmin, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('site_content')
+      .select('key, value, updated_at')
+      .like('key', EVAL_SESSION_PREFIX + '%');
+    if (error) throw error;
+    const sessions = (data || []).map(row => {
+      let body = {};
+      try { body = typeof row.value === 'string' ? JSON.parse(row.value) : (row.value || {}); }
+      catch (e) { body = { _parse_error: true }; }
+      return { key: row.key, updated_at: row.updated_at, ...body };
+    }).sort((a, b) => (b.updated_at || '').localeCompare(a.updated_at || ''));
+    res.json({ sessions });
+  } catch (err) {
+    console.error('Error en /api/evaluacion/sessions:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /api/evaluacion/sessions/:slug  — admin: borra una sesión
+app.delete('/api/evaluacion/sessions/:slug', requireAdmin, async (req, res) => {
+  try {
+    const slug = slugifyNombre(req.params.slug);
+    if (!slug) return res.status(400).json({ error: 'Slug inválido' });
+    const { error } = await supabase
+      .from('site_content').delete().eq('key', EVAL_SESSION_PREFIX + slug);
+    if (error) throw error;
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Error en DELETE /api/evaluacion/sessions:', err);
     res.status(500).json({ error: err.message });
   }
 });
