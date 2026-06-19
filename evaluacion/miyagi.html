@@ -460,6 +460,145 @@ body{
   padding:0;
 }
 .rating-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* PHOTO CAPTURE BLOCK */
+.photo-required{
+  background:linear-gradient(180deg, rgba(212,175,106,.04), rgba(10,9,8,.6));
+  border:1px dashed var(--gold-line);
+  border-radius:8px;
+  padding:28px 18px;
+  text-align:center;
+  margin-bottom:18px;
+}
+.photo-required-eyebrow{
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.28em;
+  color:var(--gold);
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.photo-required-title{
+  font-family:var(--serif);
+  font-size:18px;
+  color:var(--fg);
+  margin-bottom:6px;
+  font-weight:500;
+}
+.photo-required-note{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:13px;
+  color:var(--fg-soft);
+  line-height:1.5;
+  margin-bottom:18px;
+}
+.photo-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  background:var(--gold);
+  color:#0a0908;
+  border:none;
+  padding:14px 22px;
+  border-radius:6px;
+  font-family:var(--mono);
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.2s;
+  width:100%;
+  max-width:280px;
+}
+.photo-btn:hover:not(:disabled){background:#e6c285;}
+.photo-btn:disabled{opacity:.6;cursor:default;}
+.photo-btn svg{width:16px;height:16px;}
+.photo-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
+.photo-status{
+  margin-top:10px;
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.15em;
+  color:var(--fg-soft);
+  text-transform:uppercase;
+  min-height:12px;
+}
+.photo-status.err{
+  color:#e08585;
+  text-transform:none;
+  letter-spacing:.01em;
+  font-size:11px;
+  line-height:1.5;
+  word-break:break-word;
+  background:rgba(224,133,133,.08);
+  border:1px solid rgba(224,133,133,.25);
+  border-radius:5px;
+  padding:8px 10px;
+}
+
+.photo-preview{
+  position:relative;
+  margin-bottom:18px;
+  border-radius:8px;
+  overflow:hidden;
+  background:#000;
+  border:1px solid var(--line);
+}
+.photo-preview img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:280px;
+  object-fit:cover;
+}
+.photo-retake{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:rgba(10,9,8,.78);
+  color:var(--gold);
+  border:1px solid var(--gold-line);
+  padding:7px 12px;
+  border-radius:4px;
+  font-family:var(--mono);
+  font-size:9.5px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  cursor:pointer;
+  backdrop-filter:blur(4px);
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.photo-retake svg{width:11px;height:11px;}
+.photo-retake:hover{background:var(--gold);color:#0a0908;}
+
+.dish-body[data-locked="true"] .rating-row,
+.dish-body[data-locked="true"] .rating-label,
+.dish-body[data-locked="true"] .feedback-grid,
+.dish-body[data-locked="true"] .dish-save-row{display:none!important;}
+
+.dish-badge.photo{
+  border-color:rgba(255,200,100,.35);
+  color:#f0c279;
+  background:rgba(240,194,121,.08);
+}
+
+/* TOP-5 thumbnail */
+.top-thumb{
+  width:72px;height:72px;flex-shrink:0;
+  border-radius:7px;overflow:hidden;
+  background:#000;border:1px solid var(--line);
+}
+.top-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.top-thumb.empty{
+  display:flex;align-items:center;justify-content:center;
+  color:var(--fg-soft);font-family:var(--mono);font-size:26px;
+}
+
 .rating-btn.active{
   background:var(--gold);
   border-color:var(--gold);
@@ -1074,6 +1213,7 @@ function newState(){
     gusto: {},
     noGusto: {},
     enviado: {},
+    fotos: {},          // { [dishId]: { url, path, uploaded_at } }
     comentarios: '',
     topSeleccion: null,
     started_at: null,
@@ -1081,6 +1221,97 @@ function newState(){
     submitted_at: null,
     submitted: false
   };
+}
+
+// ─────────────────────────────────────────────────────────
+// IMAGE HELPERS
+// ─────────────────────────────────────────────────────────
+async function compressImageFile(file, maxDim = 1000, quality = 0.78){
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onerror = () => reject(new Error('No se pudo leer el archivo'));
+    fr.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Imagen inválida'));
+      img.onload = () => {
+        const ratio = Math.min(1, maxDim / Math.max(img.width, img.height));
+        const w = Math.round(img.width * ratio);
+        const h = Math.round(img.height * ratio);
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        const dataURL = canvas.toDataURL('image/jpeg', quality);
+        const base64 = dataURL.split(',')[1];
+        resolve({ base64, dataURL, width: w, height: h });
+      };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+
+async function uploadDishPhoto(dishId, file){
+  const compressed = await compressImageFile(file);
+  const r = await fetch('/api/evaluacion/upload-image', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      password: CONFIG.password,
+      nombre: STATE.nombre,
+      dishId,
+      data: compressed.base64,
+      type: 'image/jpeg',
+      ext: 'jpg'
+    })
+  });
+  if (!r.ok) {
+    let detail = '';
+    try { const j = await r.json(); detail = j && j.error ? ': ' + j.error : ''; } catch(e) {}
+    throw new Error('No se pudo subir (' + r.status + ')' + detail);
+  }
+  const j = await r.json();
+  return { url: j.url, path: j.path, uploaded_at: new Date().toISOString(), localPreview: compressed.dataURL };
+}
+
+// Renderiza un texto (kanji) con la fuente cargada en la página a un dataURL
+// de tamaño nítido (multiplicado por DPR para retina).
+async function renderTextToDataURL(text, fontFamily, sizePx, color = '#f5f0e8'){
+  // Asegura que la fuente esté lista
+  try { if (document.fonts && document.fonts.load) await document.fonts.load(`${sizePx}px "${fontFamily}"`); } catch(e){}
+  const scale = 3;
+  const measureCanvas = document.createElement('canvas');
+  const mctx = measureCanvas.getContext('2d');
+  mctx.font = `${sizePx}px "${fontFamily}", serif`;
+  const metrics = mctx.measureText(text);
+  const w = Math.ceil(metrics.width) + 12;
+  const h = Math.ceil(sizePx * 1.3);
+  const canvas = document.createElement('canvas');
+  canvas.width = w * scale;
+  canvas.height = h * scale;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+  ctx.font = `${sizePx}px "${fontFamily}", serif`;
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = color;
+  ctx.fillText(text, w / 2, h / 2);
+  return { dataURL: canvas.toDataURL('image/png'), width: w, height: h };
+}
+
+// Carga una URL como dataURL para embeber en jsPDF
+async function urlToDataURL(url){
+  try {
+    const r = await fetch(url, { mode: 'cors' });
+    if (!r.ok) return null;
+    const blob = await r.blob();
+    return await new Promise((resolve, reject) => {
+      const fr = new FileReader();
+      fr.onload = () => resolve(fr.result);
+      fr.onerror = reject;
+      fr.readAsDataURL(blob);
+    });
+  } catch (e) { console.warn('urlToDataURL falló:', e); return null; }
 }
 
 // ─────────────────────────────────────────────────────────
@@ -1333,7 +1564,16 @@ function renderApp(){
 
   document.getElementById('submit-btn').onclick = onSubmit;
   document.getElementById('modal-close').onclick = () => document.getElementById('modal-done').classList.remove('show');
-  document.getElementById('modal-download').onclick = () => generatePDF();
+  document.getElementById('modal-download').onclick = async () => {
+    const btn = document.getElementById('modal-download');
+    const original = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = 'Generando PDF…';
+    try { await generatePDF(); }
+    catch (e) { console.error(e); alert('Error generando PDF: ' + e.message); }
+    btn.disabled = false;
+    btn.innerHTML = original;
+  };
 }
 
 function renderCategorias(){
@@ -1379,8 +1619,10 @@ function badgeMarkup(dish){
   const max = CONFIG.evaluacion.escalaMax || 10;
   const rating = STATE.ratings[dish.id];
   const sent = STATE.enviado[dish.id];
+  const hasPhoto = !!(STATE.fotos[dish.id] && STATE.fotos[dish.id].url);
   if (rating) return { cls: 'dish-badge rated' + (sent ? ' sent' : ''), txt: (sent ? '✓ ' : '★ ') + rating + '/' + max };
   if (sent)   return { cls: 'dish-badge sent', txt: '✓ Guardado' };
+  if (hasPhoto) return { cls: 'dish-badge photo', txt: '📷 Foto lista' };
   return { cls: 'dish-badge', txt: 'Sin evaluar' };
 }
 
@@ -1414,7 +1656,98 @@ function renderDish(dish, num, cat, openFirst){
   const body = document.createElement('div');
   body.className = 'dish-body';
 
-  body.innerHTML += `<div class="rating-label">Calificación <span class="rating-scale">(1 al ${max})</span></div>`;
+  // ─── PHOTO BLOCK ───────────────────────────────────────
+  const photoSection = document.createElement('div');
+  photoSection.dataset.role = 'photo-section';
+  body.appendChild(photoSection);
+
+  function renderPhoto(){
+    photoSection.innerHTML = '';
+    const has = STATE.fotos[dish.id] && STATE.fotos[dish.id].url;
+    if (!has) {
+      // Foto requerida
+      body.dataset.locked = 'true';
+      const block = document.createElement('div');
+      block.className = 'photo-required';
+      block.innerHTML = `
+        <div class="photo-required-eyebrow">Paso 1</div>
+        <div class="photo-required-title">Toma una foto del platillo</div>
+        <div class="photo-required-note">Te ayudará a recordarlo al elegir tus favoritos al final.</div>
+        <button type="button" class="photo-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+          Tomar foto
+        </button>
+        <input type="file" accept="image/*" capture="environment" class="photo-input"/>
+        <div class="photo-status" data-role="status"></div>`;
+      const btn = block.querySelector('.photo-btn');
+      const input = block.querySelector('.photo-input');
+      const status = block.querySelector('[data-role="status"]');
+      btn.onclick = () => input.click();
+      input.onchange = async () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        btn.disabled = true;
+        status.classList.remove('err');
+        status.textContent = 'Procesando…';
+        try {
+          status.textContent = 'Subiendo…';
+          const photo = await uploadDishPhoto(dish.id, file);
+          STATE.fotos[dish.id] = photo;
+          saveLocalNow();
+          // Background remote sync (fire and forget — already saved local)
+          pushRemote().catch(()=>{});
+          renderPhoto();
+          refreshBadge(head, dish);
+        } catch (e) {
+          status.classList.add('err');
+          status.textContent = 'Error: ' + e.message;
+          btn.disabled = false;
+        }
+      };
+      photoSection.appendChild(block);
+    } else {
+      // Preview con botón retake
+      body.dataset.locked = 'false';
+      const block = document.createElement('div');
+      block.className = 'photo-preview';
+      const photo = STATE.fotos[dish.id];
+      block.innerHTML = `
+        <img src="${escapeHtml(photo.localPreview || photo.url)}" alt="Foto del platillo"/>
+        <button type="button" class="photo-retake">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+          Retomar
+        </button>
+        <input type="file" accept="image/*" capture="environment" class="photo-input"/>`;
+      const retake = block.querySelector('.photo-retake');
+      const input = block.querySelector('.photo-input');
+      retake.onclick = () => input.click();
+      input.onchange = async () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        retake.disabled = true;
+        try {
+          const newPhoto = await uploadDishPhoto(dish.id, file);
+          STATE.fotos[dish.id] = newPhoto;
+          saveLocalNow();
+          pushRemote().catch(()=>{});
+          renderPhoto();
+        } catch (e) {
+          alert('Error al subir: ' + e.message);
+          retake.disabled = false;
+        }
+      };
+      photoSection.appendChild(block);
+    }
+  }
+  renderPhoto();
+
+  const ratingLabel = document.createElement('div');
+  ratingLabel.className = 'rating-label';
+  ratingLabel.innerHTML = `Calificación <span class="rating-scale">(1 al ${max})</span>`;
+  body.appendChild(ratingLabel);
   const ratingRow = document.createElement('div');
   ratingRow.className = 'rating-row';
   for (let i = 1; i <= max; i++){
@@ -1536,17 +1869,33 @@ function advanceToNext(currentDishId){
   }
 }
 
-function totalDishes(){
-  return (CONFIG.categorias || []).reduce((s, c) => s + (c.platillos||[]).length, 0);
+function isRequiredCategory(cat){
+  // Las categorías marcadas como `extra` (vegetarianos) son opcionales.
+  return cat && cat.extra !== true;
 }
+function hasExtras(){
+  return (CONFIG.categorias || []).some(c => c.extra === true && (c.platillos||[]).length);
+}
+// Total de platillos REQUERIDOS (sin extras como vegetarianos)
+function totalDishes(){
+  return (CONFIG.categorias || [])
+    .filter(isRequiredCategory)
+    .reduce((s, c) => s + (c.platillos||[]).length, 0);
+}
+// Total calificado, solo dentro de categorías requeridas
 function totalRated(){
-  return Object.keys(STATE.ratings).filter(k => STATE.ratings[k]).length;
+  const requiredIds = new Set();
+  (CONFIG.categorias || []).forEach(c => {
+    if (isRequiredCategory(c)) (c.platillos||[]).forEach(d => requiredIds.add(d.id));
+  });
+  return Object.keys(STATE.ratings).filter(k => STATE.ratings[k] && requiredIds.has(k)).length;
 }
 function renderProgress(){
   const total = totalDishes();
   const rated = Math.min(totalRated(), total);
   const pct = total === 0 ? 0 : Math.round((rated / total) * 100);
-  document.getElementById('progress-label').textContent = `Progreso: ${rated} de ${total} platillos`;
+  const extras = hasExtras() ? ' · vegetarianos opcionales' : '';
+  document.getElementById('progress-label').textContent = `Progreso: ${rated} de ${total} platillos${extras}`;
   document.getElementById('progress-pct').textContent = `${pct}%`;
   document.getElementById('progress-fill').style.width = pct + '%';
 }
@@ -1581,10 +1930,17 @@ function escapeHtml(s){
 // PERSISTENCIA
 // ─────────────────────────────────────────────────────────
 function payloadForSave(){
+  // Las fotos guardamos solo la URL pública (sin localPreview para no saturar
+  // el JSON ni Supabase con base64 que ya vive en Storage).
+  const fotosLite = {};
+  Object.keys(STATE.fotos || {}).forEach(k => {
+    const f = STATE.fotos[k];
+    if (f && f.url) fotosLite[k] = { url: f.url, path: f.path, uploaded_at: f.uploaded_at };
+  });
   return {
     nombre: STATE.nombre, slug: STATE.slug,
     ratings: STATE.ratings, gusto: STATE.gusto, noGusto: STATE.noGusto,
-    enviado: STATE.enviado, comentarios: STATE.comentarios,
+    enviado: STATE.enviado, fotos: fotosLite, comentarios: STATE.comentarios,
     topSeleccion: STATE.topSeleccion,
     started_at: STATE.started_at, updated_at: STATE.updated_at,
     submitted_at: STATE.submitted_at, submitted: !!STATE.submitted
@@ -1593,7 +1949,9 @@ function payloadForSave(){
 function saveLocalNow(){
   if (!STATE.slug) return;
   STATE.updated_at = new Date().toISOString();
-  try { localStorage.setItem(storageKey(STATE.slug), JSON.stringify(payloadForSave())); } catch(e) {}
+  // payloadForSave omite los localPreview en base64 — evita saturar el quota
+  // de localStorage. La imagen se renderiza desde la URL pública al recargar.
+  try { localStorage.setItem(storageKey(STATE.slug), JSON.stringify(payloadForSave())); } catch(e) { console.warn('saveLocal:', e); }
 }
 function saveLocal(){
   clearTimeout(SAVE_TIMER);
@@ -1674,8 +2032,13 @@ function showTopSelector(rollos){
   rollos.forEach((r, i) => {
     const row = document.createElement('div');
     row.className = 'top-row' + (CHOSEN_TOP.includes(r.id) ? ' selected' : '') + (hasTie && r.rating === rollos[4].rating ? ' tie' : '');
+    const photo = STATE.fotos[r.id];
+    const thumbHTML = (photo && photo.url)
+      ? `<div class="top-thumb"><img src="${escapeHtml(photo.url)}" alt=""/></div>`
+      : `<div class="top-thumb empty">○</div>`;
     row.innerHTML = `
       <div class="top-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      ${thumbHTML}
       <div class="top-name">${escapeHtml(r.nombre)}</div>
       <div class="top-score">${r.rating} / ${max}</div>`;
     row.addEventListener('click', () => {
@@ -1718,7 +2081,7 @@ async function finalizeSubmit(){
 // ─────────────────────────────────────────────────────────
 // PDF
 // ─────────────────────────────────────────────────────────
-function generatePDF(){
+async function generatePDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit:'pt', format:'letter' });
   const W = doc.internal.pageSize.getWidth();
@@ -1740,16 +2103,49 @@ function generatePDF(){
   const fillBG = () => { doc.setFillColor(BG[0],BG[1],BG[2]); doc.rect(0,0,W,H,'F'); };
   const fillGOLD = () => doc.setFillColor(GOLD[0],GOLD[1],GOLD[2]);
 
+  // jsPDF no centra bien cuando se usa charSpace junto con align:'center'
+  // (ensancha el texto pero no compensa la posición). Centramos a mano:
+  // medimos el ancho real (incluyendo el charSpace entre letras) y posicionamos.
+  const centerText = (text, yy, charSpace = 0) => {
+    const w = doc.getTextWidth(text) + charSpace * Math.max(0, String(text).length - 1);
+    doc.text(text, (W - w) / 2, yy, { charSpace });
+  };
+
+  // ─── Precarga de imágenes (kanji + fotos del Top) ───
+  const kanjiText = (CONFIG.restaurante && CONFIG.restaurante.kanji) || '森下';
+  const kanjiBig = await renderTextToDataURL(kanjiText, 'Zen Antique Soft', 96, '#f5f0e8');
+  const kanjiSmall = await renderTextToDataURL(kanjiText, 'Zen Antique Soft', 22, '#9a9285');
+
+  const chosenIdsForPreload = STATE.topSeleccion || [];
+  const photoDataURLs = {};
+  await Promise.all(chosenIdsForPreload.map(async id => {
+    const f = STATE.fotos[id];
+    if (f && f.url) {
+      const d = await urlToDataURL(f.url);
+      if (d) photoDataURLs[id] = d;
+    }
+  }));
+
   // === COVER ===
   fillBG();
-  doc.setFont('helvetica','bold'); doc.setFontSize(48); setFG();
-  doc.text((CONFIG.restaurante.nombre || 'MORISHITA'), W/2, H/2 - 90, { align:'center' });
+
+  // Kanji centrado como imagen (escalado proporcionalmente)
+  const kanjiW = 92; // pt en el PDF
+  const kanjiH = kanjiW * (kanjiBig.height / kanjiBig.width);
+  doc.addImage(kanjiBig.dataURL, 'PNG', (W - kanjiW)/2, H/2 - 170, kanjiW, kanjiH);
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(36); setFG();
+  doc.text((CONFIG.restaurante.nombre || 'MORISHITA'), W/2, H/2 - 80, { align:'center' });
   doc.setFont('helvetica','normal'); doc.setFontSize(9); setGOLD();
-  doc.text((CONFIG.restaurante.tagline || 'AUTHENTIC JAPANESE CUISINE').toUpperCase(), W/2, H/2 - 68, { align:'center', charSpace: 2 });
-  setGOLD(); doc.setFontSize(10);
-  doc.text('◆', W/2, H/2 - 36, { align:'center' });
+  centerText((CONFIG.restaurante.tagline || 'AUTHENTIC JAPANESE CUISINE').toUpperCase(), H/2 - 62, 2);
+
+  // Separador decorativo (líneas en lugar de diamond, que no renderea bien en helvetica)
+  setGOLDLINE(); doc.setLineWidth(0.6);
+  doc.line(W/2 - 60, H/2 - 36, W/2 - 12, H/2 - 36);
+  doc.line(W/2 + 12, H/2 - 36, W/2 + 60, H/2 - 36);
+
   doc.setFont('helvetica','normal'); doc.setFontSize(10); setSOFT();
-  doc.text('EVALUACIÓN PRIVADA DE DEGUSTACIÓN', W/2, H/2 - 14, { align:'center', charSpace: 3 });
+  centerText('EVALUACION PRIVADA DE DEGUSTACION', H/2 - 14, 3);
   doc.setFont('times','normal'); doc.setFontSize(34); setFG();
   doc.text((CONFIG.evento.titulo || 'Hoja de evaluación'), W/2, H/2 + 26, { align:'center' });
   doc.setFont('times','italic'); doc.setFontSize(15); setGOLD();
@@ -1761,16 +2157,21 @@ function generatePDF(){
   const total = totalDishes(), rated = totalRated();
   const pct = total === 0 ? 0 : Math.round((rated/total)*100);
   doc.setFontSize(9); setSOFT();
-  doc.text(`PLATILLOS EVALUADOS: ${rated} / ${total}   ·   ${pct}%`, W/2, H/2 + 122, { align:'center', charSpace: 1.5 });
+  centerText(`PLATILLOS EVALUADOS: ${rated} / ${total}   ·   ${pct}%`, H/2 + 122, 1.5);
   doc.setFontSize(8);
-  doc.text(`Generado el ${new Date().toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' })}`, W/2, H - margin, { align:'center', charSpace: 1.5 });
-  doc.text((CONFIG.restaurante.nombre || 'Morishita') + ' Japanese Cuisine · ' + (CONFIG.restaurante.ubicacion || 'Ensenada, B.C.'), W/2, H - margin + 14, { align:'center', charSpace: 1.5 });
+  centerText(`Generado el ${new Date().toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' })}`, H - margin, 1.5);
+  centerText((CONFIG.restaurante.nombre || 'Morishita') + ' Japanese Cuisine · ' + (CONFIG.restaurante.ubicacion || 'Ensenada, B.C.'), H - margin + 14, 1.5);
 
   // === PAGE 2 — TOP + RESUMEN ===
   doc.addPage(); fillBG(); y = margin;
 
+  // Kanji pequeño en la esquina como sello discreto
+  const kSmW = 18;
+  const kSmH = kSmW * (kanjiSmall.height / kanjiSmall.width);
+  doc.addImage(kanjiSmall.dataURL, 'PNG', W - margin - kSmW, margin - 6, kSmW, kSmH);
+
   doc.setFont('helvetica','bold'); doc.setFontSize(11); setGOLD();
-  doc.text('RESUMEN DE EVALUACIÓN', margin, y, { charSpace: 2.5 });
+  doc.text('RESUMEN DE EVALUACION', margin, y, { charSpace: 2.5 });
   y += 6;
   setGOLDLINE(); doc.setLineWidth(0.5);
   doc.line(margin, y, margin + 70, y);
@@ -1812,20 +2213,37 @@ function generatePDF(){
 
   if (chosen.length === 0) {
     doc.setFont('times','italic'); doc.setFontSize(11); setFG();
-    doc.text('— Aún no hay rollos seleccionados —', margin, y);
+    doc.text('— Aun no hay rollos seleccionados —', margin, y);
     y += 22;
   } else {
+    const thumbSize = 64;
+    const rowH = thumbSize + 16;
     chosen.forEach((d, i) => {
-      if (y > H - 80) { doc.addPage(); fillBG(); y = margin; }
+      if (y + rowH > H - 70) { doc.addPage(); fillBG(); y = margin; }
+      const midY = y + thumbSize/2;
+      // Círculo del ranking
       fillGOLD();
-      doc.circle(margin + 9, y - 4, 9, 'F');
+      doc.circle(margin + 9, midY, 9, 'F');
       doc.setTextColor(10,9,8); doc.setFont('helvetica','bold'); doc.setFontSize(11);
-      doc.text(String(i + 1), margin + 9, y - 0.5, { align:'center' });
-      setFG(); doc.setFont('times','normal'); doc.setFontSize(14);
-      doc.text(d.nombre, margin + 28, y);
-      setGOLD(); doc.setFont('helvetica','bold'); doc.setFontSize(13);
-      doc.text(d.rating + ' / ' + (CONFIG.evaluacion.escalaMax || 10), W - margin, y, { align:'right' });
-      y += 26;
+      doc.text(String(i + 1), margin + 9, midY + 3.5, { align:'center' });
+      // Thumbnail si hay foto (grande para identificar el rollo)
+      const thumbX = margin + 28;
+      const thumbY = y;
+      const dURL = photoDataURLs[d.id];
+      if (dURL) {
+        try { doc.addImage(dURL, 'JPEG', thumbX, thumbY, thumbSize, thumbSize); } catch(e) {}
+        setLINE(); doc.setLineWidth(0.4);
+        doc.roundedRect(thumbX, thumbY, thumbSize, thumbSize, 3, 3, 'S');
+      } else {
+        setLINE(); doc.setLineWidth(0.4);
+        doc.roundedRect(thumbX, thumbY, thumbSize, thumbSize, 3, 3, 'S');
+      }
+      // Nombre y score
+      setFG(); doc.setFont('times','normal'); doc.setFontSize(15);
+      doc.text(d.nombre, thumbX + thumbSize + 16, midY + 5);
+      setGOLD(); doc.setFont('helvetica','bold'); doc.setFontSize(14);
+      doc.text(d.rating + ' / ' + (CONFIG.evaluacion.escalaMax || 10), W - margin, midY + 5, { align:'right' });
+      y += rowH;
     });
   }
   y += 4; setLINE(); doc.setLineWidth(0.4);
@@ -1855,9 +2273,13 @@ function generatePDF(){
 
       doc.setFont('times','normal'); doc.setFontSize(13); setFG();
       doc.text(`${dishIndex}.  ${dish.nombre}`, margin, y);
-      const ratingTxt = rating ? `★ ${rating}/${CONFIG.evaluacion.escalaMax || 10}` : 'Sin evaluar';
-      const txtW = doc.getTextWidth(ratingTxt);
-      const chipPad = 8;
+      // Sin estrella (★ no existe en helvetica de jsPDF y sale como "&").
+      const ratingTxt = rating ? `${rating} / ${CONFIG.evaluacion.escalaMax || 10}` : 'Sin evaluar';
+      const chipCS = 1; // charSpace del texto del chip
+      const chipPad = 9;
+      doc.setFont('helvetica','bold'); doc.setFontSize(8);
+      // El ancho debe incluir el charSpace, si no el "10 / 10" se corta.
+      const txtW = doc.getTextWidth(ratingTxt) + chipCS * Math.max(0, ratingTxt.length - 1);
       const chipW = txtW + chipPad*2;
       const chipH = 16;
       const chipX = W - margin - chipW;
@@ -1872,7 +2294,7 @@ function generatePDF(){
         setSOFT();
       }
       doc.setFont('helvetica','bold'); doc.setFontSize(8);
-      doc.text(ratingTxt, chipX + chipPad, chipY + 11, { charSpace: 1 });
+      doc.text(ratingTxt, chipX + chipPad, chipY + 11, { charSpace: chipCS });
       setFG();
       y += 16;
 
@@ -1921,7 +2343,44 @@ function generatePDF(){
   const fileTag = (slugify(STATE.nombre) || 'evaluador');
   const cliTag = slugify(CONFIG.evento.cliente || 'cliente');
   const dateTag = new Date().toISOString().slice(0,10);
-  doc.save(`evaluacion_${cliTag}_${fileTag}_${dateTag}.pdf`);
+  const filename = `evaluacion_${cliTag}_${fileTag}_${dateTag}.pdf`;
+  await savePdfSafe(doc, filename);
+}
+
+// Descarga el PDF de forma segura en iOS Safari.
+// doc.save() de jsPDF en iOS navega la pestaña a un blob: URL, y al volver a
+// la app Safari intenta recargar ese blob (ya revocado) → "WebKitBlobResource
+// error 1". Para evitarlo: en móvil usamos el share sheet nativo (Web Share API
+// con archivo), y como respaldo un <a download> que NO cambia la página actual.
+async function savePdfSafe(doc, filename){
+  const blob = doc.output('blob');
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  // 1) Web Share API con archivo (iOS 15+): abre "Guardar en Archivos / Compartir"
+  try {
+    if (navigator.canShare) {
+      const file = new File([blob], filename, { type: 'application/pdf' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: filename });
+        return;
+      }
+    }
+  } catch (e) {
+    // Si el usuario cancela el share, no seguimos al fallback (evita doble acción).
+    if (e && e.name === 'AbortError') return;
+  }
+
+  // 2) Fallback: enlace de descarga que no reemplaza la pestaña actual.
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.rel = 'noopener';
+  if (isIOS) a.target = '_blank'; // iOS abre el visor en pestaña aparte, app intacta
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { try { a.remove(); URL.revokeObjectURL(url); } catch(e){} }, 8000);
 }
 
 init();

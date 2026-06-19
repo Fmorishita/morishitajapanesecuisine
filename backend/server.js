@@ -19,18 +19,26 @@ const PRECIO_POR_PERSONA_MXN   = parseInt(process.env.PRECIO_POR_PERSONA_MXN || 
 const PORCENTAJE_ANTICIPO      = parseFloat(process.env.PORCENTAJE_ANTICIPO || '0.5');
 const CAPACIDAD_MAXIMA_SESION  = parseInt(process.env.CAPACIDAD_MAXIMA_SESION || '4', 10);
 
-// Validar config crítica al arranque
-if (!STRIPE_SECRET_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE) {
-  console.error('❌ Faltan variables de entorno críticas');
-}
+// Validar config crítica al arranque (no lanzar — solo loguear).
+// En Vercel, si una env var falta en el environment del deploy (típicamente
+// Preview cuando solo se configuró Production), no queremos que TODA la
+// función serverless muera al cargar — eso hace que hasta /health falle.
+const MISSING_ENV = [];
+if (!STRIPE_SECRET_KEY) MISSING_ENV.push('STRIPE_SECRET_KEY');
+if (!SUPABASE_URL) MISSING_ENV.push('SUPABASE_URL');
+if (!SUPABASE_SERVICE_ROLE) MISSING_ENV.push('SUPABASE_SERVICE_ROLE_KEY');
+if (MISSING_ENV.length) console.error('⚠️  Faltan env vars:', MISSING_ENV.join(', '));
 
-const stripe = Stripe(STRIPE_SECRET_KEY);
+// Stripe e instancias Supabase se crean lazy para no crashear el módulo si
+// faltan credenciales — los endpoints que las usan devolverán un 503 claro.
+const stripe = STRIPE_SECRET_KEY ? Stripe(STRIPE_SECRET_KEY) : null;
 
 // Service role: solo en backend, nunca expuesta al cliente.
 // Permite escribir en la base de datos saltándose RLS (necesario para reservas web).
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
-  auth: { persistSession: false }
-});
+// Solo se crea si las credenciales existen; los endpoints validan antes de usarla.
+const supabase = (SUPABASE_URL && SUPABASE_SERVICE_ROLE)
+  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, { auth: { persistSession: false } })
+  : null;
 
 // ----------------------------------------------------------------
 // HELPERS
@@ -114,6 +122,20 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   if (req.originalUrl === '/stripe-webhook') return next();
   express.json({ limit: '10mb' })(req, res, next);
+});
+
+// Guarda: si faltan env vars críticas, no podemos atender la mayoría de los
+// endpoints. /health debe seguir respondiendo para diagnóstico. Para todo lo
+// demás, devolvemos 503 con la lista exacta de lo que falta.
+app.use((req, res, next) => {
+  if (req.path === '/health') return next();
+  if (MISSING_ENV.length) {
+    return res.status(503).json({
+      error: 'Backend mal configurado · faltan env vars en este entorno de Vercel: ' + MISSING_ENV.join(', '),
+      env_missing: MISSING_ENV
+    });
+  }
+  next();
 });
 
 // ----------------------------------------------------------------
@@ -363,11 +385,14 @@ app.get('/stripe-webhook-client', async (req, res) => {
 // ================================================================
 
 // GET /api/content — público, devuelve todo como objeto key→value
+// Excluye las fotos de evaluación (data URIs pesados) para no inflar la respuesta
+// que consume la web pública; esas se sirven aparte por /api/evaluacion/photo.
 app.get('/api/content', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('site_content')
-      .select('key, value');
+      .select('key, value')
+      .not('key', 'like', EVAL_PHOTO_PREFIX + '%');
     if (error) throw error;
     const obj = {};
     (data || []).forEach(r => { obj[r.key] = r.value; });
@@ -500,6 +525,7 @@ app.get('/api/auth/check', requireAdmin, (req, res) => res.json({ ok: true }));
 // como una key separada en site_content. El admin puede listarlas todas.
 // ================================================================
 const EVAL_CONFIG_KEY = 'evaluacion_miyagi_config';
+const EVAL_PHOTO_PREFIX = 'evaluacion_miyagi_photo__';
 const EVAL_SESSION_PREFIX = 'evaluacion_miyagi_session__';
 const EVAL_DEFAULT_PASSWORD = 'miyagi2026';
 
@@ -562,6 +588,71 @@ app.post('/api/evaluacion/save', async (req, res) => {
   }
 });
 
+// POST /api/evaluacion/upload-image — público (gateado por contraseña del cliente)
+// Body: { password, nombre, dishId, data (base64 sin prefijo), type }
+// Guarda la foto del platillo en site_content (mismo camino probado que /save,
+// sin depender de Supabase Storage). Se sirve luego por GET /api/evaluacion/photo.
+app.post('/api/evaluacion/upload-image', async (req, res) => {
+  try {
+    const { password, nombre, dishId, data, type } = req.body || {};
+    if (!data || !dishId) return res.status(400).json({ error: 'Faltan campos: data, dishId' });
+    const slug = slugifyNombre(nombre);
+    if (!slug) return res.status(400).json({ error: 'Falta nombre' });
+
+    const expected = await getEvalPassword();
+    if (String(password || '') !== expected) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    const cleanDish = String(dishId).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 60);
+    const mime = (typeof type === 'string' && /^image\//.test(type)) ? type : 'image/jpeg';
+    const dataUri = `data:${mime};base64,${data}`;
+    const key = `${EVAL_PHOTO_PREFIX}${slug}__${cleanDish}`;
+
+    const { error } = await supabase
+      .from('site_content')
+      .upsert({ key, value: dataUri, updated_at: new Date().toISOString() });
+    if (error) {
+      console.error('upload-image db error:', error);
+      return res.status(502).json({ error: 'db: ' + error.message });
+    }
+
+    const url = `/api/evaluacion/photo?slug=${encodeURIComponent(slug)}&dish=${encodeURIComponent(cleanDish)}&t=${Date.now()}`;
+    res.json({ ok: true, url, key });
+  } catch (err) {
+    console.error('Error en /api/evaluacion/upload-image:', err);
+    res.status(500).json({ error: err && err.message ? err.message : String(err) });
+  }
+});
+
+// GET /api/evaluacion/photo?slug=X&dish=Y — sirve la imagen guardada en site_content.
+// Pública (las fotos de platillos no son sensibles); igual que una URL pública de Storage.
+app.get('/api/evaluacion/photo', async (req, res) => {
+  try {
+    const slug = slugifyNombre(req.query.slug);
+    const dish = String(req.query.dish || '').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 60);
+    if (!slug || !dish) return res.status(400).send('Parámetros inválidos');
+
+    const key = `${EVAL_PHOTO_PREFIX}${slug}__${dish}`;
+    const { data, error } = await supabase
+      .from('site_content').select('value').eq('key', key).maybeSingle();
+    if (error) return res.status(500).send(error.message);
+    if (!data || !data.value) return res.status(404).send('Foto no encontrada');
+
+    const dataUri = typeof data.value === 'string' ? data.value : '';
+    const m = dataUri.match(/^data:([^;]+);base64,(.*)$/s);
+    if (!m) return res.status(500).send('Formato de imagen inválido');
+
+    const buffer = Buffer.from(m[2], 'base64');
+    res.setHeader('Content-Type', m[1]);
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    res.send(buffer);
+  } catch (err) {
+    console.error('Error en /api/evaluacion/photo:', err);
+    res.status(500).send(err && err.message ? err.message : String(err));
+  }
+});
+
 // GET /api/evaluacion/sessions  — admin
 // Devuelve todas las sesiones recibidas, ordenadas por última actualización desc.
 app.get('/api/evaluacion/sessions', requireAdmin, async (req, res) => {
@@ -610,7 +701,7 @@ app.get('/health', async (req, res) => {
     webhook_secret: !!STRIPE_WEBHOOK_SECRET,
   };
   const ok = Object.values(checks).every(Boolean);
-  res.status(ok ? 200 : 500).json({ ok, checks });
+  res.status(ok ? 200 : 500).json({ ok, checks, env_missing: MISSING_ENV });
 });
 
 // ----------------------------------------------------------------
