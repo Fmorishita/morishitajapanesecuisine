@@ -19,18 +19,26 @@ const PRECIO_POR_PERSONA_MXN   = parseInt(process.env.PRECIO_POR_PERSONA_MXN || 
 const PORCENTAJE_ANTICIPO      = parseFloat(process.env.PORCENTAJE_ANTICIPO || '0.5');
 const CAPACIDAD_MAXIMA_SESION  = parseInt(process.env.CAPACIDAD_MAXIMA_SESION || '4', 10);
 
-// Validar config crítica al arranque
-if (!STRIPE_SECRET_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE) {
-  console.error('❌ Faltan variables de entorno críticas');
-}
+// Validar config crítica al arranque (no lanzar — solo loguear).
+// En Vercel, si una env var falta en el environment del deploy (típicamente
+// Preview cuando solo se configuró Production), no queremos que TODA la
+// función serverless muera al cargar — eso hace que hasta /health falle.
+const MISSING_ENV = [];
+if (!STRIPE_SECRET_KEY) MISSING_ENV.push('STRIPE_SECRET_KEY');
+if (!SUPABASE_URL) MISSING_ENV.push('SUPABASE_URL');
+if (!SUPABASE_SERVICE_ROLE) MISSING_ENV.push('SUPABASE_SERVICE_ROLE_KEY');
+if (MISSING_ENV.length) console.error('⚠️  Faltan env vars:', MISSING_ENV.join(', '));
 
-const stripe = Stripe(STRIPE_SECRET_KEY);
+// Stripe e instancias Supabase se crean lazy para no crashear el módulo si
+// faltan credenciales — los endpoints que las usan devolverán un 503 claro.
+const stripe = STRIPE_SECRET_KEY ? Stripe(STRIPE_SECRET_KEY) : null;
 
 // Service role: solo en backend, nunca expuesta al cliente.
 // Permite escribir en la base de datos saltándose RLS (necesario para reservas web).
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
-  auth: { persistSession: false }
-});
+// Solo se crea si las credenciales existen; los endpoints validan antes de usarla.
+const supabase = (SUPABASE_URL && SUPABASE_SERVICE_ROLE)
+  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, { auth: { persistSession: false } })
+  : null;
 
 // ----------------------------------------------------------------
 // HELPERS
@@ -114,6 +122,20 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   if (req.originalUrl === '/stripe-webhook') return next();
   express.json({ limit: '10mb' })(req, res, next);
+});
+
+// Guarda: si faltan env vars críticas, no podemos atender la mayoría de los
+// endpoints. /health debe seguir respondiendo para diagnóstico. Para todo lo
+// demás, devolvemos 503 con la lista exacta de lo que falta.
+app.use((req, res, next) => {
+  if (req.path === '/health') return next();
+  if (MISSING_ENV.length) {
+    return res.status(503).json({
+      error: 'Backend mal configurado · faltan env vars en este entorno de Vercel: ' + MISSING_ENV.join(', '),
+      env_missing: MISSING_ENV
+    });
+  }
+  next();
 });
 
 // ----------------------------------------------------------------
@@ -679,7 +701,7 @@ app.get('/health', async (req, res) => {
     webhook_secret: !!STRIPE_WEBHOOK_SECRET,
   };
   const ok = Object.values(checks).every(Boolean);
-  res.status(ok ? 200 : 500).json({ ok, checks });
+  res.status(ok ? 200 : 500).json({ ok, checks, env_missing: MISSING_ENV });
 });
 
 // ----------------------------------------------------------------
