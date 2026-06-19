@@ -363,11 +363,14 @@ app.get('/stripe-webhook-client', async (req, res) => {
 // ================================================================
 
 // GET /api/content — público, devuelve todo como objeto key→value
+// Excluye las fotos de evaluación (data URIs pesados) para no inflar la respuesta
+// que consume la web pública; esas se sirven aparte por /api/evaluacion/photo.
 app.get('/api/content', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('site_content')
-      .select('key, value');
+      .select('key, value')
+      .not('key', 'like', EVAL_PHOTO_PREFIX + '%');
     if (error) throw error;
     const obj = {};
     (data || []).forEach(r => { obj[r.key] = r.value; });
@@ -500,6 +503,7 @@ app.get('/api/auth/check', requireAdmin, (req, res) => res.json({ ok: true }));
 // como una key separada en site_content. El admin puede listarlas todas.
 // ================================================================
 const EVAL_CONFIG_KEY = 'evaluacion_miyagi_config';
+const EVAL_PHOTO_PREFIX = 'evaluacion_miyagi_photo__';
 const EVAL_SESSION_PREFIX = 'evaluacion_miyagi_session__';
 const EVAL_DEFAULT_PASSWORD = 'miyagi2026';
 
@@ -562,44 +566,13 @@ app.post('/api/evaluacion/save', async (req, res) => {
   }
 });
 
-// Intenta asegurar que el bucket público site-images exista. NO bloqueante:
-// si list/create fallan, no lanza — deja que el upload real corra y reporte su
-// propio error (que es el que de verdad importa diagnosticar). Cacheado tras éxito.
-let _bucketReady = false;
-async function ensureSiteImagesBucket() {
-  if (_bucketReady) return;
-  try {
-    const { data: buckets } = await supabase.storage.listBuckets();
-    const exists = (buckets || []).some(b => b.name === 'site-images');
-    if (!exists) {
-      const { error: createErr } = await supabase.storage.createBucket('site-images', { public: true });
-      if (createErr && !/already exists|exists/i.test(createErr.message || '')) {
-        console.warn('ensureSiteImagesBucket createBucket:', createErr.message);
-      }
-    }
-    _bucketReady = true;
-  } catch (e) {
-    console.warn('ensureSiteImagesBucket (no bloqueante):', e && e.message);
-  }
-}
-
-// Convierte un error de Supabase Storage (forma variable) en texto legible.
-function describeStorageError(err) {
-  if (!err) return 'desconocido';
-  const parts = [];
-  if (err.message) parts.push(err.message);
-  if (err.error && err.error !== err.message) parts.push(err.error);
-  if (err.statusCode || err.status) parts.push('status ' + (err.statusCode || err.status));
-  if (!parts.length) { try { return JSON.stringify(err); } catch(e) { return String(err); } }
-  return parts.join(' · ');
-}
-
 // POST /api/evaluacion/upload-image — público (gateado por contraseña del cliente)
-// Body: { password, nombre, dishId, data (base64 sin prefijo), type, ext }
-// Sube la foto del platillo al bucket site-images bajo evaluacion/<cliente>/<nombre>/...
+// Body: { password, nombre, dishId, data (base64 sin prefijo), type }
+// Guarda la foto del platillo en site_content (mismo camino probado que /save,
+// sin depender de Supabase Storage). Se sirve luego por GET /api/evaluacion/photo.
 app.post('/api/evaluacion/upload-image', async (req, res) => {
   try {
-    const { password, nombre, dishId, data, type, ext } = req.body || {};
+    const { password, nombre, dishId, data, type } = req.body || {};
     if (!data || !dishId) return res.status(400).json({ error: 'Faltan campos: data, dishId' });
     const slug = slugifyNombre(nombre);
     if (!slug) return res.status(400).json({ error: 'Falta nombre' });
@@ -609,30 +582,52 @@ app.post('/api/evaluacion/upload-image', async (req, res) => {
       return res.status(401).json({ error: 'No autorizado' });
     }
 
-    await ensureSiteImagesBucket(); // best effort, nunca lanza
+    const cleanDish = String(dishId).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 60);
+    const mime = (typeof type === 'string' && /^image\//.test(type)) ? type : 'image/jpeg';
+    const dataUri = `data:${mime};base64,${data}`;
+    const key = `${EVAL_PHOTO_PREFIX}${slug}__${cleanDish}`;
 
-    const cleanDish = String(dishId).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 40);
-    const safeExt = String(ext || 'jpg').replace(/[^a-z0-9]/gi, '').toLowerCase().slice(0, 5) || 'jpg';
-    const clienteSlug = (process.env.EVAL_CLIENTE_SLUG || 'miyagi').replace(/[^a-z0-9_-]/gi, '').toLowerCase();
-    const storagePath = `evaluacion/${clienteSlug}/${slug}/${cleanDish}-${Date.now()}.${safeExt}`;
-
-    const buffer = Buffer.from(data, 'base64');
-    const { error: uploadError } = await supabase.storage
-      .from('site-images')
-      .upload(storagePath, buffer, { contentType: type || 'image/jpeg', upsert: true });
-    if (uploadError) {
-      // El error real del upload es lo que necesitamos ver — lo devolvemos con detalle.
-      console.error('upload-image storage error:', uploadError);
-      return res.status(502).json({ error: 'storage/upload: ' + describeStorageError(uploadError) });
+    const { error } = await supabase
+      .from('site_content')
+      .upsert({ key, value: dataUri, updated_at: new Date().toISOString() });
+    if (error) {
+      console.error('upload-image db error:', error);
+      return res.status(502).json({ error: 'db: ' + error.message });
     }
 
-    const { data: { publicUrl } } = supabase.storage
-      .from('site-images').getPublicUrl(storagePath);
-
-    res.json({ ok: true, url: publicUrl, path: storagePath });
+    const url = `/api/evaluacion/photo?slug=${encodeURIComponent(slug)}&dish=${encodeURIComponent(cleanDish)}&t=${Date.now()}`;
+    res.json({ ok: true, url, key });
   } catch (err) {
     console.error('Error en /api/evaluacion/upload-image:', err);
     res.status(500).json({ error: err && err.message ? err.message : String(err) });
+  }
+});
+
+// GET /api/evaluacion/photo?slug=X&dish=Y — sirve la imagen guardada en site_content.
+// Pública (las fotos de platillos no son sensibles); igual que una URL pública de Storage.
+app.get('/api/evaluacion/photo', async (req, res) => {
+  try {
+    const slug = slugifyNombre(req.query.slug);
+    const dish = String(req.query.dish || '').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 60);
+    if (!slug || !dish) return res.status(400).send('Parámetros inválidos');
+
+    const key = `${EVAL_PHOTO_PREFIX}${slug}__${dish}`;
+    const { data, error } = await supabase
+      .from('site_content').select('value').eq('key', key).maybeSingle();
+    if (error) return res.status(500).send(error.message);
+    if (!data || !data.value) return res.status(404).send('Foto no encontrada');
+
+    const dataUri = typeof data.value === 'string' ? data.value : '';
+    const m = dataUri.match(/^data:([^;]+);base64,(.*)$/s);
+    if (!m) return res.status(500).send('Formato de imagen inválido');
+
+    const buffer = Buffer.from(m[2], 'base64');
+    res.setHeader('Content-Type', m[1]);
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    res.send(buffer);
+  } catch (err) {
+    console.error('Error en /api/evaluacion/photo:', err);
+    res.status(500).send(err && err.message ? err.message : String(err));
   }
 });
 
