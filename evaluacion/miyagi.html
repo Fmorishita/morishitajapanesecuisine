@@ -1254,7 +1254,11 @@ async function uploadDishPhoto(dishId, file){
       ext: 'jpg'
     })
   });
-  if (!r.ok) throw new Error('Error al subir (' + r.status + ')');
+  if (!r.ok) {
+    let detail = '';
+    try { const j = await r.json(); detail = j && j.error ? ': ' + j.error : ''; } catch(e) {}
+    throw new Error('No se pudo subir (' + r.status + ')' + detail);
+  }
   const j = await r.json();
   return { url: j.url, path: j.path, uploaded_at: new Date().toISOString(), localPreview: compressed.dataURL };
 }

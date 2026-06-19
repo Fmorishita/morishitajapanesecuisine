@@ -562,6 +562,28 @@ app.post('/api/evaluacion/save', async (req, res) => {
   }
 });
 
+// Asegura que el bucket público site-images exista. Idempotente y cacheado.
+// El panel de contenido asume que ya existe; pero si nunca se subió una imagen
+// por ahí, el bucket no se ha creado y los uploads fallan con "Bucket not found".
+let _bucketReady = false;
+async function ensureSiteImagesBucket() {
+  if (_bucketReady) return;
+  const { data: buckets, error: listErr } = await supabase.storage.listBuckets();
+  if (listErr) throw new Error('No se pudo listar buckets: ' + listErr.message);
+  const exists = (buckets || []).some(b => b.name === 'site-images');
+  if (!exists) {
+    const { error: createErr } = await supabase.storage.createBucket('site-images', {
+      public: true,
+      fileSizeLimit: '15MB'
+    });
+    // Si dos requests lo crean a la vez, ignoramos "already exists".
+    if (createErr && !/already exists/i.test(createErr.message || '')) {
+      throw new Error('No se pudo crear el bucket: ' + createErr.message);
+    }
+  }
+  _bucketReady = true;
+}
+
 // POST /api/evaluacion/upload-image — público (gateado por contraseña del cliente)
 // Body: { password, nombre, dishId, data (base64 sin prefijo), type, ext }
 // Sube la foto del platillo al bucket site-images bajo evaluacion/<cliente>/<nombre>/...
@@ -576,6 +598,8 @@ app.post('/api/evaluacion/upload-image', async (req, res) => {
     if (String(password || '') !== expected) {
       return res.status(401).json({ error: 'No autorizado' });
     }
+
+    await ensureSiteImagesBucket();
 
     const cleanDish = String(dishId).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 40);
     const safeExt = String(ext || 'jpg').replace(/[^a-z0-9]/gi, '').toLowerCase().slice(0, 5) || 'jpg';
