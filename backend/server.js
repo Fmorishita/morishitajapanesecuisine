@@ -562,26 +562,36 @@ app.post('/api/evaluacion/save', async (req, res) => {
   }
 });
 
-// Asegura que el bucket público site-images exista. Idempotente y cacheado.
-// El panel de contenido asume que ya existe; pero si nunca se subió una imagen
-// por ahí, el bucket no se ha creado y los uploads fallan con "Bucket not found".
+// Intenta asegurar que el bucket público site-images exista. NO bloqueante:
+// si list/create fallan, no lanza — deja que el upload real corra y reporte su
+// propio error (que es el que de verdad importa diagnosticar). Cacheado tras éxito.
 let _bucketReady = false;
 async function ensureSiteImagesBucket() {
   if (_bucketReady) return;
-  const { data: buckets, error: listErr } = await supabase.storage.listBuckets();
-  if (listErr) throw new Error('No se pudo listar buckets: ' + listErr.message);
-  const exists = (buckets || []).some(b => b.name === 'site-images');
-  if (!exists) {
-    const { error: createErr } = await supabase.storage.createBucket('site-images', {
-      public: true,
-      fileSizeLimit: '15MB'
-    });
-    // Si dos requests lo crean a la vez, ignoramos "already exists".
-    if (createErr && !/already exists/i.test(createErr.message || '')) {
-      throw new Error('No se pudo crear el bucket: ' + createErr.message);
+  try {
+    const { data: buckets } = await supabase.storage.listBuckets();
+    const exists = (buckets || []).some(b => b.name === 'site-images');
+    if (!exists) {
+      const { error: createErr } = await supabase.storage.createBucket('site-images', { public: true });
+      if (createErr && !/already exists|exists/i.test(createErr.message || '')) {
+        console.warn('ensureSiteImagesBucket createBucket:', createErr.message);
+      }
     }
+    _bucketReady = true;
+  } catch (e) {
+    console.warn('ensureSiteImagesBucket (no bloqueante):', e && e.message);
   }
-  _bucketReady = true;
+}
+
+// Convierte un error de Supabase Storage (forma variable) en texto legible.
+function describeStorageError(err) {
+  if (!err) return 'desconocido';
+  const parts = [];
+  if (err.message) parts.push(err.message);
+  if (err.error && err.error !== err.message) parts.push(err.error);
+  if (err.statusCode || err.status) parts.push('status ' + (err.statusCode || err.status));
+  if (!parts.length) { try { return JSON.stringify(err); } catch(e) { return String(err); } }
+  return parts.join(' · ');
 }
 
 // POST /api/evaluacion/upload-image — público (gateado por contraseña del cliente)
@@ -599,7 +609,7 @@ app.post('/api/evaluacion/upload-image', async (req, res) => {
       return res.status(401).json({ error: 'No autorizado' });
     }
 
-    await ensureSiteImagesBucket();
+    await ensureSiteImagesBucket(); // best effort, nunca lanza
 
     const cleanDish = String(dishId).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 40);
     const safeExt = String(ext || 'jpg').replace(/[^a-z0-9]/gi, '').toLowerCase().slice(0, 5) || 'jpg';
@@ -610,7 +620,11 @@ app.post('/api/evaluacion/upload-image', async (req, res) => {
     const { error: uploadError } = await supabase.storage
       .from('site-images')
       .upload(storagePath, buffer, { contentType: type || 'image/jpeg', upsert: true });
-    if (uploadError) throw uploadError;
+    if (uploadError) {
+      // El error real del upload es lo que necesitamos ver — lo devolvemos con detalle.
+      console.error('upload-image storage error:', uploadError);
+      return res.status(502).json({ error: 'storage/upload: ' + describeStorageError(uploadError) });
+    }
 
     const { data: { publicUrl } } = supabase.storage
       .from('site-images').getPublicUrl(storagePath);
@@ -618,7 +632,7 @@ app.post('/api/evaluacion/upload-image', async (req, res) => {
     res.json({ ok: true, url: publicUrl, path: storagePath });
   } catch (err) {
     console.error('Error en /api/evaluacion/upload-image:', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err && err.message ? err.message : String(err) });
   }
 });
 
