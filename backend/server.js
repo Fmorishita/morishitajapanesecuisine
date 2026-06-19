@@ -562,6 +562,42 @@ app.post('/api/evaluacion/save', async (req, res) => {
   }
 });
 
+// POST /api/evaluacion/upload-image — público (gateado por contraseña del cliente)
+// Body: { password, nombre, dishId, data (base64 sin prefijo), type, ext }
+// Sube la foto del platillo al bucket site-images bajo evaluacion/<cliente>/<nombre>/...
+app.post('/api/evaluacion/upload-image', async (req, res) => {
+  try {
+    const { password, nombre, dishId, data, type, ext } = req.body || {};
+    if (!data || !dishId) return res.status(400).json({ error: 'Faltan campos: data, dishId' });
+    const slug = slugifyNombre(nombre);
+    if (!slug) return res.status(400).json({ error: 'Falta nombre' });
+
+    const expected = await getEvalPassword();
+    if (String(password || '') !== expected) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    const cleanDish = String(dishId).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 40);
+    const safeExt = String(ext || 'jpg').replace(/[^a-z0-9]/gi, '').toLowerCase().slice(0, 5) || 'jpg';
+    const clienteSlug = (process.env.EVAL_CLIENTE_SLUG || 'miyagi').replace(/[^a-z0-9_-]/gi, '').toLowerCase();
+    const storagePath = `evaluacion/${clienteSlug}/${slug}/${cleanDish}-${Date.now()}.${safeExt}`;
+
+    const buffer = Buffer.from(data, 'base64');
+    const { error: uploadError } = await supabase.storage
+      .from('site-images')
+      .upload(storagePath, buffer, { contentType: type || 'image/jpeg', upsert: true });
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('site-images').getPublicUrl(storagePath);
+
+    res.json({ ok: true, url: publicUrl, path: storagePath });
+  } catch (err) {
+    console.error('Error en /api/evaluacion/upload-image:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/evaluacion/sessions  — admin
 // Devuelve todas las sesiones recibidas, ordenadas por última actualización desc.
 app.get('/api/evaluacion/sessions', requireAdmin, async (req, res) => {
