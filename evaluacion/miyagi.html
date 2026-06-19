@@ -589,14 +589,14 @@ body{
 
 /* TOP-5 thumbnail */
 .top-thumb{
-  width:48px;height:48px;flex-shrink:0;
-  border-radius:5px;overflow:hidden;
+  width:72px;height:72px;flex-shrink:0;
+  border-radius:7px;overflow:hidden;
   background:#000;border:1px solid var(--line);
 }
 .top-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
 .top-thumb.empty{
   display:flex;align-items:center;justify-content:center;
-  color:var(--fg-soft);font-family:var(--mono);font-size:18px;
+  color:var(--fg-soft);font-family:var(--mono);font-size:26px;
 }
 
 .rating-btn.active{
@@ -2103,6 +2103,14 @@ async function generatePDF(){
   const fillBG = () => { doc.setFillColor(BG[0],BG[1],BG[2]); doc.rect(0,0,W,H,'F'); };
   const fillGOLD = () => doc.setFillColor(GOLD[0],GOLD[1],GOLD[2]);
 
+  // jsPDF no centra bien cuando se usa charSpace junto con align:'center'
+  // (ensancha el texto pero no compensa la posición). Centramos a mano:
+  // medimos el ancho real (incluyendo el charSpace entre letras) y posicionamos.
+  const centerText = (text, yy, charSpace = 0) => {
+    const w = doc.getTextWidth(text) + charSpace * Math.max(0, String(text).length - 1);
+    doc.text(text, (W - w) / 2, yy, { charSpace });
+  };
+
   // ─── Precarga de imágenes (kanji + fotos del Top) ───
   const kanjiText = (CONFIG.restaurante && CONFIG.restaurante.kanji) || '森下';
   const kanjiBig = await renderTextToDataURL(kanjiText, 'Zen Antique Soft', 96, '#f5f0e8');
@@ -2129,7 +2137,7 @@ async function generatePDF(){
   doc.setFont('helvetica','bold'); doc.setFontSize(36); setFG();
   doc.text((CONFIG.restaurante.nombre || 'MORISHITA'), W/2, H/2 - 80, { align:'center' });
   doc.setFont('helvetica','normal'); doc.setFontSize(9); setGOLD();
-  doc.text((CONFIG.restaurante.tagline || 'AUTHENTIC JAPANESE CUISINE').toUpperCase(), W/2, H/2 - 62, { align:'center', charSpace: 2 });
+  centerText((CONFIG.restaurante.tagline || 'AUTHENTIC JAPANESE CUISINE').toUpperCase(), H/2 - 62, 2);
 
   // Separador decorativo (líneas en lugar de diamond, que no renderea bien en helvetica)
   setGOLDLINE(); doc.setLineWidth(0.6);
@@ -2137,7 +2145,7 @@ async function generatePDF(){
   doc.line(W/2 + 12, H/2 - 36, W/2 + 60, H/2 - 36);
 
   doc.setFont('helvetica','normal'); doc.setFontSize(10); setSOFT();
-  doc.text('EVALUACION PRIVADA DE DEGUSTACION', W/2, H/2 - 14, { align:'center', charSpace: 3 });
+  centerText('EVALUACION PRIVADA DE DEGUSTACION', H/2 - 14, 3);
   doc.setFont('times','normal'); doc.setFontSize(34); setFG();
   doc.text((CONFIG.evento.titulo || 'Hoja de evaluación'), W/2, H/2 + 26, { align:'center' });
   doc.setFont('times','italic'); doc.setFontSize(15); setGOLD();
@@ -2149,10 +2157,10 @@ async function generatePDF(){
   const total = totalDishes(), rated = totalRated();
   const pct = total === 0 ? 0 : Math.round((rated/total)*100);
   doc.setFontSize(9); setSOFT();
-  doc.text(`PLATILLOS EVALUADOS: ${rated} / ${total}   ·   ${pct}%`, W/2, H/2 + 122, { align:'center', charSpace: 1.5 });
+  centerText(`PLATILLOS EVALUADOS: ${rated} / ${total}   ·   ${pct}%`, H/2 + 122, 1.5);
   doc.setFontSize(8);
-  doc.text(`Generado el ${new Date().toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' })}`, W/2, H - margin, { align:'center', charSpace: 1.5 });
-  doc.text((CONFIG.restaurante.nombre || 'Morishita') + ' Japanese Cuisine · ' + (CONFIG.restaurante.ubicacion || 'Ensenada, B.C.'), W/2, H - margin + 14, { align:'center', charSpace: 1.5 });
+  centerText(`Generado el ${new Date().toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' })}`, H - margin, 1.5);
+  centerText((CONFIG.restaurante.nombre || 'Morishita') + ' Japanese Cuisine · ' + (CONFIG.restaurante.ubicacion || 'Ensenada, B.C.'), H - margin + 14, 1.5);
 
   // === PAGE 2 — TOP + RESUMEN ===
   doc.addPage(); fillBG(); y = margin;
@@ -2208,30 +2216,33 @@ async function generatePDF(){
     doc.text('— Aun no hay rollos seleccionados —', margin, y);
     y += 22;
   } else {
-    const thumbSize = 40;
-    const rowH = 50;
+    const thumbSize = 64;
+    const rowH = thumbSize + 16;
     chosen.forEach((d, i) => {
-      if (y + rowH > H - 80) { doc.addPage(); fillBG(); y = margin; }
+      if (y + rowH > H - 70) { doc.addPage(); fillBG(); y = margin; }
+      const midY = y + thumbSize/2;
       // Círculo del ranking
       fillGOLD();
-      doc.circle(margin + 9, y + thumbSize/2 - 4, 9, 'F');
+      doc.circle(margin + 9, midY, 9, 'F');
       doc.setTextColor(10,9,8); doc.setFont('helvetica','bold'); doc.setFontSize(11);
-      doc.text(String(i + 1), margin + 9, y + thumbSize/2 - 0.5, { align:'center' });
-      // Thumbnail si hay foto
-      const thumbX = margin + 26;
-      const thumbY = y - 4;
+      doc.text(String(i + 1), margin + 9, midY + 3.5, { align:'center' });
+      // Thumbnail si hay foto (grande para identificar el rollo)
+      const thumbX = margin + 28;
+      const thumbY = y;
       const dURL = photoDataURLs[d.id];
       if (dURL) {
         try { doc.addImage(dURL, 'JPEG', thumbX, thumbY, thumbSize, thumbSize); } catch(e) {}
+        setLINE(); doc.setLineWidth(0.4);
+        doc.roundedRect(thumbX, thumbY, thumbSize, thumbSize, 3, 3, 'S');
       } else {
         setLINE(); doc.setLineWidth(0.4);
         doc.roundedRect(thumbX, thumbY, thumbSize, thumbSize, 3, 3, 'S');
       }
       // Nombre y score
-      setFG(); doc.setFont('times','normal'); doc.setFontSize(14);
-      doc.text(d.nombre, thumbX + thumbSize + 12, y + thumbSize/2);
-      setGOLD(); doc.setFont('helvetica','bold'); doc.setFontSize(13);
-      doc.text(d.rating + ' / ' + (CONFIG.evaluacion.escalaMax || 10), W - margin, y + thumbSize/2, { align:'right' });
+      setFG(); doc.setFont('times','normal'); doc.setFontSize(15);
+      doc.text(d.nombre, thumbX + thumbSize + 16, midY + 5);
+      setGOLD(); doc.setFont('helvetica','bold'); doc.setFontSize(14);
+      doc.text(d.rating + ' / ' + (CONFIG.evaluacion.escalaMax || 10), W - margin, midY + 5, { align:'right' });
       y += rowH;
     });
   }
@@ -2262,9 +2273,13 @@ async function generatePDF(){
 
       doc.setFont('times','normal'); doc.setFontSize(13); setFG();
       doc.text(`${dishIndex}.  ${dish.nombre}`, margin, y);
-      const ratingTxt = rating ? `★ ${rating}/${CONFIG.evaluacion.escalaMax || 10}` : 'Sin evaluar';
-      const txtW = doc.getTextWidth(ratingTxt);
-      const chipPad = 8;
+      // Sin estrella (★ no existe en helvetica de jsPDF y sale como "&").
+      const ratingTxt = rating ? `${rating} / ${CONFIG.evaluacion.escalaMax || 10}` : 'Sin evaluar';
+      const chipCS = 1; // charSpace del texto del chip
+      const chipPad = 9;
+      doc.setFont('helvetica','bold'); doc.setFontSize(8);
+      // El ancho debe incluir el charSpace, si no el "10 / 10" se corta.
+      const txtW = doc.getTextWidth(ratingTxt) + chipCS * Math.max(0, ratingTxt.length - 1);
       const chipW = txtW + chipPad*2;
       const chipH = 16;
       const chipX = W - margin - chipW;
@@ -2279,7 +2294,7 @@ async function generatePDF(){
         setSOFT();
       }
       doc.setFont('helvetica','bold'); doc.setFontSize(8);
-      doc.text(ratingTxt, chipX + chipPad, chipY + 11, { charSpace: 1 });
+      doc.text(ratingTxt, chipX + chipPad, chipY + 11, { charSpace: chipCS });
       setFG();
       y += 16;
 
@@ -2328,7 +2343,44 @@ async function generatePDF(){
   const fileTag = (slugify(STATE.nombre) || 'evaluador');
   const cliTag = slugify(CONFIG.evento.cliente || 'cliente');
   const dateTag = new Date().toISOString().slice(0,10);
-  doc.save(`evaluacion_${cliTag}_${fileTag}_${dateTag}.pdf`);
+  const filename = `evaluacion_${cliTag}_${fileTag}_${dateTag}.pdf`;
+  await savePdfSafe(doc, filename);
+}
+
+// Descarga el PDF de forma segura en iOS Safari.
+// doc.save() de jsPDF en iOS navega la pestaña a un blob: URL, y al volver a
+// la app Safari intenta recargar ese blob (ya revocado) → "WebKitBlobResource
+// error 1". Para evitarlo: en móvil usamos el share sheet nativo (Web Share API
+// con archivo), y como respaldo un <a download> que NO cambia la página actual.
+async function savePdfSafe(doc, filename){
+  const blob = doc.output('blob');
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  // 1) Web Share API con archivo (iOS 15+): abre "Guardar en Archivos / Compartir"
+  try {
+    if (navigator.canShare) {
+      const file = new File([blob], filename, { type: 'application/pdf' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: filename });
+        return;
+      }
+    }
+  } catch (e) {
+    // Si el usuario cancela el share, no seguimos al fallback (evita doble acción).
+    if (e && e.name === 'AbortError') return;
+  }
+
+  // 2) Fallback: enlace de descarga que no reemplaza la pestaña actual.
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.rel = 'noopener';
+  if (isIOS) a.target = '_blank'; // iOS abre el visor en pestaña aparte, app intacta
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { try { a.remove(); URL.revokeObjectURL(url); } catch(e){} }, 8000);
 }
 
 init();
