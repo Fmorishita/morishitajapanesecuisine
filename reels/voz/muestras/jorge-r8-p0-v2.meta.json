@@ -1,0 +1,113 @@
+{
+ "id": "jorge-r8-p0-v2",
+ "proveedor": "edge-tts (Microsoft Edge Read Aloud, gratis)",
+ "voice": "es-MX-JorgeNeural",
+ "rate": "+8%",
+ "pitch": "+0Hz",
+ "volume": "+0%",
+ "modo": "por-frases",
+ "pronuncia": {
+  "nigiri": "niguiri",
+  "nigiris": "niguiris"
+ },
+ "duracion_s": 15.61,
+ "sample_rate": 48000,
+ "plan": [
+  {
+   "frase": "Una barra.",
+   "start": 0.0,
+   "end": 0.56
+  },
+  {
+   "pausa": 0.2,
+   "start": 0.56
+  },
+  {
+   "frase": "Cuatro asientos.",
+   "start": 0.76,
+   "end": 1.59
+  },
+  {
+   "pausa": 0.3,
+   "start": 1.59
+  },
+  {
+   "frase": "Catorce tiempos.",
+   "start": 1.89,
+   "end": 2.87
+  },
+  {
+   "pausa": 0.2,
+   "start": 2.87
+  },
+  {
+   "frase": "Sin carta.",
+   "start": 3.07,
+   "end": 3.77
+  },
+  {
+   "pausa": 0.35,
+   "start": 3.77
+  },
+  {
+   "frase": "La chef, Vero Morishita, arma tu omakase frente a ti.",
+   "start": 4.12,
+   "end": 7.35
+  },
+  {
+   "pausa": 0.25,
+   "start": 7.35
+  },
+  {
+   "frase": "Nigiris.",
+   "start": 7.6,
+   "end": 8.24
+  },
+  {
+   "pausa": 0.12,
+   "start": 8.24
+  },
+  {
+   "frase": "Sashimis.",
+   "start": 8.36,
+   "end": 9.06
+  },
+  {
+   "pausa": 0.12,
+   "start": 9.06
+  },
+  {
+   "frase": "Platillos calientes.",
+   "start": 9.18,
+   "end": 10.29
+  },
+  {
+   "pausa": 0.35,
+   "start": 10.29
+  },
+  {
+   "frase": "Aquí en Ensenada.",
+   "start": 10.64,
+   "end": 11.59
+  },
+  {
+   "pausa": 0.15,
+   "start": 11.59
+  },
+  {
+   "frase": "Solo sábado y domingo.",
+   "start": 11.74,
+   "end": 12.96
+  },
+  {
+   "pausa": 0.4,
+   "start": 12.96
+  },
+  {
+   "frase": "Reserva tu lugar en el link de mi perfil.",
+   "start": 13.36,
+   "end": 15.46
+  }
+ ],
+ "texto": "# Texto de prueba (~15 s). Solo datos de fuente/hechos.md sección (a):\n# A6 barra de 4 asientos · A1 14 tiempos · A11 no hay carta · A18 Chef Vero Morishita (nombre pendiente D6)\n# A10 se prepara delante del comensal · A12 nigiris, sashimis, platillos calientes\n# A17 Ensenada · A7 sábado y domingo · A25 reserva directa (link)\n# v2: nigiris y sashimis en líneas separadas (en lista rápida \"sashimis\" se emborrona: whisper oye \"sasinis\").\nUna barra.\n[pausa 0.2]\nCuatro asientos.\n[pausa 0.3]\nCatorce tiempos.\n[pausa 0.2]\nSin carta.\n[pausa 0.35]\nLa chef, Vero Morishita, arma tu omakase frente a ti.\n[pausa 0.25]\nNigiris.\n[pausa 0.12]\nSashimis.\n[pausa 0.12]\nPlatillos calientes.\n[pausa 0.35]\nAquí en Ensenada.\n[pausa 0.15]\nSolo sábado y domingo.\n[pausa 0.4]\nReserva tu lugar en el link de mi perfil.\n"
+}

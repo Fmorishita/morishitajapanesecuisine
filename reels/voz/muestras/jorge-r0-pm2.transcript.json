@@ -1,0 +1,276 @@
+{
+  "modelo": "small",
+  "texto": "una barra, cuatro asientos, catorce tiempos, sin carta, la chef, vero morisita, arma tu omacase frente a ti, nigiris, sasimis, platillos calientes. Aquí en Ensenada, solo sábado y domingo. Reserva tu lugar en el link de mi perfil.",
+  "palabras": [
+    {
+      "word": "una",
+      "start": 0.0,
+      "end": 0.2,
+      "prob": 0.112
+    },
+    {
+      "word": "barra,",
+      "start": 0.2,
+      "end": 0.6,
+      "prob": 0.985
+    },
+    {
+      "word": "cuatro",
+      "start": 0.8,
+      "end": 1.02,
+      "prob": 0.681
+    },
+    {
+      "word": "asientos,",
+      "start": 1.02,
+      "end": 1.52,
+      "prob": 0.962
+    },
+    {
+      "word": "catorce",
+      "start": 2.0,
+      "end": 2.46,
+      "prob": 0.885
+    },
+    {
+      "word": "tiempos,",
+      "start": 2.46,
+      "end": 3.02,
+      "prob": 0.998
+    },
+    {
+      "word": "sin",
+      "start": 3.24,
+      "end": 3.46,
+      "prob": 0.403
+    },
+    {
+      "word": "carta,",
+      "start": 3.46,
+      "end": 3.86,
+      "prob": 0.99
+    },
+    {
+      "word": "la",
+      "start": 4.3,
+      "end": 4.5,
+      "prob": 0.888
+    },
+    {
+      "word": "chef,",
+      "start": 4.5,
+      "end": 4.76,
+      "prob": 0.752
+    },
+    {
+      "word": "vero",
+      "start": 5.14,
+      "end": 5.38,
+      "prob": 0.682
+    },
+    {
+      "word": "morisita,",
+      "start": 5.38,
+      "end": 5.94,
+      "prob": 0.802
+    },
+    {
+      "word": "arma",
+      "start": 6.26,
+      "end": 6.48,
+      "prob": 0.885
+    },
+    {
+      "word": "tu",
+      "start": 6.48,
+      "end": 6.7,
+      "prob": 0.969
+    },
+    {
+      "word": "omacase",
+      "start": 6.7,
+      "end": 7.16,
+      "prob": 0.561
+    },
+    {
+      "word": "frente",
+      "start": 7.16,
+      "end": 7.38,
+      "prob": 0.999
+    },
+    {
+      "word": "a",
+      "start": 7.38,
+      "end": 7.62,
+      "prob": 0.991
+    },
+    {
+      "word": "ti,",
+      "start": 7.62,
+      "end": 7.76,
+      "prob": 0.94
+    },
+    {
+      "word": "nigiris,",
+      "start": 8.02,
+      "end": 8.64,
+      "prob": 0.694
+    },
+    {
+      "word": "sasimis,",
+      "start": 8.9,
+      "end": 9.5,
+      "prob": 0.625
+    },
+    {
+      "word": "platillos",
+      "start": 9.82,
+      "end": 10.26,
+      "prob": 0.989
+    },
+    {
+      "word": "calientes.",
+      "start": 10.26,
+      "end": 10.86,
+      "prob": 0.995
+    },
+    {
+      "word": "Aquí",
+      "start": 11.42,
+      "end": 11.68,
+      "prob": 0.786
+    },
+    {
+      "word": "en",
+      "start": 11.68,
+      "end": 11.86,
+      "prob": 0.96
+    },
+    {
+      "word": "Ensenada,",
+      "start": 11.86,
+      "end": 12.32,
+      "prob": 0.863
+    },
+    {
+      "word": "solo",
+      "start": 12.58,
+      "end": 12.82,
+      "prob": 0.821
+    },
+    {
+      "word": "sábado",
+      "start": 12.82,
+      "end": 13.3,
+      "prob": 0.99
+    },
+    {
+      "word": "y",
+      "start": 13.3,
+      "end": 13.38,
+      "prob": 0.999
+    },
+    {
+      "word": "domingo.",
+      "start": 13.38,
+      "end": 13.84,
+      "prob": 0.994
+    },
+    {
+      "word": "Reserva",
+      "start": 14.24,
+      "end": 14.76,
+      "prob": 0.912
+    },
+    {
+      "word": "tu",
+      "start": 14.76,
+      "end": 14.88,
+      "prob": 0.998
+    },
+    {
+      "word": "lugar",
+      "start": 14.88,
+      "end": 15.16,
+      "prob": 0.999
+    },
+    {
+      "word": "en",
+      "start": 15.16,
+      "end": 15.36,
+      "prob": 0.996
+    },
+    {
+      "word": "el",
+      "start": 15.36,
+      "end": 15.5,
+      "prob": 0.999
+    },
+    {
+      "word": "link",
+      "start": 15.5,
+      "end": 15.74,
+      "prob": 0.989
+    },
+    {
+      "word": "de",
+      "start": 15.74,
+      "end": 15.88,
+      "prob": 0.994
+    },
+    {
+      "word": "mi",
+      "start": 15.88,
+      "end": 16.0,
+      "prob": 0.99
+    },
+    {
+      "word": "perfil.",
+      "start": 16.0,
+      "end": 16.46,
+      "prob": 0.999
+    }
+  ],
+  "duracion_s": 16.65,
+  "palabras_guion": 38,
+  "palabras_por_seg": 2.28,
+  "precision_palabras": 0.9211,
+  "precision_fonetica": 1.0,
+  "diferencias": [
+    {
+      "op": "replace",
+      "guion": "morishita",
+      "whisper": "morisita"
+    },
+    {
+      "op": "replace",
+      "guion": "omakase",
+      "whisper": "omacase"
+    },
+    {
+      "op": "replace",
+      "guion": "sashimis",
+      "whisper": "sasimis"
+    }
+  ],
+  "baja_confianza": [
+    {
+      "word": "una",
+      "start": 0.0,
+      "end": 0.2,
+      "prob": 0.112
+    },
+    {
+      "word": "sin",
+      "start": 3.24,
+      "end": 3.46,
+      "prob": 0.403
+    },
+    {
+      "word": "omacase",
+      "start": 6.7,
+      "end": 7.16,
+      "prob": 0.561
+    }
+  ]
+}

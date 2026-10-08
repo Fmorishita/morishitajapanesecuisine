@@ -1,0 +1,193 @@
+[
+ {
+  "word": "Una",
+  "start": 0.0,
+  "end": 0.203
+ },
+ {
+  "word": "barra",
+  "start": 0.214,
+  "end": 0.612
+ },
+ {
+  "word": "Cuatro",
+  "start": 0.84,
+  "end": 1.149
+ },
+ {
+  "word": "asientos",
+  "start": 1.16,
+  "end": 1.82
+ },
+ {
+  "word": "Catorce",
+  "start": 2.15,
+  "end": 2.617
+ },
+ {
+  "word": "tiempos",
+  "start": 2.628,
+  "end": 3.208
+ },
+ {
+  "word": "Sin",
+  "start": 3.43,
+  "end": 3.657
+ },
+ {
+  "word": "carta",
+  "start": 3.668,
+  "end": 4.19
+ },
+ {
+  "word": "La",
+  "start": 4.54,
+  "end": 4.666
+ },
+ {
+  "word": "chef",
+  "start": 4.677,
+  "end": 4.984
+ },
+ {
+  "word": "Vero",
+  "start": 5.314,
+  "end": 5.53
+ },
+ {
+  "word": "Morishita",
+  "start": 5.541,
+  "end": 6.086
+ },
+ {
+  "word": "arma",
+  "start": 6.359,
+  "end": 6.598
+ },
+ {
+  "word": "tu",
+  "start": 6.609,
+  "end": 6.734
+ },
+ {
+  "word": "omakase",
+  "start": 6.745,
+  "end": 7.211
+ },
+ {
+  "word": "frente",
+  "start": 7.223,
+  "end": 7.495
+ },
+ {
+  "word": "a",
+  "start": 7.507,
+  "end": 7.552
+ },
+ {
+  "word": "ti",
+  "start": 7.564,
+  "end": 7.791
+ },
+ {
+  "word": "Nigiris",
+  "start": 8.09,
+  "end": 8.635,
+  "tts": "niguiris"
+ },
+ {
+  "word": "sashimis",
+  "start": 8.851,
+  "end": 9.487
+ },
+ {
+  "word": "platillos",
+  "start": 9.715,
+  "end": 10.237
+ },
+ {
+  "word": "calientes",
+  "start": 10.249,
+  "end": 10.93
+ },
+ {
+  "word": "Aquí",
+  "start": 11.32,
+  "end": 11.616
+ },
+ {
+  "word": "en",
+  "start": 11.628,
+  "end": 11.73
+ },
+ {
+  "word": "Ensenada",
+  "start": 11.741,
+  "end": 12.321
+ },
+ {
+  "word": "Solo",
+  "start": 12.5,
+  "end": 12.782
+ },
+ {
+  "word": "sábado",
+  "start": 12.794,
+  "end": 13.237
+ },
+ {
+  "word": "y",
+  "start": 13.248,
+  "end": 13.316
+ },
+ {
+  "word": "domingo",
+  "start": 13.328,
+  "end": 13.816
+ },
+ {
+  "word": "Reserva",
+  "start": 14.23,
+  "end": 14.593
+ },
+ {
+  "word": "tu",
+  "start": 14.605,
+  "end": 14.707
+ },
+ {
+  "word": "lugar",
+  "start": 14.718,
+  "end": 15.002
+ },
+ {
+  "word": "en",
+  "start": 15.014,
+  "end": 15.116
+ },
+ {
+  "word": "el",
+  "start": 15.127,
+  "end": 15.252
+ },
+ {
+  "word": "link",
+  "start": 15.264,
+  "end": 15.502
+ },
+ {
+  "word": "de",
+  "start": 15.514,
+  "end": 15.605
+ },
+ {
+  "word": "mi",
+  "start": 15.616,
+  "end": 15.718
+ },
+ {
+  "word": "perfil",
+  "start": 15.73,
+  "end": 16.116
+ }
+]

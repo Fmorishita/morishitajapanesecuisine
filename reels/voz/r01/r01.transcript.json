@@ -1,0 +1,554 @@
+{
+  "modelo": "small",
+  "texto": "¿Vale 1850 pesos un omacase? No te lo decimos nosotros. 4.9 estrellas, en 41 reseñas de Google. Fue una experiencia espectacular de principio a fin. La chef fue atenta y amable, explicando cada pieza con detalle. Producto súper fresco. 14 tiempos, sin carta, frente a la chef. Solo 4 asientos por sesión. Sábado y domingo. ¿Y vale lo que cuesta? De verdad vale mucho la pena. Comenta o macace y te mando las fechas libres de este fin de semana.",
+  "palabras": [
+    {
+      "word": "¿Vale",
+      "start": 0.0,
+      "end": 0.3,
+      "prob": 0.813
+    },
+    {
+      "word": "1850",
+      "start": 0.3,
+      "end": 1.38,
+      "prob": 0.82
+    },
+    {
+      "word": "pesos",
+      "start": 1.38,
+      "end": 1.76,
+      "prob": 0.957
+    },
+    {
+      "word": "un",
+      "start": 1.76,
+      "end": 2.0,
+      "prob": 0.667
+    },
+    {
+      "word": "omacase?",
+      "start": 2.0,
+      "end": 2.44,
+      "prob": 0.707
+    },
+    {
+      "word": "No",
+      "start": 2.96,
+      "end": 3.22,
+      "prob": 0.752
+    },
+    {
+      "word": "te",
+      "start": 3.22,
+      "end": 3.36,
+      "prob": 0.988
+    },
+    {
+      "word": "lo",
+      "start": 3.36,
+      "end": 3.46,
+      "prob": 0.993
+    },
+    {
+      "word": "decimos",
+      "start": 3.46,
+      "end": 3.8,
+      "prob": 0.998
+    },
+    {
+      "word": "nosotros.",
+      "start": 3.8,
+      "end": 4.24,
+      "prob": 0.923
+    },
+    {
+      "word": "4",
+      "start": 4.8,
+      "end": 5.04,
+      "prob": 0.669
+    },
+    {
+      "word": ".9",
+      "start": 5.04,
+      "end": 5.6,
+      "prob": 0.971
+    },
+    {
+      "word": "estrellas,",
+      "start": 5.6,
+      "end": 6.2,
+      "prob": 0.886
+    },
+    {
+      "word": "en",
+      "start": 6.38,
+      "end": 6.52,
+      "prob": 0.972
+    },
+    {
+      "word": "41",
+      "start": 6.52,
+      "end": 7.0,
+      "prob": 0.96
+    },
+    {
+      "word": "reseñas",
+      "start": 7.0,
+      "end": 7.6,
+      "prob": 0.965
+    },
+    {
+      "word": "de",
+      "start": 7.6,
+      "end": 7.76,
+      "prob": 0.992
+    },
+    {
+      "word": "Google.",
+      "start": 7.76,
+      "end": 7.98,
+      "prob": 0.905
+    },
+    {
+      "word": "Fue",
+      "start": 8.58,
+      "end": 8.78,
+      "prob": 0.935
+    },
+    {
+      "word": "una",
+      "start": 8.78,
+      "end": 8.92,
+      "prob": 0.999
+    },
+    {
+      "word": "experiencia",
+      "start": 8.92,
+      "end": 9.4,
+      "prob": 0.996
+    },
+    {
+      "word": "espectacular",
+      "start": 9.4,
+      "end": 10.1,
+      "prob": 0.993
+    },
+    {
+      "word": "de",
+      "start": 10.1,
+      "end": 10.26,
+      "prob": 0.938
+    },
+    {
+      "word": "principio",
+      "start": 10.26,
+      "end": 10.54,
+      "prob": 0.992
+    },
+    {
+      "word": "a",
+      "start": 10.54,
+      "end": 10.88,
+      "prob": 0.992
+    },
+    {
+      "word": "fin.",
+      "start": 10.88,
+      "end": 10.98,
+      "prob": 0.993
+    },
+    {
+      "word": "La",
+      "start": 11.58,
+      "end": 11.74,
+      "prob": 0.976
+    },
+    {
+      "word": "chef",
+      "start": 11.74,
+      "end": 11.94,
+      "prob": 0.685
+    },
+    {
+      "word": "fue",
+      "start": 11.94,
+      "end": 12.16,
+      "prob": 0.993
+    },
+    {
+      "word": "atenta",
+      "start": 12.16,
+      "end": 12.38,
+      "prob": 0.715
+    },
+    {
+      "word": "y",
+      "start": 12.38,
+      "end": 12.56,
+      "prob": 0.799
+    },
+    {
+      "word": "amable,",
+      "start": 12.56,
+      "end": 12.88,
+      "prob": 0.972
+    },
+    {
+      "word": "explicando",
+      "start": 13.18,
+      "end": 13.76,
+      "prob": 0.994
+    },
+    {
+      "word": "cada",
+      "start": 13.76,
+      "end": 13.96,
+      "prob": 0.996
+    },
+    {
+      "word": "pieza",
+      "start": 13.96,
+      "end": 14.42,
+      "prob": 0.99
+    },
+    {
+      "word": "con",
+      "start": 14.42,
+      "end": 14.54,
+      "prob": 0.995
+    },
+    {
+      "word": "detalle.",
+      "start": 14.54,
+      "end": 14.92,
+      "prob": 0.996
+    },
+    {
+      "word": "Producto",
+      "start": 15.4,
+      "end": 15.88,
+      "prob": 0.929
+    },
+    {
+      "word": "súper",
+      "start": 15.88,
+      "end": 16.1,
+      "prob": 0.783
+    },
+    {
+      "word": "fresco.",
+      "start": 16.1,
+      "end": 16.6,
+      "prob": 0.997
+    },
+    {
+      "word": "14",
+      "start": 17.1,
+      "end": 17.4,
+      "prob": 0.875
+    },
+    {
+      "word": "tiempos,",
+      "start": 17.4,
+      "end": 17.98,
+      "prob": 0.967
+    },
+    {
+      "word": "sin",
+      "start": 18.26,
+      "end": 18.4,
+      "prob": 0.995
+    },
+    {
+      "word": "carta,",
+      "start": 18.4,
+      "end": 18.76,
+      "prob": 0.998
+    },
+    {
+      "word": "frente",
+      "start": 19.08,
+      "end": 19.26,
+      "prob": 0.998
+    },
+    {
+      "word": "a",
+      "start": 19.26,
+      "end": 19.42,
+      "prob": 0.98
+    },
+    {
+      "word": "la",
+      "start": 19.42,
+      "end": 19.5,
+      "prob": 0.998
+    },
+    {
+      "word": "chef.",
+      "start": 19.5,
+      "end": 19.74,
+      "prob": 0.967
+    },
+    {
+      "word": "Solo",
+      "start": 20.22,
+      "end": 20.44,
+      "prob": 0.428
+    },
+    {
+      "word": "4",
+      "start": 20.44,
+      "end": 20.76,
+      "prob": 0.595
+    },
+    {
+      "word": "asientos",
+      "start": 20.76,
+      "end": 21.12,
+      "prob": 0.958
+    },
+    {
+      "word": "por",
+      "start": 21.12,
+      "end": 21.44,
+      "prob": 0.985
+    },
+    {
+      "word": "sesión.",
+      "start": 21.44,
+      "end": 21.8,
+      "prob": 0.922
+    },
+    {
+      "word": "Sábado",
+      "start": 22.66,
+      "end": 23.1,
+      "prob": 0.893
+    },
+    {
+      "word": "y",
+      "start": 23.1,
+      "end": 23.22,
+      "prob": 0.997
+    },
+    {
+      "word": "domingo.",
+      "start": 23.22,
+      "end": 23.6,
+      "prob": 0.808
+    },
+    {
+      "word": "¿Y",
+      "start": 24.14,
+      "end": 24.3,
+      "prob": 0.956
+    },
+    {
+      "word": "vale",
+      "start": 24.3,
+      "end": 24.52,
+      "prob": 0.988
+    },
+    {
+      "word": "lo",
+      "start": 24.52,
+      "end": 24.68,
+      "prob": 0.998
+    },
+    {
+      "word": "que",
+      "start": 24.68,
+      "end": 24.82,
+      "prob": 0.998
+    },
+    {
+      "word": "cuesta?",
+      "start": 24.82,
+      "end": 25.14,
+      "prob": 0.996
+    },
+    {
+      "word": "De",
+      "start": 25.8,
+      "end": 26.04,
+      "prob": 0.823
+    },
+    {
+      "word": "verdad",
+      "start": 26.04,
+      "end": 26.28,
+      "prob": 0.998
+    },
+    {
+      "word": "vale",
+      "start": 26.28,
+      "end": 26.58,
+      "prob": 0.906
+    },
+    {
+      "word": "mucho",
+      "start": 26.58,
+      "end": 26.9,
+      "prob": 0.995
+    },
+    {
+      "word": "la",
+      "start": 26.9,
+      "end": 27.06,
+      "prob": 0.999
+    },
+    {
+      "word": "pena.",
+      "start": 27.06,
+      "end": 27.3,
+      "prob": 1.0
+    },
+    {
+      "word": "Comenta",
+      "start": 27.84,
+      "end": 28.36,
+      "prob": 0.86
+    },
+    {
+      "word": "o",
+      "start": 28.36,
+      "end": 28.46,
+      "prob": 0.15
+    },
+    {
+      "word": "macace",
+      "start": 28.46,
+      "end": 28.82,
+      "prob": 0.614
+    },
+    {
+      "word": "y",
+      "start": 28.82,
+      "end": 29.0,
+      "prob": 0.978
+    },
+    {
+      "word": "te",
+      "start": 29.0,
+      "end": 29.08,
+      "prob": 0.975
+    },
+    {
+      "word": "mando",
+      "start": 29.08,
+      "end": 29.38,
+      "prob": 0.99
+    },
+    {
+      "word": "las",
+      "start": 29.38,
+      "end": 29.48,
+      "prob": 0.99
+    },
+    {
+      "word": "fechas",
+      "start": 29.48,
+      "end": 29.84,
+      "prob": 0.946
+    },
+    {
+      "word": "libres",
+      "start": 29.84,
+      "end": 30.24,
+      "prob": 0.989
+    },
+    {
+      "word": "de",
+      "start": 30.24,
+      "end": 30.36,
+      "prob": 0.997
+    },
+    {
+      "word": "este",
+      "start": 30.36,
+      "end": 30.56,
+      "prob": 0.968
+    },
+    {
+      "word": "fin",
+      "start": 30.56,
+      "end": 30.82,
+      "prob": 0.991
+    },
+    {
+      "word": "de",
+      "start": 30.82,
+      "end": 30.94,
+      "prob": 0.999
+    },
+    {
+      "word": "semana.",
+      "start": 30.94,
+      "end": 31.2,
+      "prob": 0.999
+    }
+  ],
+  "duracion_s": 31.61,
+  "palabras_guion": 85,
+  "palabras_por_seg": 2.69,
+  "precision_palabras": 0.8471,
+  "precision_fonetica": 0.8588,
+  "diferencias": [
+    {
+      "op": "replace",
+      "guion": "mil ochocientos cincuenta",
+      "whisper": "1850"
+    },
+    {
+      "op": "replace",
+      "guion": "omakase",
+      "whisper": "omacase"
+    },
+    {
+      "op": "replace",
+      "guion": "cuatro punto nueve",
+      "whisper": "4 9"
+    },
+    {
+      "op": "replace",
+      "guion": "cuarenta y una",
+      "whisper": "41"
+    },
+    {
+      "op": "replace",
+      "guion": "catorce",
+      "whisper": "14"
+    },
+    {
+      "op": "replace",
+      "guion": "cuatro",
+      "whisper": "4"
+    },
+    {
+      "op": "replace",
+      "guion": "omakase",
+      "whisper": "o macace"
+    }
+  ],
+  "baja_confianza": [
+    {
+      "word": "Solo",
+      "start": 20.22,
+      "end": 20.44,
+      "prob": 0.428
+    },
+    {
+      "word": "4",
+      "start": 20.44,
+      "end": 20.76,
+      "prob": 0.595
+    },
+    {
+      "word": "o",
+      "start": 28.36,
+      "end": 28.46,
+      "prob": 0.15
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+# Audio pesado regenerable (scripts en audio/_src/ y voz/tts.py)
+audio/musica/stems/
+audio/musica/*.wav
+voz/muestras/*.wav
+# Dependencias y caches de HyperFrames
+node_modules/
+videos/*/node_modules/
+videos/*/.hyperframes/
