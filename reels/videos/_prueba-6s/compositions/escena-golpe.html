@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <!-- El <head> de una sub-composición se descarta: todo va dentro de <template> -->
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Zen Antique Soft";
+          src: url("assets/fonts/ZenAntiqueSoft-Regular-subset.woff2") format("woff2");
+          font-weight: 400;
+          font-display: block;
+        }
+        @font-face {
+          font-family: "DM Mono";
+          src: url("assets/fonts/DMMono-Medium.ttf") format("truetype");
+          font-weight: 500;
+          font-display: block;
+        }
+        #escena-golpe-root {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          background: radial-gradient(ellipse 80% 55% at 50% 42%, #13110e 0%, #0a0908 70%);
+        }
+        /* Centrado con flex dentro del área útil (x 65–1015, y 270–1248) */
+        #eg-stack {
+          position: absolute;
+          left: 65px;
+          right: 65px;
+          top: 270px;
+          height: 978px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+        #eg-eyebrow {
+          display: block;
+          font-family: "DM Mono", monospace;
+          font-weight: 500;
+          font-size: 32px;
+          letter-spacing: 0.32em;
+          color: #d4af6a;
+          text-transform: uppercase;
+          margin-bottom: 12px;
+        }
+        #eg-num {
+          display: block;
+          font-family: "Zen Antique Soft", serif;
+          font-size: 400px;
+          line-height: 0.9;
+          color: #d4af6a;
+          transform-origin: 50% 100%; /* crece hacia arriba: no pisa "ASIENTOS" */
+        }
+        #eg-word {
+          display: block;
+          font-family: "Zen Antique Soft", serif;
+          font-size: 150px;
+          line-height: 0.92;
+          letter-spacing: -0.02em;
+          color: #f5f0e8;
+          transform-origin: 50% 0%; /* crece hacia abajo: no pisa el "4" */
+        }
+        /* grain-overlay (componente del catálogo), opacidad bajada a textura sutil */
+        #eg-grain {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          pointer-events: none;
+          z-index: 5;
+        }
+        @keyframes hf-grain-noise {
+          0%, 100% { transform: translate(0, 0); }
+          10% { transform: translate(-5%, -5%); }
+          20% { transform: translate(-10%, 5%); }
+          30% { transform: translate(5%, -10%); }
+          40% { transform: translate(-5%, 15%); }
+          50% { transform: translate(-10%, 5%); }
+          60% { transform: translate(15%, 0); }
+          70% { transform: translate(0, 10%); }
+          80% { transform: translate(-15%, 0); }
+          90% { transform: translate(10%, 5%); }
+        }
+        #eg-grain .grain-texture {
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+          opacity: 0.09;
+          animation: hf-grain-noise 0.5s steps(1) infinite;
+        }
+      </style>
+
+      <div data-hf-id="hf-upe6" id="escena-golpe-root" data-composition-id="escena-golpe" data-width="1080" data-height="1920">
+        <div data-hf-id="hf-gwse" id="eg-stack">
+          <span data-hf-id="hf-6kzz" id="eg-eyebrow">1 barra</span>
+          <span data-hf-id="hf-pvtf" id="eg-num">4</span>
+          <span data-hf-id="hf-4ptt" id="eg-word">ASIENTOS</span>
+        </div>
+        <div data-hf-id="hf-u73u" id="eg-grain" data-layout-ignore=""><div data-hf-id="hf-0qtj" class="grain-texture"></div></div>
+      </div>
+
+      <script>
+        (function () {
+          const tl = gsap.timeline({ paused: true });
+          // Gancho visible desde el frame 0: el número ya está en pantalla y "cae" en 6 frames
+          tl.fromTo("#eg-num", { scale: 1.35 }, { scale: 1, duration: 0.2, ease: "power4.out" }, 0);
+          tl.fromTo("#eg-word", { scale: 1.15 }, { scale: 1, duration: 0.2, ease: "power4.out" }, 0);
+          tl.fromTo("#eg-eyebrow", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" }, 0.25);
+          // Interrupción de patrón a 1.3 s: pulso 1 → 1.08 → 1 (un solo tween con yoyo, sin solapes)
+          tl.to("#eg-num", { scale: 1.08, duration: 0.12, ease: "power2.out", yoyo: true, repeat: 1 }, 1.3);
+          // Empuje hacia el flash (2.1 → 2.4 s)
+          tl.fromTo("#eg-stack", { scale: 1 }, { scale: 1.12, duration: 0.29, ease: "power3.in" }, 2.1);
+          window.__timelines["escena-golpe"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

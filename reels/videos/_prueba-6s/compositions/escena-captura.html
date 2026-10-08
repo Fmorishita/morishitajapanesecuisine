@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Zen Antique Soft";
+          src: url("assets/fonts/ZenAntiqueSoft-Regular-subset.woff2") format("woff2");
+          font-weight: 400;
+          font-display: block;
+        }
+        #escena-captura-root {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          background: #0a0908;
+        }
+        /* El zoom va en un envoltorio interno (nunca en el clip temporizado) */
+        #ec-cam {
+          position: absolute;
+          inset: 0;
+          transform-origin: 8% 24%; /* ancla a la izquierda para no cortar "PASO 01" ni "¿Cuántos" */
+        }
+        #ec-img {
+          display: block;
+          width: 1080px;
+          height: 1920px;
+          object-fit: cover;
+        }
+        /* Scrim neutro (negro de marca) detrás del subtítulo: no tiñe la captura */
+        #ec-scrim {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 860px;
+          height: 460px;
+          background: linear-gradient(180deg, rgba(10, 9, 8, 0) 0%, rgba(10, 9, 8, 0.97) 20%, rgba(10, 9, 8, 0.97) 80%, rgba(10, 9, 8, 0) 100%);
+        }
+        /* Subtítulo kinético dentro del área útil (y 1010–1180) */
+        #ec-sub {
+          position: absolute;
+          left: 65px;
+          right: 65px;
+          top: 1010px;
+          height: 170px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 26px;
+        }
+        #ec-sub .w {
+          display: inline-block;
+          font-family: "Zen Antique Soft", serif;
+          font-size: 104px;
+          line-height: 1.05;
+          letter-spacing: -0.01em;
+          color: #f5f0e8;
+          transform-origin: 50% 80%;
+        }
+        #ec-sub .w.key {
+          color: #d4af6a;
+        }
+      </style>
+
+      <div data-hf-id="hf-jd8w" id="escena-captura-root" data-composition-id="escena-captura" data-width="1080" data-height="1920">
+        <div data-hf-id="hf-9flq" id="ec-cam" data-layout-allow-overflow="">
+          <img data-hf-id="hf-egoe" id="ec-img" src="assets/img/captura-reserva-comensales-oscuro__maximo-4.jpg" alt="Paso 01 del flujo de reserva: Máximo 4 personas por servicio">
+        </div>
+        <div data-hf-id="hf-izho" id="ec-scrim"></div>
+        <div data-hf-id="hf-y1qk" id="ec-sub">
+          <span data-hf-id="hf-9e12" class="w" id="ec-w1">máximo</span>
+          <span data-hf-id="hf-6fyt" class="w key" id="ec-w2">4</span>
+          <span data-hf-id="hf-42o0" class="w" id="ec-w3">personas</span>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          const tl = gsap.timeline({ paused: true });
+          // Tiempos LOCALES de la escena (0 = 2.4 s del reel)
+          // Punch-in lento 100 → 105 % en 2.2 s
+          tl.fromTo("#ec-cam", { scale: 1 }, { scale: 1.05, duration: 2.2, ease: "sine.out" }, 0);
+          // Punch-in rápido a 109 % en 6 frames (2.2 s local = 4.6 s del reel)
+          tl.to("#ec-cam", { scale: 1.09, duration: 0.2, ease: "power3.out" }, 2.2);
+          // Subtítulo palabra por palabra, entrada de 100 ms; la palabra clave en oro y a 1.2×
+          tl.fromTo("#ec-w1", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.1, ease: "power2.out" }, 0.6);
+          tl.fromTo("#ec-w2", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1.2, duration: 0.1, ease: "power2.out" }, 0.85);
+          tl.to("#ec-w2", { scale: 1, duration: 0.18, ease: "power2.out" }, 0.95);
+          tl.fromTo("#ec-w3", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.1, ease: "power2.out" }, 1.1);
+          window.__timelines["escena-captura"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>
