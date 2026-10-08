@@ -1154,11 +1154,10 @@ body{
 'use strict';
 
 // ─────────────────────────────────────────────────────────
-// DEFAULT CONFIG (overridable por el admin via /api/content)
+// DEFAULT CONFIG (overridable por el admin via /api/evaluacion/config)
 // ─────────────────────────────────────────────────────────
 const DEFAULT_CONFIG = {
   version: 2,
-  password: 'miyagi2026',
   evento: {
     titulo: 'Degustación nuevo menú',
     cliente: 'Miyagi Sushi',
@@ -1203,7 +1202,10 @@ let STATE = newState();
 let DISH_FLAT = []; // [{cat, dish, num, headEl, wrapEl}]
 let SAVE_TIMER = null, INDICATOR_TIMER = null;
 let CHOSEN_TOP = null; // array de dish ids seleccionados como Top
-const CONFIG_REMOTE_KEY = 'evaluacion_miyagi_config';
+// La contraseña la valida el servidor; aquí solo se guarda la que tecleó la persona
+// para mandarla con cada guardado.
+const EVAL_PW_KEY = 'morishita_eval_pw';
+let EVAL_PW = '';
 
 function newState(){
   return {
@@ -1257,7 +1259,7 @@ async function uploadDishPhoto(dishId, file){
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      password: CONFIG.password,
+      password: EVAL_PW,
       nombre: STATE.nombre,
       dishId,
       data: compressed.base64,
@@ -1340,10 +1342,9 @@ async function init(){
 
 async function loadConfig(){
   try {
-    const r = await fetch('/api/content', { cache:'no-store' });
+    const r = await fetch('/api/evaluacion/config', { cache:'no-store' });
     if (r.ok) {
-      const data = await r.json();
-      const raw = data[CONFIG_REMOTE_KEY];
+      const raw = (await r.json()).config;
       if (raw) {
         try {
           const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
@@ -1383,21 +1384,45 @@ function applyConfigToHeader(){
 // ─────────────────────────────────────────────────────────
 // SCREEN 1 — Contraseña
 // ─────────────────────────────────────────────────────────
+// true/false según el servidor; null si no hubo red.
+async function checkEvalPassword(pw){
+  try {
+    const r = await fetch('/api/evaluacion/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw })
+    });
+    return r.ok;
+  } catch (e) {
+    console.warn('No se pudo validar la contraseña:', e);
+    return null;
+  }
+}
+
 function wireGate(){
   const input = document.getElementById('gate-input');
   const btn = document.getElementById('gate-btn');
   const err = document.getElementById('gate-error');
 
-  if (sessionStorage.getItem('morishita_eval_pw_ok') === '1') {
-    showNameScreen();
-    return;
+  // Revalida la contraseña guardada: si el admin la cambió, vuelve a pedirla
+  // (sin red, se confía en la guardada para no bloquear a quien ya entró).
+  const saved = sessionStorage.getItem(EVAL_PW_KEY);
+  if (saved) {
+    checkEvalPassword(saved).then(ok => {
+      if (ok === false) { sessionStorage.removeItem(EVAL_PW_KEY); return; }
+      EVAL_PW = saved;
+      showNameScreen();
+    });
   }
 
-  const tryAuth = () => {
+  const tryAuth = async () => {
     const pw = input.value.trim();
-    if (pw === (CONFIG.password || '').trim()) {
+    if (!pw) return;
+    const ok = await checkEvalPassword(pw);
+    if (ok) {
       err.classList.remove('show');
-      sessionStorage.setItem('morishita_eval_pw_ok', '1');
+      EVAL_PW = pw;
+      sessionStorage.setItem(EVAL_PW_KEY, pw);
       showNameScreen();
     } else {
       err.classList.add('show');
@@ -1963,7 +1988,7 @@ async function pushRemote(){
     const r = await fetch('/api/evaluacion/save', {
       method:'POST',
       headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ password: CONFIG.password, nombre: STATE.nombre, sesion: payloadForSave() })
+      body: JSON.stringify({ password: EVAL_PW, nombre: STATE.nombre, sesion: payloadForSave() })
     });
     return r.ok;
   } catch(e) { console.warn('Push remote falló:', e); return false; }

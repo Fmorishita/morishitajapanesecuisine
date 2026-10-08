@@ -324,7 +324,7 @@
 
   <div id="login-screen" class="login-container">
     <h1>森下 ADMIN</h1>
-    <input type="password" id="pin" placeholder="PIN DE ACCESO" onkeyup="if(event.key==='Enter') checkPin()"/>
+    <input type="password" id="pin" placeholder="TOKEN DE ADMIN" onkeyup="if(event.key==='Enter') checkPin()"/>
     <button onclick="checkPin()">ENTRAR</button>
   </div>
 
@@ -553,13 +553,23 @@
       }).join('');
     }
 
-    function checkPin() {
-      if (document.getElementById('pin').value === '1850') {
+    // El token se valida en el servidor (ADMIN_TOKEN de Vercel); no vive en este HTML.
+    async function checkPin() {
+      const token = document.getElementById('pin').value.trim();
+      if (!token) return;
+      let status = 0;
+      try {
+        const r = await fetch('/api/auth/check', { headers: { 'x-admin-token': token }, cache: 'no-store' });
+        status = r.status;
+      } catch (e) { console.warn('No se pudo validar el token:', e); }
+      if (status === 200) {
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('main-dashboard').style.display = 'block';
         loadExecutiveData();
+      } else if (status === 503) {
+        alert('FALTA CONFIGURAR ADMIN_TOKEN EN VERCEL');
       } else {
-        alert('PIN INCORRECTO');
+        alert('TOKEN INCORRECTO');
       }
     }
   </script>
