@@ -509,7 +509,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--fg);min-height:100
 
 const DEFAULT_CONFIG = {
   version: 2,
-  password: 'miyagi2026',
+  password: '',  // la contraseña vigente llega del servidor (/api/evaluacion/config/admin)
   evento: {
     titulo: 'Degustación nuevo menú',
     cliente: 'Miyagi Sushi',
@@ -585,8 +585,7 @@ const DEFAULT_CONFIG = {
 };
 
 const CONFIG_KEY = 'evaluacion_miyagi_config';
-const ADMIN_PIN = '1850'; // PIN client-side. Para guardar en Supabase, usa el header x-admin-token con este valor.
-let TOKEN = '';
+let TOKEN = '';  // ADMIN_TOKEN de Vercel; lo valida el servidor en /api/auth/check
 let CONFIG = clone(DEFAULT_CONFIG);
 let DIRTY = false;
 
@@ -601,8 +600,16 @@ function wireLogin(){
   const tryLogin = async () => {
     const v = input.value.trim();
     if (!v) return;
-    if (v !== ADMIN_PIN) {
-      err.textContent = 'PIN incorrecto';
+    let status = 0;
+    try {
+      const r = await fetch('/api/auth/check', { headers: { 'x-admin-token': v }, cache: 'no-store' });
+      status = r.status;
+    } catch (e) { console.warn('No se pudo validar el token:', e); }
+    if (status !== 200) {
+      sessionStorage.removeItem('morishita_admin_token');
+      err.textContent = status === 401 ? 'Token incorrecto'
+        : status === 503 ? 'Falta configurar ADMIN_TOKEN en Vercel'
+        : 'No se pudo validar el token';
       err.classList.add('show');
       input.value = '';
       input.focus();
@@ -633,10 +640,12 @@ async function openApp(){
 }
 
 async function loadConfig(){
+  let data;
   try {
-    const r = await fetch('/api/content', { cache: 'no-store' });
-    const data = await r.json();
-    const raw = data[CONFIG_KEY];
+    const r = await fetch('/api/evaluacion/config/admin', { headers: { 'x-admin-token': TOKEN }, cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    data = await r.json();
+    const raw = data.config;
     if (raw) {
       try {
         const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
@@ -658,7 +667,10 @@ async function loadConfig(){
   } catch (e) {
     console.warn('Error cargando config:', e);
     document.getElementById('sync-status').innerHTML = '<span style="color:var(--red);">Error de red — defaults locales</span>';
+    return;
   }
+  // Sin contraseña guardada en la config, el servidor usa su default: la mostramos para editarla.
+  if (!CONFIG.password && data.password) CONFIG.password = data.password;
 }
 
 function mergeConfig(base, override){
@@ -881,7 +893,7 @@ async function saveConfig(){
     });
     if (r.status === 401) {
       updateSaveStatus('err');
-      alert('El servidor no aceptó el token 1850. Verifica que la variable ADMIN_TOKEN en Vercel sea "1850" (o no esté definida — usa 1850 por default).');
+      alert('El servidor no aceptó el token. Sal y vuelve a entrar con el ADMIN_TOKEN configurado en Vercel.');
       return;
     }
     if (!r.ok) throw new Error('HTTP ' + r.status);

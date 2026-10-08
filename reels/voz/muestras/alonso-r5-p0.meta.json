@@ -1,0 +1,95 @@
+{
+ "id": "alonso-r5-p0",
+ "proveedor": "edge-tts (Microsoft Edge Read Aloud, gratis)",
+ "voice": "es-US-AlonsoNeural",
+ "rate": "+5%",
+ "pitch": "+0Hz",
+ "volume": "+0%",
+ "modo": "por-frases",
+ "pronuncia": {
+  "nigiri": "niguiri",
+  "nigiris": "niguiris"
+ },
+ "duracion_s": 16.72,
+ "sample_rate": 48000,
+ "plan": [
+  {
+   "frase": "Una barra.",
+   "start": 0.0,
+   "end": 0.62
+  },
+  {
+   "pausa": 0.2,
+   "start": 0.62
+  },
+  {
+   "frase": "Cuatro asientos.",
+   "start": 0.82,
+   "end": 1.72
+  },
+  {
+   "pausa": 0.3,
+   "start": 1.72
+  },
+  {
+   "frase": "Catorce tiempos.",
+   "start": 2.02,
+   "end": 3.07
+  },
+  {
+   "pausa": 0.2,
+   "start": 3.07
+  },
+  {
+   "frase": "Sin carta.",
+   "start": 3.27,
+   "end": 4.01
+  },
+  {
+   "pausa": 0.35,
+   "start": 4.01
+  },
+  {
+   "frase": "La chef, Vero Morishita, arma tu omakase frente a ti.",
+   "start": 4.36,
+   "end": 7.84
+  },
+  {
+   "pausa": 0.25,
+   "start": 7.84
+  },
+  {
+   "frase": "Nigiris, sashimis, platillos calientes.",
+   "start": 8.09,
+   "end": 11.1
+  },
+  {
+   "pausa": 0.35,
+   "start": 11.1
+  },
+  {
+   "frase": "Aquí en Ensenada.",
+   "start": 11.45,
+   "end": 12.47
+  },
+  {
+   "pausa": 0.15,
+   "start": 12.47
+  },
+  {
+   "frase": "Solo sábado y domingo.",
+   "start": 12.62,
+   "end": 13.93
+  },
+  {
+   "pausa": 0.4,
+   "start": 13.93
+  },
+  {
+   "frase": "Reserva tu lugar en el link de mi perfil.",
+   "start": 14.33,
+   "end": 16.57
+  }
+ ],
+ "texto": "# Texto de prueba (~15 s). Solo datos de fuente/hechos.md sección (a):\n# A6 barra de 4 asientos · A1 14 tiempos · A11 no hay carta · A18 Chef Vero Morishita (nombre pendiente D6)\n# A10 se prepara delante del comensal · A12 nigiris, sashimis, platillos calientes\n# A17 Ensenada · A7 sábado y domingo · A25 reserva directa (link)\n# Una oración por línea: el ritmo lo ponen las pausas, no el TTS.\nUna barra.\n[pausa 0.2]\nCuatro asientos.\n[pausa 0.3]\nCatorce tiempos.\n[pausa 0.2]\nSin carta.\n[pausa 0.35]\nLa chef, Vero Morishita, arma tu omakase frente a ti.\n[pausa 0.25]\nNigiris, sashimis, platillos calientes.\n[pausa 0.35]\nAquí en Ensenada.\n[pausa 0.15]\nSolo sábado y domingo.\n[pausa 0.4]\nReserva tu lugar en el link de mi perfil.\n"
+}

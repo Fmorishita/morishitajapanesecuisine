@@ -1,0 +1,113 @@
+{
+ "id": "r01",
+ "proveedor": "edge-tts (Microsoft Edge Read Aloud, gratis)",
+ "voice": "es-MX-JorgeNeural",
+ "rate": "+8%",
+ "pitch": "+0Hz",
+ "volume": "+0%",
+ "modo": "por-frases",
+ "pronuncia": {
+  "nigiri": "niguiri",
+  "nigiris": "niguiris"
+ },
+ "duracion_s": 31.61,
+ "sample_rate": 48000,
+ "plan": [
+  {
+   "frase": "¿Vale mil ochocientos cincuenta pesos un omakase?",
+   "start": 0.0,
+   "end": 2.63
+  },
+  {
+   "pausa": 0.35,
+   "start": 2.63
+  },
+  {
+   "frase": "No te lo decimos nosotros.",
+   "start": 2.98,
+   "end": 4.57
+  },
+  {
+   "pausa": 0.2,
+   "start": 4.57
+  },
+  {
+   "frase": "Cuatro punto nueve estrellas, en cuarenta y una reseñas de Google.",
+   "start": 4.77,
+   "end": 8.2
+  },
+  {
+   "pausa": 0.35,
+   "start": 8.2
+  },
+  {
+   "frase": "\"Fue una experiencia espectacular de principio a fin.\"",
+   "start": 8.55,
+   "end": 11.21
+  },
+  {
+   "pausa": 0.3,
+   "start": 11.21
+  },
+  {
+   "frase": "\"La chef fue atenta y amable, explicando cada pieza con detalle.\"",
+   "start": 11.51,
+   "end": 15.09
+  },
+  {
+   "pausa": 0.3,
+   "start": 15.09
+  },
+  {
+   "frase": "\"Producto super fresco.\"",
+   "start": 15.39,
+   "end": 16.71
+  },
+  {
+   "pausa": 0.35,
+   "start": 16.71
+  },
+  {
+   "frase": "Catorce tiempos, sin carta, frente a la chef.",
+   "start": 17.06,
+   "end": 19.94
+  },
+  {
+   "pausa": 0.2,
+   "start": 19.94
+  },
+  {
+   "frase": "Solo cuatro asientos por sesión. Sábado y domingo.",
+   "start": 20.14,
+   "end": 23.75
+  },
+  {
+   "pausa": 0.35,
+   "start": 23.75
+  },
+  {
+   "frase": "¿Y vale lo que cuesta?",
+   "start": 24.1,
+   "end": 25.35
+  },
+  {
+   "pausa": 0.45,
+   "start": 25.35
+  },
+  {
+   "frase": "\"De verdad vale mucho la pena.\"",
+   "start": 25.8,
+   "end": 27.49
+  },
+  {
+   "pausa": 0.45,
+   "start": 27.49
+  },
+  {
+   "frase": "Comenta omakase y te mando las fechas libres de este fin de semana.",
+   "start": 27.94,
+   "end": 31.46
+  }
+ ],
+ "texto": "¿Vale mil ochocientos cincuenta pesos un omakase?\n[pausa 0.35]\nNo te lo decimos nosotros.\n[pausa 0.2]\nCuatro punto nueve estrellas, en cuarenta y una reseñas de Google.\n[pausa 0.35]\n\"Fue una experiencia espectacular de principio a fin.\"\n[pausa 0.3]\n\"La chef fue atenta y amable, explicando cada pieza con detalle.\"\n[pausa 0.3]\n\"Producto super fresco.\"\n[pausa 0.35]\nCatorce tiempos, sin carta, frente a la chef.\n[pausa 0.2]\nSolo cuatro asientos por sesión. Sábado y domingo.\n[pausa 0.35]\n¿Y vale lo que cuesta?\n[pausa 0.45]\n\"De verdad vale mucho la pena.\"\n[pausa 0.45]\nComenta omakase y te mando las fechas libres de este fin de semana.\n"
+}

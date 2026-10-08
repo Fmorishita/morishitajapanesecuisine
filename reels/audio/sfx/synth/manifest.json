@@ -1,0 +1,130 @@
+[
+ {
+  "archivo": "whoosh-corto-01.wav",
+  "duracion_s": 0.25,
+  "pico_en_s": 0.136,
+  "pico_dbfs": -3.0,
+  "lufs": -15.6,
+  "uso": "Transición rápida (corte, punch-in). Golpe a 0.14 s: arráncalo 0.14 s antes del corte."
+ },
+ {
+  "archivo": "whoosh-medio-02.wav",
+  "duracion_s": 0.36,
+  "pico_en_s": 0.23,
+  "pico_dbfs": -3.0,
+  "lufs": -16.7,
+  "uso": "Whip pan / cambio de bloque. Golpe ~0.22 s."
+ },
+ {
+  "archivo": "whoosh-suave-03.wav",
+  "duracion_s": 0.5,
+  "pico_en_s": 0.319,
+  "pico_dbfs": -3.0,
+  "lufs": -15.4,
+  "uso": "Transición elegante y más oscura (entrada a la reseña, al plato estrella)."
+ },
+ {
+  "archivo": "pop-texto-suave-01.wav",
+  "duracion_s": 0.18,
+  "pico_en_s": 0.002,
+  "pico_dbfs": -3.0,
+  "lufs": -12.7,
+  "uso": "Aparece una palabra clave del subtítulo. Suave, no tapa la voz."
+ },
+ {
+  "archivo": "pop-texto-agudo-02.wav",
+  "duracion_s": 0.14,
+  "pico_en_s": 0.002,
+  "pico_dbfs": -3.0,
+  "lufs": -12.1,
+  "uso": "Cifra o palabra resaltada (más brillante)."
+ },
+ {
+  "archivo": "click-texto-madera-03.wav",
+  "duracion_s": 0.08,
+  "pico_en_s": 0.001,
+  "pico_dbfs": -3.0,
+  "lufs": -11.8,
+  "uso": "Click seco, tipo madera, para listas o texto que entra en ritmo."
+ },
+ {
+  "archivo": "boom-grave-01.wav",
+  "duracion_s": 2.2,
+  "pico_en_s": 0.039,
+  "pico_dbfs": -3.0,
+  "lufs": -17.8,
+  "uso": "Golpe grave del gancho y de la revelación (cifra '14', '4 lugares'). Golpe a 0 s."
+ },
+ {
+  "archivo": "boom-taiko-02.wav",
+  "duracion_s": 2.6,
+  "pico_en_s": 0.009,
+  "pico_dbfs": -3.0,
+  "lufs": -18.7,
+  "uso": "Impacto grave con cuerpo de taiko: revelación, cambio de sección, inicio del CTA."
+ },
+ {
+  "archivo": "riser-1-5s.wav",
+  "duracion_s": 1.5,
+  "pico_en_s": 1.47,
+  "pico_dbfs": -3.0,
+  "lufs": -17.8,
+  "uso": "Sube durante 1.5 s y corta en seco: el final cae en el golpe (arráncalo 1.5 s antes de la revelación)."
+ },
+ {
+  "archivo": "riser-2-5s.wav",
+  "duracion_s": 2.5,
+  "pico_en_s": 2.441,
+  "pico_dbfs": -3.0,
+  "lufs": -16.6,
+  "uso": "Sube durante 2.5 s y corta en seco: el final cae en el golpe (arráncalo 2.5 s antes de la revelación)."
+ },
+ {
+  "archivo": "glitch-zap.wav",
+  "duracion_s": 0.16,
+  "pico_en_s": 0.004,
+  "pico_dbfs": -3.0,
+  "lufs": -11.2,
+  "uso": "Glitch corto SOLO sobre texto/gráfico (≤ 3 frames de efecto visual), nunca sobre comida."
+ },
+ {
+  "archivo": "tick-obturador.wav",
+  "duracion_s": 0.12,
+  "pico_en_s": 0.029,
+  "pico_dbfs": -3.0,
+  "lufs": -18.7,
+  "uso": "Tick de cámara: aparece una captura de pantalla o un 'foto fija'."
+ },
+ {
+  "archivo": "hyoshigi-2-golpes.wav",
+  "duracion_s": 1.3,
+  "pico_en_s": 0.42,
+  "pico_dbfs": -3.0,
+  "lufs": -19.1,
+  "uso": "Claves de madera japonesas (2 golpes, el 2º a 0.42 s): apertura, 'empieza el servicio', marcar el CTA. Firma sonora de la marca."
+ },
+ {
+  "archivo": "shing-metal.wav",
+  "duracion_s": 2.2,
+  "pico_en_s": 0.123,
+  "pico_dbfs": -3.0,
+  "lufs": -17.9,
+  "uso": "Destello metálico sintético (no es sonido real de cuchillo): brillo sobre un título o el sello del cierre."
+ },
+ {
+  "archivo": "rin-resena.wav",
+  "duracion_s": 4.0,
+  "pico_en_s": 0.171,
+  "pico_dbfs": -3.0,
+  "lufs": -13.4,
+  "uso": "Campanita suave al aparecer una reseña de Google (estrellas). Volumen 0.3–0.5 bajo la voz."
+ },
+ {
+  "archivo": "tap-cta.wav",
+  "duracion_s": 0.09,
+  "pico_en_s": 0.002,
+  "pico_dbfs": -3.0,
+  "lufs": -14.0,
+  "uso": "Toque de dedo en pantalla/botón: 'Reservar', link del perfil, captura del flujo de reserva."
+ }
+]

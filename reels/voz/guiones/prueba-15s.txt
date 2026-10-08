@@ -1,0 +1,22 @@
+# Texto de prueba (~15 s). Solo datos de fuente/hechos.md sección (a):
+# A6 barra de 4 asientos · A1 14 tiempos · A11 no hay carta · A18 Chef Vero Morishita (nombre pendiente D6)
+# A10 se prepara delante del comensal · A12 nigiris, sashimis, platillos calientes
+# A17 Ensenada · A7 sábado y domingo · A25 reserva directa (link)
+# Una oración por línea: el ritmo lo ponen las pausas, no el TTS.
+Una barra.
+[pausa 0.2]
+Cuatro asientos.
+[pausa 0.3]
+Catorce tiempos.
+[pausa 0.2]
+Sin carta.
+[pausa 0.35]
+La chef, Vero Morishita, arma tu omakase frente a ti.
+[pausa 0.25]
+Nigiris, sashimis, platillos calientes.
+[pausa 0.35]
+Aquí en Ensenada.
+[pausa 0.15]
+Solo sábado y domingo.
+[pausa 0.4]
+Reserva tu lugar en el link de mi perfil.

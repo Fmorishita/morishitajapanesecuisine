@@ -1,0 +1,5 @@
+{
+  "_nota": "Sustituciones SOLO para el texto que se manda al TTS (edge-tts). words.json conserva la palabra del guion. Verificado con prueba acústica (centroide/duración de la fricativa) y faster-whisper small; ver voz-aprobada.md.",
+  "nigiri": "niguiri",
+  "nigiris": "niguiris"
+}

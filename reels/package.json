@@ -1,0 +1,12 @@
+{
+  "name": "morishita-reels",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Reels de Instagram de Morishita Japanese Cuisine con HyperFrames (HTML a MP4)",
+  "scripts": {
+    "hf": "hyperframes"
+  },
+  "devDependencies": {
+    "hyperframes": "0.8.141"
+  }
+}

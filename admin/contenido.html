@@ -224,7 +224,7 @@
 <div class="login" id="loginScreen">
   <h1>森下 ADMIN</h1>
   <p>Panel de contenido del sitio</p>
-  <input type="password" id="pinInput" placeholder="PIN DE ACCESO" onkeyup="if(event.key==='Enter')checkPin()"/>
+  <input type="password" id="pinInput" placeholder="TOKEN DE ADMIN" onkeyup="if(event.key==='Enter')checkPin()"/>
   <button onclick="checkPin()">ENTRAR</button>
 </div>
 
@@ -311,7 +311,8 @@ async function loadContent(){
   try{
     // Validar el PIN antes de continuar — evita entrar con un PIN que no puede guardar
     const auth = await fetch('/api/auth/check',{headers:{'x-admin-token':ADMIN_TOKEN}});
-    if(auth.status===401) throw new Error('PIN incorrecto.');
+    if(auth.status===401) throw new Error('Token incorrecto.');
+    if(auth.status===503) throw new Error('Falta configurar ADMIN_TOKEN en Vercel.');
     if(!auth.ok) throw new Error('Error de servidor ('+auth.status+')');
     const r = await fetch('/api/content');
     if(!r.ok) throw new Error('HTTP '+r.status);

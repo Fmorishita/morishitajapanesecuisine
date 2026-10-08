@@ -1,0 +1,193 @@
+[
+ {
+  "word": "Una",
+  "start": 0.0,
+  "end": 0.175
+ },
+ {
+  "word": "barra",
+  "start": 0.186,
+  "end": 0.545
+ },
+ {
+  "word": "Cuatro",
+  "start": 0.77,
+  "end": 0.996
+ },
+ {
+  "word": "asientos",
+  "start": 1.007,
+  "end": 1.59
+ },
+ {
+  "word": "Catorce",
+  "start": 1.89,
+  "end": 2.311
+ },
+ {
+  "word": "tiempos",
+  "start": 2.322,
+  "end": 2.87
+ },
+ {
+  "word": "Sin",
+  "start": 3.07,
+  "end": 3.294
+ },
+ {
+  "word": "carta",
+  "start": 3.306,
+  "end": 3.745
+ },
+ {
+  "word": "La",
+  "start": 4.11,
+  "end": 4.23
+ },
+ {
+  "word": "chef",
+  "start": 4.242,
+  "end": 4.554
+ },
+ {
+  "word": "Vero",
+  "start": 4.843,
+  "end": 5.028
+ },
+ {
+  "word": "Morishita",
+  "start": 5.04,
+  "end": 5.584
+ },
+ {
+  "word": "arma",
+  "start": 5.827,
+  "end": 6.116
+ },
+ {
+  "word": "tu",
+  "start": 6.128,
+  "end": 6.255
+ },
+ {
+  "word": "omakase",
+  "start": 6.267,
+  "end": 6.741
+ },
+ {
+  "word": "frente",
+  "start": 6.753,
+  "end": 7.019
+ },
+ {
+  "word": "a",
+  "start": 7.031,
+  "end": 7.066
+ },
+ {
+  "word": "ti",
+  "start": 7.077,
+  "end": 7.332
+ },
+ {
+  "word": "Nigiris",
+  "start": 7.59,
+  "end": 8.239,
+  "tts": "niguiris"
+ },
+ {
+  "word": "Sashimis",
+  "start": 8.36,
+  "end": 9.06
+ },
+ {
+  "word": "Platillos",
+  "start": 9.18,
+  "end": 9.602
+ },
+ {
+  "word": "calientes",
+  "start": 9.614,
+  "end": 10.274
+ },
+ {
+  "word": "Aquí",
+  "start": 10.63,
+  "end": 10.9
+ },
+ {
+  "word": "en",
+  "start": 10.912,
+  "end": 10.993
+ },
+ {
+  "word": "Ensenada",
+  "start": 11.005,
+  "end": 11.572
+ },
+ {
+  "word": "Solo",
+  "start": 11.73,
+  "end": 12.0
+ },
+ {
+  "word": "sábado",
+  "start": 12.012,
+  "end": 12.394
+ },
+ {
+  "word": "y",
+  "start": 12.405,
+  "end": 12.44
+ },
+ {
+  "word": "domingo",
+  "start": 12.452,
+  "end": 12.949
+ },
+ {
+  "word": "Reserva",
+  "start": 13.35,
+  "end": 13.759
+ },
+ {
+  "word": "tu",
+  "start": 13.771,
+  "end": 13.887
+ },
+ {
+  "word": "lugar",
+  "start": 13.898,
+  "end": 14.199
+ },
+ {
+  "word": "en",
+  "start": 14.211,
+  "end": 14.303
+ },
+ {
+  "word": "el",
+  "start": 14.315,
+  "end": 14.419
+ },
+ {
+  "word": "link",
+  "start": 14.431,
+  "end": 14.685
+ },
+ {
+  "word": "de",
+  "start": 14.697,
+  "end": 14.789
+ },
+ {
+  "word": "mi",
+  "start": 14.801,
+  "end": 14.917
+ },
+ {
+  "word": "perfil",
+  "start": 14.928,
+  "end": 15.38
+ }
+]

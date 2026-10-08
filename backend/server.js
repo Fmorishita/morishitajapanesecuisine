@@ -3,6 +3,7 @@
 // Vercel Serverless (Node.js + Express)
 // ================================================================
 
+const crypto = require('crypto');
 const express = require('express');
 const cors = require('cors');
 const Stripe = require('stripe');
@@ -141,10 +142,30 @@ app.use((req, res, next) => {
 // ----------------------------------------------------------------
 // ADMIN MIDDLEWARE
 // ----------------------------------------------------------------
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '1850';
+// El token vive SOLO en la env var ADMIN_TOKEN de Vercel, sin valor por
+// defecto: si falta o es corto, los endpoints de admin quedan cerrados (503)
+// en vez de aceptar un valor adivinable.
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '';
+const ADMIN_TOKEN_MIN_LENGTH = 16;
+const ADMIN_TOKEN_OK = ADMIN_TOKEN.length >= ADMIN_TOKEN_MIN_LENGTH;
+if (!ADMIN_TOKEN_OK) {
+  console.error(`⚠️  ADMIN_TOKEN falta o tiene menos de ${ADMIN_TOKEN_MIN_LENGTH} caracteres: endpoints de admin deshabilitados.`);
+}
+
+// Comparación en tiempo constante (no revela cuántos caracteres coinciden).
+function safeEqual(a, b) {
+  const ha = crypto.createHash('sha256').update(String(a ?? '')).digest();
+  const hb = crypto.createHash('sha256').update(String(b ?? '')).digest();
+  return crypto.timingSafeEqual(ha, hb);
+}
 
 function requireAdmin(req, res, next) {
-  if (req.headers['x-admin-token'] !== ADMIN_TOKEN) {
+  if (!ADMIN_TOKEN_OK) {
+    return res.status(503).json({
+      error: `ADMIN_TOKEN no configurado en el servidor (mínimo ${ADMIN_TOKEN_MIN_LENGTH} caracteres).`
+    });
+  }
+  if (!safeEqual(req.headers['x-admin-token'], ADMIN_TOKEN)) {
     return res.status(401).json({ error: 'No autorizado' });
   }
   next();
@@ -384,15 +405,15 @@ app.get('/stripe-webhook-client', async (req, res) => {
 // ENDPOINTS: Contenido editable del sitio (site_content)
 // ================================================================
 
-// GET /api/content — público, devuelve todo como objeto key→value
-// Excluye las fotos de evaluación (data URIs pesados) para no inflar la respuesta
-// que consume la web pública; esas se sirven aparte por /api/evaluacion/photo.
+// GET /api/content — público, devuelve el contenido del sitio como objeto key→value.
+// Excluye todo lo de la hoja de evaluación (config con contraseña, sesiones con
+// nombres y comentarios, fotos en data URI): eso solo sale por /api/evaluacion/*.
 app.get('/api/content', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('site_content')
       .select('key, value')
-      .not('key', 'like', EVAL_PHOTO_PREFIX + '%');
+      .not('key', 'like', EVAL_KEY_PREFIX + '%');
     if (error) throw error;
     const obj = {};
     (data || []).forEach(r => { obj[r.key] = r.value; });
@@ -524,6 +545,7 @@ app.get('/api/auth/check', requireAdmin, (req, res) => res.json({ ok: true }));
 // Cada persona que llena la hoja crea su propia sesión, guardada
 // como una key separada en site_content. El admin puede listarlas todas.
 // ================================================================
+const EVAL_KEY_PREFIX = 'evaluacion';  // todas estas keys son privadas (fuera de /api/content)
 const EVAL_CONFIG_KEY = 'evaluacion_miyagi_config';
 const EVAL_PHOTO_PREFIX = 'evaluacion_miyagi_photo__';
 const EVAL_SESSION_PREFIX = 'evaluacion_miyagi_session__';
@@ -538,19 +560,65 @@ function slugifyNombre(n) {
     .slice(0, 60);
 }
 
+// Config guardada por el admin (objeto) o null si no hay.
+async function getEvalConfig() {
+  const { data, error } = await supabase
+    .from('site_content').select('value').eq('key', EVAL_CONFIG_KEY).maybeSingle();
+  if (error) throw error;
+  if (!data || !data.value) return null;
+  return typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+}
+
+function evalPasswordFrom(cfg) {
+  return cfg && cfg.password ? String(cfg.password) : EVAL_DEFAULT_PASSWORD;
+}
+
 async function getEvalPassword() {
   try {
-    const { data } = await supabase
-      .from('site_content').select('value').eq('key', EVAL_CONFIG_KEY).maybeSingle();
-    if (data && data.value) {
-      const cfg = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
-      if (cfg && cfg.password) return String(cfg.password);
-    }
+    return evalPasswordFrom(await getEvalConfig());
   } catch (e) {
     console.warn('No se pudo leer la contraseña de evaluación:', e.message);
   }
   return EVAL_DEFAULT_PASSWORD;
 }
+
+async function evalPasswordOk(password) {
+  return safeEqual(String(password || '').trim(), (await getEvalPassword()).trim());
+}
+
+// GET /api/evaluacion/config — público: config de la hoja SIN la contraseña.
+app.get('/api/evaluacion/config', async (req, res) => {
+  try {
+    const cfg = await getEvalConfig();
+    if (cfg) delete cfg.password;
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({ config: cfg });
+  } catch (err) {
+    console.error('Error en /api/evaluacion/config:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/evaluacion/config/admin — admin: config completa + contraseña vigente.
+app.get('/api/evaluacion/config/admin', requireAdmin, async (req, res) => {
+  try {
+    const cfg = await getEvalConfig();
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({ config: cfg, password: evalPasswordFrom(cfg) });
+  } catch (err) {
+    console.error('Error en /api/evaluacion/config/admin:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/evaluacion/auth — valida la contraseña de la hoja en el servidor.
+// Body: { password }
+app.post('/api/evaluacion/auth', async (req, res) => {
+  if (!(await evalPasswordOk((req.body || {}).password))) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+  res.json({ ok: true });
+});
 
 // POST /api/evaluacion/save  — público (gateado por la contraseña del cliente)
 // Body: { password, nombre, sesion }
@@ -564,8 +632,7 @@ app.post('/api/evaluacion/save', async (req, res) => {
     const slug = slugifyNombre(nombre);
     if (!slug) return res.status(400).json({ error: 'Falta el nombre' });
 
-    const expected = await getEvalPassword();
-    if (String(password || '') !== expected) {
+    if (!(await evalPasswordOk(password))) {
       return res.status(401).json({ error: 'No autorizado' });
     }
 
@@ -599,8 +666,7 @@ app.post('/api/evaluacion/upload-image', async (req, res) => {
     const slug = slugifyNombre(nombre);
     if (!slug) return res.status(400).json({ error: 'Falta nombre' });
 
-    const expected = await getEvalPassword();
-    if (String(password || '') !== expected) {
+    if (!(await evalPasswordOk(password))) {
       return res.status(401).json({ error: 'No autorizado' });
     }
 

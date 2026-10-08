@@ -1,0 +1,193 @@
+[
+ {
+  "word": "Una",
+  "start": 0.0,
+  "end": 0.175
+ },
+ {
+  "word": "barra",
+  "start": 0.186,
+  "end": 0.545
+ },
+ {
+  "word": "Cuatro",
+  "start": 0.77,
+  "end": 0.996
+ },
+ {
+  "word": "asientos",
+  "start": 1.007,
+  "end": 1.59
+ },
+ {
+  "word": "Catorce",
+  "start": 1.89,
+  "end": 2.311
+ },
+ {
+  "word": "tiempos",
+  "start": 2.322,
+  "end": 2.87
+ },
+ {
+  "word": "Sin",
+  "start": 3.07,
+  "end": 3.294
+ },
+ {
+  "word": "carta",
+  "start": 3.306,
+  "end": 3.745
+ },
+ {
+  "word": "La",
+  "start": 4.11,
+  "end": 4.23
+ },
+ {
+  "word": "chef",
+  "start": 4.242,
+  "end": 4.554
+ },
+ {
+  "word": "Vero",
+  "start": 4.843,
+  "end": 5.028
+ },
+ {
+  "word": "Morishita",
+  "start": 5.04,
+  "end": 5.584
+ },
+ {
+  "word": "arma",
+  "start": 5.827,
+  "end": 6.116
+ },
+ {
+  "word": "tu",
+  "start": 6.128,
+  "end": 6.255
+ },
+ {
+  "word": "omakase",
+  "start": 6.267,
+  "end": 6.741
+ },
+ {
+  "word": "frente",
+  "start": 6.753,
+  "end": 7.019
+ },
+ {
+  "word": "a",
+  "start": 7.031,
+  "end": 7.066
+ },
+ {
+  "word": "ti",
+  "start": 7.077,
+  "end": 7.332
+ },
+ {
+  "word": "Nigiris",
+  "start": 7.59,
+  "end": 8.1,
+  "tts": "niguiris"
+ },
+ {
+  "word": "sashimis",
+  "start": 8.309,
+  "end": 8.968
+ },
+ {
+  "word": "platillos",
+  "start": 9.223,
+  "end": 9.697
+ },
+ {
+  "word": "calientes",
+  "start": 9.709,
+  "end": 10.369
+ },
+ {
+  "word": "Aquí",
+  "start": 10.72,
+  "end": 10.99
+ },
+ {
+  "word": "en",
+  "start": 11.002,
+  "end": 11.083
+ },
+ {
+  "word": "Ensenada",
+  "start": 11.095,
+  "end": 11.662
+ },
+ {
+  "word": "Solo",
+  "start": 11.82,
+  "end": 12.09
+ },
+ {
+  "word": "sábado",
+  "start": 12.102,
+  "end": 12.484
+ },
+ {
+  "word": "y",
+  "start": 12.495,
+  "end": 12.53
+ },
+ {
+  "word": "domingo",
+  "start": 12.542,
+  "end": 13.039
+ },
+ {
+  "word": "Reserva",
+  "start": 13.44,
+  "end": 13.849
+ },
+ {
+  "word": "tu",
+  "start": 13.861,
+  "end": 13.977
+ },
+ {
+  "word": "lugar",
+  "start": 13.988,
+  "end": 14.289
+ },
+ {
+  "word": "en",
+  "start": 14.301,
+  "end": 14.393
+ },
+ {
+  "word": "el",
+  "start": 14.405,
+  "end": 14.509
+ },
+ {
+  "word": "link",
+  "start": 14.521,
+  "end": 14.775
+ },
+ {
+  "word": "de",
+  "start": 14.787,
+  "end": 14.879
+ },
+ {
+  "word": "mi",
+  "start": 14.891,
+  "end": 15.007
+ },
+ {
+  "word": "perfil",
+  "start": 15.018,
+  "end": 15.47
+ }
+]
